@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.data/
+
+# Compiled output
+dist/
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+coverage/
+
+# Local database backups
+backups/
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+!.env.example

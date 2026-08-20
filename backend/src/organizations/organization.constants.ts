@@ -1,0 +1,1 @@
+export const ORGANIZATION_INVITATION_TTL_DAYS = 7;

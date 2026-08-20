@@ -1,0 +1,10 @@
+allowBuilds:
+  '@prisma/engines': true
+  '@scarf/scarf': false
+  argon2: true
+  esbuild: true
+  prisma: true
+  unrs-resolver: true
+
+overrides:
+  '@nestjs/swagger>js-yaml': 5.2.3

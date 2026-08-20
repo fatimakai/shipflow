@@ -1,0 +1,4 @@
+* text=auto eol=lf
+
+# Prisma owns these generated files and may emit intentional trailing spaces.
+src/generated/prisma/** -whitespace
