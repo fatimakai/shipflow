@@ -1,13 +1,13 @@
-# NestShip Frontend
+# Shipflow Frontend
 
-React frontend for the NestShip SaaS application. It consumes the versioned
-NestShip REST API from the separate `nestship-backend` repository.
+React frontend for the Shipflow SaaS application. It consumes the versioned
+Shipflow REST API from the separate `shipflow-backend` repository.
 
 ## Requirements
 
 - Node.js 24
 - npm 11
-- NestShip backend and PostgreSQL for live API development
+- Shipflow backend and PostgreSQL for live API development
 
 ## Local Setup
 
@@ -70,4 +70,4 @@ URLs, or logs. Refresh tokens remain in backend-managed HttpOnly cookies.
 See [ADR 0001](docs/adr/0001-frontend-foundation.md) for the foundation and
 [ADR 0002](docs/adr/0002-frontend-authentication.md) for authentication. The
 authoritative product plan is
-`nestship-backend/docs/roadmaps/project-roadmap.md`.
+`shipflow-backend/docs/roadmaps/project-roadmap.md`.

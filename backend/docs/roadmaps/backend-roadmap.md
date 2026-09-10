@@ -1,9 +1,9 @@
-# NestShip Backend Roadmap
+# Shipflow Backend Roadmap
 
 > Superseded on 2026-08-11 by the [unified project roadmap](project-roadmap.md).
 > Retained as a historical team-specific planning view.
 
-- Repository: `nestship-backend`
+- Repository: `shipflow-backend`
 - Team ownership: Backend team
 - Baseline date: 2026-08-07
 - Current branch policy: Work directly on `main`
@@ -11,7 +11,7 @@
 
 ## Purpose
 
-This document contains only backend-owned work for NestShip. It preserves the
+This document contains only backend-owned work for Shipflow. It preserves the
 phase numbers from the original project plan so that cross-team references stay
 stable. Phase numbers that belong entirely to the frontend are intentionally
 omitted.
@@ -484,7 +484,7 @@ buyers and contributors.
 **Status:** Pending
 
 **Objective:** Supply a stable backend artifact and operational support for the
-NestShip v1 release.
+Shipflow v1 release.
 
 ### Ordered Steps
 

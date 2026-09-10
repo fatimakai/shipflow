@@ -1,17 +1,17 @@
-# NestShip Frontend Roadmap
+# Shipflow Frontend Roadmap
 
 > Superseded on 2026-08-11 by the [unified project roadmap](project-roadmap.md).
 > Retained as a historical team-specific planning view.
 
-- Planned repository: `nestship-frontend`
+- Planned repository: `shipflow-frontend`
 - Team ownership: Frontend team
 - Baseline date: 2026-08-07
 - Current status: Repository not yet represented in this backend workspace
-- Backend contract source: NestShip Swagger/OpenAPI under `/api/docs-json`
+- Backend contract source: Shipflow Swagger/OpenAPI under `/api/docs-json`
 
 ## Purpose
 
-This document contains only frontend-owned work for NestShip. It preserves the
+This document contains only frontend-owned work for Shipflow. It preserves the
 phase numbers from the original project plan, so numbering is intentionally
 non-contiguous where a phase is owned entirely by the backend.
 
@@ -101,7 +101,7 @@ repeatable toolchain and development environment.
 
 ### Ordered Steps
 
-1. Create the `nestship-frontend` Git repository and define team access.
+1. Create the `shipflow-frontend` Git repository and define team access.
 2. Scaffold React, Vite, and TypeScript using the approved Node and pnpm versions.
 3. Enable strict TypeScript and consistent import/path aliases.
 4. Add formatting, linting, type-checking, unit-test, browser-test, build, preview, and development scripts.
@@ -318,7 +318,7 @@ application interface.
 8. Add skeleton, loading, empty, stale, error, and offline states for every data surface.
 9. Add light and dark themes through tokens rather than component-specific colors.
 10. Audit responsive layouts, text containment, accessibility, focus, and reduced motion.
-11. Document reusable frontend patterns separately from NestShip example content.
+11. Document reusable frontend patterns separately from Shipflow example content.
 
 ### Completion Criteria
 
@@ -428,7 +428,7 @@ compatibility, and deployment standards.
 
 **Status:** Pending
 
-**Objective:** Present and validate the complete NestShip experience for beta
+**Objective:** Present and validate the complete Shipflow experience for beta
 users and commercial buyers.
 
 ### Ordered Steps
@@ -473,6 +473,6 @@ users and commercial buyers.
 
 ## Immediate Next Frontend Task
 
-Complete Phase 0 frontend decisions, create the `nestship-frontend` repository,
+Complete Phase 0 frontend decisions, create the `shipflow-frontend` repository,
 and execute Phase 1 repository foundation before beginning the Phase 6
 authentication interface.

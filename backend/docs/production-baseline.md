@@ -17,13 +17,13 @@ proxy trust.
 Build the non-root runtime image:
 
 ```bash
-docker build --target runtime -t nestship-backend:local .
+docker build --target runtime -t shipflow-backend:local .
 ```
 
 Build the migration image from the same source and lockfile:
 
 ```bash
-docker build --target migrate -t nestship-backend-migrate:local .
+docker build --target migrate -t shipflow-backend-migrate:local .
 ```
 
 Run the runtime filesystem read-only and supply secrets through the deployment
@@ -58,7 +58,7 @@ pnpm db:backup backups/pre-release.dump
 Test restoration against a separate empty recovery database:
 
 ```bash
-DATABASE_URL="postgresql://.../nestship_recovery" pnpm db:restore backups/pre-release.dump --confirm-restore
+DATABASE_URL="postgresql://.../shipflow_recovery" pnpm db:restore backups/pre-release.dump --confirm-restore
 pnpm prisma:migrate:deploy
 ```
 

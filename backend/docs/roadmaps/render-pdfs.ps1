@@ -14,11 +14,13 @@ if (-not $chrome) {
     throw 'Google Chrome or Microsoft Edge is required to render the roadmap PDFs.'
 }
 
-$buildDirectory = Join-Path ([System.IO.Path]::GetTempPath()) 'nestship-roadmap-pdf'
+$buildDirectory = Join-Path ([System.IO.Path]::GetTempPath()) 'shipflow-roadmap-pdf'
 New-Item -ItemType Directory -Path $buildDirectory -Force | Out-Null
 
 $documents = @(
-    @{ Name = 'project-roadmap'; Footer = 'NestShip Unified Project Roadmap' }
+    @{ Name = 'project-roadmap'; Footer = 'Shipflow Unified Project Roadmap' },
+    @{ Name = 'backend-roadmap'; Footer = 'Shipflow Backend Roadmap' },
+    @{ Name = 'frontend-roadmap'; Footer = 'Shipflow Frontend Roadmap' }
 )
 
 foreach ($document in $documents) {

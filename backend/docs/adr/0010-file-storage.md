@@ -46,7 +46,7 @@ result tagging. Deny object reads unless `GuardDutyMalwareScanStatus` is
 so provider policy and application authorization both gate downloads.
 
 Configure S3 lifecycle rules to abort incomplete multipart uploads after one
-day and expire objects tagged `nestship-state=pending` after two days. The
+day and expire objects tagged `shipflow-state=pending` after two days. The
 application changes that tag as files move through scanning, ready, deleted,
 and rejected states.
 

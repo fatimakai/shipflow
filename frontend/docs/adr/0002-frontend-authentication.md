@@ -5,7 +5,7 @@
 
 ## Context
 
-NestShip uses short-lived bearer access tokens and opaque rotating refresh
+Shipflow uses short-lived bearer access tokens and opaque rotating refresh
 tokens. The frontend must restore browser sessions without exposing the refresh
 cookie or rendering stale protected content.
 

@@ -5,7 +5,7 @@
 
 ## Context
 
-NestShip needs organization-level subscriptions while keeping payment data and
+Shipflow needs organization-level subscriptions while keeping payment data and
 payment lifecycle operations in Stripe. Request-time feature authorization must
 remain fast, tenant-safe, and available during a transient Stripe outage.
 

@@ -1,7 +1,7 @@
-# NestShip Unified Project Roadmap
+# Shipflow Unified Project Roadmap
 
-- Product: NestShip commercial SaaS boilerplate
-- Architecture: Separate `nestship-backend` and `nestship-frontend` repositories
+- Product: Shipflow commercial SaaS boilerplate
+- Architecture: Separate `shipflow-backend` and `shipflow-frontend` repositories
 - Backend stack: NestJS 11, Node.js 24, pnpm 11, PostgreSQL, and Prisma
 - Frontend stack: React 19, Vite 8, TypeScript, npm, Tailwind CSS, shadcn, Base UI, and React Router
 - API contract: Versioned REST API and Swagger/OpenAPI under `/api/v1`
@@ -10,7 +10,7 @@
 
 ## Purpose
 
-This is the authoritative implementation roadmap for the complete NestShip
+This is the authoritative implementation roadmap for the complete Shipflow
 product. It replaces separate frontend and backend planning documents with one
 phase sequence that shows both sides of each product capability.
 
@@ -654,7 +654,7 @@ buyer-ready.
 
 **Status:** Pending
 
-**Objective:** Ship a reproducible, documented, supportable NestShip v1 product.
+**Objective:** Ship a reproducible, documented, supportable Shipflow v1 product.
 
 ### Ordered Work
 

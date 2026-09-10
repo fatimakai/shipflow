@@ -5,7 +5,7 @@
 
 ## Context
 
-NestShip needs durable identity, session, and organization boundaries before
+Shipflow needs durable identity, session, and organization boundaries before
 authentication and organization APIs are implemented. The first schema must
 support email and OAuth identities, refresh-token rotation, organization
 membership, and single-use invitations without prematurely defining billing.
