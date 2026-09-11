@@ -1,5 +1,8 @@
 import * as Joi from 'joi';
 
+const LOCAL_TWO_FACTOR_ENCRYPTION_KEY =
+  'c2hpcGZsb3ctbG9jYWwtMmZhLWtleS12MS0wMDAwMDA=';
+
 const normalizeCorsOrigins = (
   value: string,
   helpers: Joi.CustomHelpers,
@@ -38,6 +41,19 @@ const normalizeCorsOrigins = (
   }
 };
 
+const validateTwoFactorEncryptionKey = (
+  value: string,
+  helpers: Joi.CustomHelpers,
+): string | Joi.ErrorReport => {
+  const decoded = Buffer.from(value, 'base64');
+
+  if (decoded.length !== 32 || decoded.toString('base64') !== value) {
+    return helpers.error('any.invalid');
+  }
+
+  return value;
+};
+
 export interface EnvironmentVariables {
   NODE_ENV: 'development' | 'test' | 'production';
   PORT: number;
@@ -61,6 +77,9 @@ export interface EnvironmentVariables {
   JWT_ACCESS_SECRET: string;
   JWT_ACCESS_TTL_SECONDS: number;
   REFRESH_TOKEN_TTL_DAYS: number;
+  TWO_FACTOR_ISSUER: string;
+  TWO_FACTOR_ENCRYPTION_KEY: string;
+  TWO_FACTOR_ENCRYPTION_KEY_VERSION: number;
   EMAIL_VERIFICATION_TOKEN_TTL_HOURS: number;
   PASSWORD_RESET_TOKEN_TTL_MINUTES: number;
   AUTH_REFRESH_COOKIE_NAME: string;
@@ -197,6 +216,23 @@ export const environmentValidationSchema = Joi.object({
   JWT_ACCESS_TTL_SECONDS: Joi.number().integer().min(60).max(3600).default(900),
 
   REFRESH_TOKEN_TTL_DAYS: Joi.number().integer().min(1).max(365).default(30),
+
+  TWO_FACTOR_ISSUER: Joi.string().trim().min(1).max(100).default('ShipFlow'),
+
+  TWO_FACTOR_ENCRYPTION_KEY: Joi.string()
+    .trim()
+    .custom(validateTwoFactorEncryptionKey, '32-byte base64 key validation')
+    .when('NODE_ENV', {
+      is: 'production',
+      then: Joi.required(),
+      otherwise: Joi.string().default(LOCAL_TWO_FACTOR_ENCRYPTION_KEY),
+    }),
+
+  TWO_FACTOR_ENCRYPTION_KEY_VERSION: Joi.number()
+    .integer()
+    .min(1)
+    .max(2147483647)
+    .default(1),
 
   EMAIL_VERIFICATION_TOKEN_TTL_HOURS: Joi.number()
     .integer()

@@ -241,6 +241,7 @@ export type UserWhereInput = {
   notifications?: Prisma.NotificationListRelationFilter
   notificationPreference?: Prisma.XOR<Prisma.NotificationPreferenceNullableScalarRelationFilter, Prisma.NotificationPreferenceWhereInput> | null
   uploadedFiles?: Prisma.StoredFileListRelationFilter
+  twoFactorCredential?: Prisma.XOR<Prisma.TwoFactorCredentialNullableScalarRelationFilter, Prisma.TwoFactorCredentialWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -266,6 +267,7 @@ export type UserOrderByWithRelationInput = {
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   notificationPreference?: Prisma.NotificationPreferenceOrderByWithRelationInput
   uploadedFiles?: Prisma.StoredFileOrderByRelationAggregateInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -294,6 +296,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   notifications?: Prisma.NotificationListRelationFilter
   notificationPreference?: Prisma.XOR<Prisma.NotificationPreferenceNullableScalarRelationFilter, Prisma.NotificationPreferenceWhereInput> | null
   uploadedFiles?: Prisma.StoredFileListRelationFilter
+  twoFactorCredential?: Prisma.XOR<Prisma.TwoFactorCredentialNullableScalarRelationFilter, Prisma.TwoFactorCredentialWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -353,6 +356,7 @@ export type UserCreateInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -378,6 +382,7 @@ export type UserUncheckedCreateInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -403,6 +408,7 @@ export type UserUpdateInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -428,6 +434,7 @@ export type UserUncheckedUpdateInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -600,6 +607,20 @@ export type UserUpdateOneRequiredWithoutPasswordResetTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, Prisma.UserUpdateWithoutPasswordResetTokensInput>, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
 }
 
+export type UserCreateNestedOneWithoutTwoFactorCredentialInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTwoFactorCredentialInput, Prisma.UserUncheckedCreateWithoutTwoFactorCredentialInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTwoFactorCredentialInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTwoFactorCredentialNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTwoFactorCredentialInput, Prisma.UserUncheckedCreateWithoutTwoFactorCredentialInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTwoFactorCredentialInput
+  upsert?: Prisma.UserUpsertWithoutTwoFactorCredentialInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTwoFactorCredentialInput, Prisma.UserUpdateWithoutTwoFactorCredentialInput>, Prisma.UserUncheckedUpdateWithoutTwoFactorCredentialInput>
+}
+
 export type UserCreateNestedOneWithoutOwnedOrganizationsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedOrganizationsInput, Prisma.UserUncheckedCreateWithoutOwnedOrganizationsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedOrganizationsInput
@@ -722,6 +743,7 @@ export type UserCreateWithoutOauthAccountsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOauthAccountsInput = {
@@ -746,6 +768,7 @@ export type UserUncheckedCreateWithoutOauthAccountsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOauthAccountsInput = {
@@ -786,6 +809,7 @@ export type UserUpdateWithoutOauthAccountsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOauthAccountsInput = {
@@ -810,6 +834,7 @@ export type UserUncheckedUpdateWithoutOauthAccountsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -834,6 +859,7 @@ export type UserCreateWithoutSessionsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -858,6 +884,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -898,6 +925,7 @@ export type UserUpdateWithoutSessionsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -922,6 +950,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmailVerificationTokensInput = {
@@ -946,6 +975,7 @@ export type UserCreateWithoutEmailVerificationTokensInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmailVerificationTokensInput = {
@@ -970,6 +1000,7 @@ export type UserUncheckedCreateWithoutEmailVerificationTokensInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmailVerificationTokensInput = {
@@ -1010,6 +1041,7 @@ export type UserUpdateWithoutEmailVerificationTokensInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailVerificationTokensInput = {
@@ -1034,6 +1066,7 @@ export type UserUncheckedUpdateWithoutEmailVerificationTokensInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -1058,6 +1091,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -1082,6 +1116,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -1122,6 +1157,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -1139,6 +1175,123 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   oauthAccounts?: Prisma.OAuthAccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   emailVerificationTokens?: Prisma.EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  ownedOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  acceptedInvitations?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
+  uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTwoFactorCredentialInput = {
+  id?: string
+  email: string
+  displayName?: string | null
+  avatarUrl?: string | null
+  passwordHash?: string | null
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  oauthAccounts?: Prisma.OAuthAccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  emailVerificationTokens?: Prisma.EmailVerificationTokenCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  ownedOrganizations?: Prisma.OrganizationCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  sentInvitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  acceptedInvitations?: Prisma.InvitationCreateNestedManyWithoutAcceptedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
+  uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserUncheckedCreateWithoutTwoFactorCredentialInput = {
+  id?: string
+  email: string
+  displayName?: string | null
+  avatarUrl?: string | null
+  passwordHash?: string | null
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  oauthAccounts?: Prisma.OAuthAccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  emailVerificationTokens?: Prisma.EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  ownedOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutOwnerInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  acceptedInvitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
+  uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserCreateOrConnectWithoutTwoFactorCredentialInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTwoFactorCredentialInput, Prisma.UserUncheckedCreateWithoutTwoFactorCredentialInput>
+}
+
+export type UserUpsertWithoutTwoFactorCredentialInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTwoFactorCredentialInput, Prisma.UserUncheckedUpdateWithoutTwoFactorCredentialInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTwoFactorCredentialInput, Prisma.UserUncheckedCreateWithoutTwoFactorCredentialInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTwoFactorCredentialInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTwoFactorCredentialInput, Prisma.UserUncheckedUpdateWithoutTwoFactorCredentialInput>
+}
+
+export type UserUpdateWithoutTwoFactorCredentialInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  oauthAccounts?: Prisma.OAuthAccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  emailVerificationTokens?: Prisma.EmailVerificationTokenUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  ownedOrganizations?: Prisma.OrganizationUpdateManyWithoutOwnerNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  sentInvitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  acceptedInvitations?: Prisma.InvitationUpdateManyWithoutAcceptedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
+  uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTwoFactorCredentialInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  oauthAccounts?: Prisma.OAuthAccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  emailVerificationTokens?: Prisma.EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   ownedOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutOwnerNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   sentInvitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
@@ -1170,6 +1323,7 @@ export type UserCreateWithoutOwnedOrganizationsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOwnedOrganizationsInput = {
@@ -1194,6 +1348,7 @@ export type UserUncheckedCreateWithoutOwnedOrganizationsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOwnedOrganizationsInput = {
@@ -1234,6 +1389,7 @@ export type UserUpdateWithoutOwnedOrganizationsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedOrganizationsInput = {
@@ -1258,6 +1414,7 @@ export type UserUncheckedUpdateWithoutOwnedOrganizationsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -1282,6 +1439,7 @@ export type UserCreateWithoutMembershipsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -1306,6 +1464,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -1346,6 +1505,7 @@ export type UserUpdateWithoutMembershipsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -1370,6 +1530,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentInvitationsInput = {
@@ -1394,6 +1555,7 @@ export type UserCreateWithoutSentInvitationsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentInvitationsInput = {
@@ -1418,6 +1580,7 @@ export type UserUncheckedCreateWithoutSentInvitationsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentInvitationsInput = {
@@ -1447,6 +1610,7 @@ export type UserCreateWithoutAcceptedInvitationsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAcceptedInvitationsInput = {
@@ -1471,6 +1635,7 @@ export type UserUncheckedCreateWithoutAcceptedInvitationsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAcceptedInvitationsInput = {
@@ -1511,6 +1676,7 @@ export type UserUpdateWithoutSentInvitationsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentInvitationsInput = {
@@ -1535,6 +1701,7 @@ export type UserUncheckedUpdateWithoutSentInvitationsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutAcceptedInvitationsInput = {
@@ -1570,6 +1737,7 @@ export type UserUpdateWithoutAcceptedInvitationsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAcceptedInvitationsInput = {
@@ -1594,6 +1762,7 @@ export type UserUncheckedUpdateWithoutAcceptedInvitationsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1618,6 +1787,7 @@ export type UserCreateWithoutNotificationsInput = {
   acceptedInvitations?: Prisma.InvitationCreateNestedManyWithoutAcceptedByInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1642,6 +1812,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   acceptedInvitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedByInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1682,6 +1853,7 @@ export type UserUpdateWithoutNotificationsInput = {
   acceptedInvitations?: Prisma.InvitationUpdateManyWithoutAcceptedByNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1706,6 +1878,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   acceptedInvitations?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedByNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferenceInput = {
@@ -1730,6 +1903,7 @@ export type UserCreateWithoutNotificationPreferenceInput = {
   acceptedInvitations?: Prisma.InvitationCreateNestedManyWithoutAcceptedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   uploadedFiles?: Prisma.StoredFileCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferenceInput = {
@@ -1754,6 +1928,7 @@ export type UserUncheckedCreateWithoutNotificationPreferenceInput = {
   acceptedInvitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   uploadedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUploadedByInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferenceInput = {
@@ -1794,6 +1969,7 @@ export type UserUpdateWithoutNotificationPreferenceInput = {
   acceptedInvitations?: Prisma.InvitationUpdateManyWithoutAcceptedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferenceInput = {
@@ -1818,6 +1994,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferenceInput = {
   acceptedInvitations?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   uploadedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUploadedFilesInput = {
@@ -1842,6 +2019,7 @@ export type UserCreateWithoutUploadedFilesInput = {
   acceptedInvitations?: Prisma.InvitationCreateNestedManyWithoutAcceptedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutUserInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUploadedFilesInput = {
@@ -1866,6 +2044,7 @@ export type UserUncheckedCreateWithoutUploadedFilesInput = {
   acceptedInvitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutUserInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUploadedFilesInput = {
@@ -1906,6 +2085,7 @@ export type UserUpdateWithoutUploadedFilesInput = {
   acceptedInvitations?: Prisma.InvitationUpdateManyWithoutAcceptedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutUserNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedFilesInput = {
@@ -1930,6 +2110,7 @@ export type UserUncheckedUpdateWithoutUploadedFilesInput = {
   acceptedInvitations?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutUserNestedInput
+  twoFactorCredential?: Prisma.TwoFactorCredentialUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -2067,6 +2248,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   notificationPreference?: boolean | Prisma.User$notificationPreferenceArgs<ExtArgs>
   uploadedFiles?: boolean | Prisma.User$uploadedFilesArgs<ExtArgs>
+  twoFactorCredential?: boolean | Prisma.User$twoFactorCredentialArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2125,6 +2307,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   notificationPreference?: boolean | Prisma.User$notificationPreferenceArgs<ExtArgs>
   uploadedFiles?: boolean | Prisma.User$uploadedFilesArgs<ExtArgs>
+  twoFactorCredential?: boolean | Prisma.User$twoFactorCredentialArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2144,6 +2327,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     notificationPreference: Prisma.$NotificationPreferencePayload<ExtArgs> | null
     uploadedFiles: Prisma.$StoredFilePayload<ExtArgs>[]
+    twoFactorCredential: Prisma.$TwoFactorCredentialPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2562,6 +2746,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notificationPreference<T extends Prisma.User$notificationPreferenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationPreferenceArgs<ExtArgs>>): Prisma.Prisma__NotificationPreferenceClient<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   uploadedFiles<T extends Prisma.User$uploadedFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoredFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  twoFactorCredential<T extends Prisma.User$twoFactorCredentialArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$twoFactorCredentialArgs<ExtArgs>>): Prisma.Prisma__TwoFactorCredentialClient<runtime.Types.Result.GetResult<Prisma.$TwoFactorCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3251,6 +3436,25 @@ export type User$uploadedFilesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.StoredFileScalarFieldEnum | Prisma.StoredFileScalarFieldEnum[]
+}
+
+/**
+ * User.twoFactorCredential
+ */
+export type User$twoFactorCredentialArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TwoFactorCredential
+   */
+  select?: Prisma.TwoFactorCredentialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TwoFactorCredential
+   */
+  omit?: Prisma.TwoFactorCredentialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TwoFactorCredentialInclude<ExtArgs> | null
+  where?: Prisma.TwoFactorCredentialWhereInput
 }
 
 /**

@@ -44,62 +44,65 @@ backup, and restore workflows.
 
 ## Environment
 
-| Variable                         | Default                   | Description                                                       |
-| -------------------------------- | ------------------------- | ----------------------------------------------------------------- |
-| `NODE_ENV`                       | `development`             | Runtime environment: `development`, `test`, or `production`       |
-| `PORT`                           | `3000`                    | HTTP port used by the API                                         |
-| `APP_NAME`                       | `ShipFlow API`            | Service name used in API documentation and health responses       |
-| `LOG_LEVEL`                      | `debug` locally           | Minimum structured log level; production defaults to `info`       |
-| `CORS_ORIGINS`                   | `http://localhost:5173`   | Comma-separated allowlist of browser origins                      |
-| `SWAGGER_ENABLED`                | `true` outside production | Enables Swagger UI and the OpenAPI document                       |
-| `HTTP_BODY_LIMIT_BYTES`          | `1048576`                 | Maximum parsed JSON or form body size                             |
-| `HTTP_REQUEST_TIMEOUT_MS`        | `30000`                   | Request receive and handler-processing timeout                    |
-| `HTTP_HEADERS_TIMEOUT_MS`        | `15000`                   | Maximum time allowed to receive HTTP headers                      |
-| `HTTP_KEEP_ALIVE_TIMEOUT_MS`     | `5000`                    | Idle keep-alive socket timeout                                    |
-| `HTTP_TRUST_PROXY_HOPS`          | `0`                       | Exact number of reviewed reverse-proxy hops                       |
-| `HTTP_MAX_REQUESTS_PER_SOCKET`   | `1000`                    | Requests accepted before retiring a keep-alive socket             |
-| `RATE_LIMIT_TTL_MS`              | `60000`                   | Default in-memory rate-limit window                               |
-| `RATE_LIMIT_MAX`                 | `120`                     | Default requests allowed per window and client                    |
-| `POSTGRES_DB`                    | `shipflow`                | Local Compose database name                                       |
-| `POSTGRES_USER`                  | `shipflow`                | Local Compose database user                                       |
-| `POSTGRES_PASSWORD`              | `shipflow_local_password` | Local-only Compose database password                              |
-| `POSTGRES_PORT`                  | `5432`                    | Loopback port exposed by Compose                                  |
-| `DATABASE_URL`                   | Local ShipFlow URL        | PostgreSQL connection URL used by Prisma                          |
-| `DATABASE_POOL_MAX`              | `10`                      | Maximum connections in the application pool                       |
-| `DATABASE_CONNECTION_TIMEOUT_MS` | `5000`                    | PostgreSQL connection timeout in milliseconds                     |
-| `DATABASE_STATEMENT_TIMEOUT_MS`  | `15000`                   | PostgreSQL statement execution limit                              |
-| `DATABASE_SLOW_QUERY_MS`         | `500`                     | Duration threshold for parameter-free slow-query warnings         |
-| `JWT_ACCESS_SECRET`              | Local-only value          | HS256 secret; explicit 32+ character value required in production |
-| `JWT_ACCESS_TTL_SECONDS`         | `900`                     | Access-token lifetime                                             |
-| `REFRESH_TOKEN_TTL_DAYS`         | `30`                      | Rotating refresh-session lifetime                                 |
-| `AUTH_REFRESH_COOKIE_NAME`       | `shipflow_refresh`        | HttpOnly refresh cookie name                                      |
-| `AUTH_COOKIE_SECURE`             | `false` locally           | Requires HTTPS cookies and must be `true` in production           |
-| `FRONTEND_URL`                   | `http://localhost:5173`   | Frontend base URL for account links and OAuth redirects           |
-| `EMAIL_PROVIDER`                 | `log` (`capture` in test) | Email adapter; production requires `resend`                       |
-| `EMAIL_FROM_NAME`                | `ShipFlow`                | Friendly sender name                                              |
-| `EMAIL_FROM_ADDRESS`             | Example no-reply address  | Verified sender address                                           |
-| `EMAIL_REPLY_TO`                 | Example support address   | Reply-to address                                                  |
-| `EMAIL_SUPPORT_ADDRESS`          | Example support address   | Support address rendered in templates                             |
-| `EMAIL_SMOKE_TEST_RECIPIENT`     | None                      | Explicit recipient for the controlled provider smoke test         |
-| `RESEND_API_KEY`                 | None                      | Required when the Resend adapter is selected                      |
-| `RESEND_WEBHOOK_SECRET`          | None                      | Required when the Resend adapter is selected                      |
-| `BILLING_PROVIDER`               | `stub`                    | Billing adapter; production requires `stripe`                     |
-| `BILLING_TRIAL_DAYS`             | `14`                      | One-time organization trial length                                |
-| `BILLING_GRACE_PERIOD_DAYS`      | `7`                       | Paid access retained after entering `past_due`                    |
-| `BILLING_CURRENCY`               | `usd`                     | Application plan-catalog currency                                 |
-| `STRIPE_SECRET_KEY`              | None                      | Required when the Stripe adapter is selected                      |
-| `STRIPE_WEBHOOK_SECRET`          | None                      | Signing secret for `POST /api/v1/webhooks/stripe`                 |
-| `STRIPE_PRO_PRODUCT_ID`          | Local placeholder         | Approved Pro product ID                                           |
-| `STRIPE_PRO_MONTHLY_PRICE_ID`    | Local placeholder         | Approved USD 29 monthly price ID                                  |
-| `STRIPE_PRO_ANNUAL_PRICE_ID`     | Local placeholder         | Approved USD 290 annual price ID                                  |
-| `STRIPE_AUTOMATIC_TAX_ENABLED`   | `false` locally           | Must be `true` in production                                      |
-| `FILE_STORAGE_PROVIDER`          | `local`                   | File adapter; production requires `s3`                            |
-| `FILE_LOCAL_ROOT`                | `.data/files`             | Private non-public local object root                              |
-| `FILE_MALWARE_SCAN_ENABLED`      | `false` locally           | Must be `true` for production S3 storage                          |
-| `AWS_REGION`                     | None                      | Required AWS Region for the S3 adapter                            |
-| `S3_BUCKET`                      | None                      | Required private production bucket                                |
-| `S3_ENDPOINT`                    | None                      | Optional S3-compatible endpoint for controlled environments       |
-| `S3_FORCE_PATH_STYLE`            | `false`                   | Enables path-style addressing for compatible test services        |
+| Variable                            | Default                   | Description                                                         |
+| ----------------------------------- | ------------------------- | ------------------------------------------------------------------- |
+| `NODE_ENV`                          | `development`             | Runtime environment: `development`, `test`, or `production`         |
+| `PORT`                              | `3000`                    | HTTP port used by the API                                           |
+| `APP_NAME`                          | `ShipFlow API`            | Service name used in API documentation and health responses         |
+| `LOG_LEVEL`                         | `debug` locally           | Minimum structured log level; production defaults to `info`         |
+| `CORS_ORIGINS`                      | `http://localhost:5173`   | Comma-separated allowlist of browser origins                        |
+| `SWAGGER_ENABLED`                   | `true` outside production | Enables Swagger UI and the OpenAPI document                         |
+| `HTTP_BODY_LIMIT_BYTES`             | `1048576`                 | Maximum parsed JSON or form body size                               |
+| `HTTP_REQUEST_TIMEOUT_MS`           | `30000`                   | Request receive and handler-processing timeout                      |
+| `HTTP_HEADERS_TIMEOUT_MS`           | `15000`                   | Maximum time allowed to receive HTTP headers                        |
+| `HTTP_KEEP_ALIVE_TIMEOUT_MS`        | `5000`                    | Idle keep-alive socket timeout                                      |
+| `HTTP_TRUST_PROXY_HOPS`             | `0`                       | Exact number of reviewed reverse-proxy hops                         |
+| `HTTP_MAX_REQUESTS_PER_SOCKET`      | `1000`                    | Requests accepted before retiring a keep-alive socket               |
+| `RATE_LIMIT_TTL_MS`                 | `60000`                   | Default in-memory rate-limit window                                 |
+| `RATE_LIMIT_MAX`                    | `120`                     | Default requests allowed per window and client                      |
+| `POSTGRES_DB`                       | `shipflow`                | Local Compose database name                                         |
+| `POSTGRES_USER`                     | `shipflow`                | Local Compose database user                                         |
+| `POSTGRES_PASSWORD`                 | `shipflow_local_password` | Local-only Compose database password                                |
+| `POSTGRES_PORT`                     | `5432`                    | Loopback port exposed by Compose                                    |
+| `DATABASE_URL`                      | Local ShipFlow URL        | PostgreSQL connection URL used by Prisma                            |
+| `DATABASE_POOL_MAX`                 | `10`                      | Maximum connections in the application pool                         |
+| `DATABASE_CONNECTION_TIMEOUT_MS`    | `5000`                    | PostgreSQL connection timeout in milliseconds                       |
+| `DATABASE_STATEMENT_TIMEOUT_MS`     | `15000`                   | PostgreSQL statement execution limit                                |
+| `DATABASE_SLOW_QUERY_MS`            | `500`                     | Duration threshold for parameter-free slow-query warnings           |
+| `JWT_ACCESS_SECRET`                 | Local-only value          | HS256 secret; explicit 32+ character value required in production   |
+| `JWT_ACCESS_TTL_SECONDS`            | `900`                     | Access-token lifetime                                               |
+| `REFRESH_TOKEN_TTL_DAYS`            | `30`                      | Rotating refresh-session lifetime                                   |
+| `TWO_FACTOR_ISSUER`                 | `ShipFlow`                | Issuer shown by authenticator applications                          |
+| `TWO_FACTOR_ENCRYPTION_KEY`         | Development-only key      | Canonical base64 AES-256 key; explicit value required in production |
+| `TWO_FACTOR_ENCRYPTION_KEY_VERSION` | `1`                       | Positive version stored with encrypted TOTP credentials             |
+| `AUTH_REFRESH_COOKIE_NAME`          | `shipflow_refresh`        | HttpOnly refresh cookie name                                        |
+| `AUTH_COOKIE_SECURE`                | `false` locally           | Requires HTTPS cookies and must be `true` in production             |
+| `FRONTEND_URL`                      | `http://localhost:5173`   | Frontend base URL for account links and OAuth redirects             |
+| `EMAIL_PROVIDER`                    | `log` (`capture` in test) | Email adapter; production requires `resend`                         |
+| `EMAIL_FROM_NAME`                   | `ShipFlow`                | Friendly sender name                                                |
+| `EMAIL_FROM_ADDRESS`                | Example no-reply address  | Verified sender address                                             |
+| `EMAIL_REPLY_TO`                    | Example support address   | Reply-to address                                                    |
+| `EMAIL_SUPPORT_ADDRESS`             | Example support address   | Support address rendered in templates                               |
+| `EMAIL_SMOKE_TEST_RECIPIENT`        | None                      | Explicit recipient for the controlled provider smoke test           |
+| `RESEND_API_KEY`                    | None                      | Required when the Resend adapter is selected                        |
+| `RESEND_WEBHOOK_SECRET`             | None                      | Required when the Resend adapter is selected                        |
+| `BILLING_PROVIDER`                  | `stub`                    | Billing adapter; production requires `stripe`                       |
+| `BILLING_TRIAL_DAYS`                | `14`                      | One-time organization trial length                                  |
+| `BILLING_GRACE_PERIOD_DAYS`         | `7`                       | Paid access retained after entering `past_due`                      |
+| `BILLING_CURRENCY`                  | `usd`                     | Application plan-catalog currency                                   |
+| `STRIPE_SECRET_KEY`                 | None                      | Required when the Stripe adapter is selected                        |
+| `STRIPE_WEBHOOK_SECRET`             | None                      | Signing secret for `POST /api/v1/webhooks/stripe`                   |
+| `STRIPE_PRO_PRODUCT_ID`             | Local placeholder         | Approved Pro product ID                                             |
+| `STRIPE_PRO_MONTHLY_PRICE_ID`       | Local placeholder         | Approved USD 29 monthly price ID                                    |
+| `STRIPE_PRO_ANNUAL_PRICE_ID`        | Local placeholder         | Approved USD 290 annual price ID                                    |
+| `STRIPE_AUTOMATIC_TAX_ENABLED`      | `false` locally           | Must be `true` in production                                        |
+| `FILE_STORAGE_PROVIDER`             | `local`                   | File adapter; production requires `s3`                              |
+| `FILE_LOCAL_ROOT`                   | `.data/files`             | Private non-public local object root                                |
+| `FILE_MALWARE_SCAN_ENABLED`         | `false` locally           | Must be `true` for production S3 storage                            |
+| `AWS_REGION`                        | None                      | Required AWS Region for the S3 adapter                              |
+| `S3_BUCKET`                         | None                      | Required private production bucket                                  |
+| `S3_ENDPOINT`                       | None                      | Optional S3-compatible endpoint for controlled environments         |
+| `S3_FORCE_PATH_STYLE`               | `false`                   | Enables path-style addressing for compatible test services          |
 
 Application runtime values, including the Prisma connection settings, are
 loaded through `@nestjs/config` and validated with Joi. Invalid application

@@ -171,6 +171,7 @@ model User {
   notifications           Notification[]
   notificationPreference  NotificationPreference?
   uploadedFiles           StoredFile[]             @relation("FileUploader")
+  twoFactorCredential     TwoFactorCredential?
 
   @@index([status], map: "users_status_idx")
   @@index([deletedAt], map: "users_deleted_at_idx")
@@ -242,6 +243,36 @@ model PasswordResetToken {
   @@index([userId], map: "password_reset_tokens_user_id_idx")
   @@index([expiresAt], map: "password_reset_tokens_expires_at_idx")
   @@map("password_reset_tokens")
+}
+
+model TwoFactorCredential {
+  id                   String                @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId               String                @unique(map: "two_factor_credentials_user_id_key") @map("user_id") @db.Uuid
+  encryptedSecret      Bytes                 @map("encrypted_secret")
+  initializationVector Bytes                 @map("initialization_vector")
+  authenticationTag    Bytes                 @map("authentication_tag")
+  encryptionKeyVersion Int                   @default(1) @map("encryption_key_version")
+  enabledAt            DateTime?             @map("enabled_at") @db.Timestamptz(3)
+  lastUsedTimeStep     BigInt?               @map("last_used_time_step")
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  backupCodes          TwoFactorBackupCode[]
+
+  @@index([enabledAt], map: "two_factor_credentials_enabled_at_idx")
+  @@map("two_factor_credentials")
+}
+
+model TwoFactorBackupCode {
+  id           String              @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  credentialId String              @map("credential_id") @db.Uuid
+  codeHash     String              @unique(map: "two_factor_backup_codes_code_hash_key") @map("code_hash") @db.VarChar(64)
+  consumedAt   DateTime?           @map("consumed_at") @db.Timestamptz(3)
+  createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  credential   TwoFactorCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+
+  @@index([credentialId, consumedAt], map: "two_factor_backup_codes_credential_consumed_idx")
+  @@map("two_factor_backup_codes")
 }
 
 model Organization {

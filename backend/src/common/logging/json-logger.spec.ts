@@ -7,6 +7,7 @@ describe('production logging', () => {
       redactLogValue({
         authorization: 'Bearer header-secret',
         password: 'plain-password',
+        TWO_FACTOR_ENCRYPTION_KEY: 'base64-key-material',
         email: 'person@example.test',
         safe: 'https://app.test/reset?token=action-secret&next=home',
         database:
@@ -15,6 +16,7 @@ describe('production logging', () => {
     ).toEqual({
       authorization: '[REDACTED]',
       password: '[REDACTED]',
+      TWO_FACTOR_ENCRYPTION_KEY: '[REDACTED]',
       email: '[REDACTED]',
       safe: 'https://app.test/reset?token=[REDACTED]&next=home',
       database: 'postgresql://shipflow:[REDACTED]@database.test:5432/shipflow',

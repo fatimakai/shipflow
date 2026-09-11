@@ -1,5 +1,5 @@
 const sensitiveKeyPattern =
-  /authorization|cookie|password|passphrase|token|secret|api[-_]?key|signature|raw[-_]?body|email|recipient/i;
+  /authorization|cookie|password|passphrase|token|secret|api[-_]?key|encryption[-_]?key|signature|raw[-_]?body|email|recipient/i;
 
 export function redactLogValue(value: unknown, depth = 0): unknown {
   if (depth > 8) return '[TRUNCATED]';

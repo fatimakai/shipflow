@@ -7,6 +7,7 @@ describe('environmentValidationSchema', () => {
   const databaseUrl =
     'postgresql://shipflow:shipflow_local_password@localhost:5432/shipflow?schema=public';
   const jwtSecret = 'a-production-jwt-secret-that-is-at-least-32-characters';
+  const twoFactorEncryptionKey = Buffer.alloc(32, 19).toString('base64');
   const productionEmail = {
     EMAIL_PROVIDER: 'resend',
     EMAIL_FROM_ADDRESS: 'no-reply@mail.example.com',
@@ -79,6 +80,7 @@ describe('environmentValidationSchema', () => {
       ...productionEmail,
       ...productionBilling,
       ...productionStorage,
+      TWO_FACTOR_ENCRYPTION_KEY: twoFactorEncryptionKey,
     });
     const value = result.value as EnvironmentVariables;
 
@@ -118,6 +120,40 @@ describe('environmentValidationSchema', () => {
     });
 
     expect(error?.message).toContain('JWT_ACCESS_SECRET');
+  });
+
+  it('defaults 2FA settings locally and requires a 32-byte key in production', () => {
+    const development = environmentValidationSchema.validate({
+      DATABASE_URL: databaseUrl,
+    });
+    const missingProductionKey = environmentValidationSchema.validate({
+      NODE_ENV: 'production',
+      DATABASE_URL: databaseUrl,
+      JWT_ACCESS_SECRET: jwtSecret,
+      ...productionEmail,
+      ...productionBilling,
+      ...productionStorage,
+    });
+    const malformedKey = environmentValidationSchema.validate({
+      DATABASE_URL: databaseUrl,
+      TWO_FACTOR_ENCRYPTION_KEY: Buffer.alloc(16).toString('base64'),
+    });
+
+    expect(development.error).toBeUndefined();
+    expect(development.value).toMatchObject({
+      TWO_FACTOR_ISSUER: 'ShipFlow',
+      TWO_FACTOR_ENCRYPTION_KEY_VERSION: 1,
+    });
+    expect(
+      Buffer.from(
+        (development.value as EnvironmentVariables).TWO_FACTOR_ENCRYPTION_KEY,
+        'base64',
+      ),
+    ).toHaveLength(32);
+    expect(missingProductionKey.error?.message).toContain(
+      'TWO_FACTOR_ENCRYPTION_KEY',
+    );
+    expect(malformedKey.error?.message).toContain('TWO_FACTOR_ENCRYPTION_KEY');
   });
 
   it('requires Resend and HTTPS account links in production', () => {

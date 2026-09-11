@@ -56,6 +56,8 @@ export const ModelName = {
   Session: 'Session',
   EmailVerificationToken: 'EmailVerificationToken',
   PasswordResetToken: 'PasswordResetToken',
+  TwoFactorCredential: 'TwoFactorCredential',
+  TwoFactorBackupCode: 'TwoFactorBackupCode',
   Organization: 'Organization',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -158,6 +160,33 @@ export const PasswordResetTokenScalarFieldEnum = {
 } as const
 
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const TwoFactorCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  encryptedSecret: 'encryptedSecret',
+  initializationVector: 'initializationVector',
+  authenticationTag: 'authenticationTag',
+  encryptionKeyVersion: 'encryptionKeyVersion',
+  enabledAt: 'enabledAt',
+  lastUsedTimeStep: 'lastUsedTimeStep',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TwoFactorCredentialScalarFieldEnum = (typeof TwoFactorCredentialScalarFieldEnum)[keyof typeof TwoFactorCredentialScalarFieldEnum]
+
+
+export const TwoFactorBackupCodeScalarFieldEnum = {
+  id: 'id',
+  credentialId: 'credentialId',
+  codeHash: 'codeHash',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TwoFactorBackupCodeScalarFieldEnum = (typeof TwoFactorBackupCodeScalarFieldEnum)[keyof typeof TwoFactorBackupCodeScalarFieldEnum]
 
 
 export const OrganizationScalarFieldEnum = {

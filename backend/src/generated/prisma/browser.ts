@@ -43,6 +43,16 @@ export type EmailVerificationToken = Prisma.EmailVerificationTokenModel
  */
 export type PasswordResetToken = Prisma.PasswordResetTokenModel
 /**
+ * Model TwoFactorCredential
+ * 
+ */
+export type TwoFactorCredential = Prisma.TwoFactorCredentialModel
+/**
+ * Model TwoFactorBackupCode
+ * 
+ */
+export type TwoFactorBackupCode = Prisma.TwoFactorBackupCodeModel
+/**
  * Model Organization
  * 
  */

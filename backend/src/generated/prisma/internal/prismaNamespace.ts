@@ -402,6 +402,8 @@ export const ModelName = {
   Session: 'Session',
   EmailVerificationToken: 'EmailVerificationToken',
   PasswordResetToken: 'PasswordResetToken',
+  TwoFactorCredential: 'TwoFactorCredential',
+  TwoFactorBackupCode: 'TwoFactorBackupCode',
   Organization: 'Organization',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -430,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "oAuthAccount" | "session" | "emailVerificationToken" | "passwordResetToken" | "organization" | "membership" | "invitation" | "emailDelivery" | "emailWebhookEvent" | "plan" | "stripeCustomer" | "billingCheckoutSession" | "subscription" | "processedStripeEvent" | "notification" | "notificationPreference" | "storedFile"
+    modelProps: "user" | "oAuthAccount" | "session" | "emailVerificationToken" | "passwordResetToken" | "twoFactorCredential" | "twoFactorBackupCode" | "organization" | "membership" | "invitation" | "emailDelivery" | "emailWebhookEvent" | "plan" | "stripeCustomer" | "billingCheckoutSession" | "subscription" | "processedStripeEvent" | "notification" | "notificationPreference" | "storedFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -801,6 +803,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenCountAggregateOutputType> | number
+        }
+      }
+    }
+    TwoFactorCredential: {
+      payload: Prisma.$TwoFactorCredentialPayload<ExtArgs>
+      fields: Prisma.TwoFactorCredentialFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TwoFactorCredentialFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TwoFactorCredentialFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>
+        }
+        findFirst: {
+          args: Prisma.TwoFactorCredentialFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TwoFactorCredentialFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>
+        }
+        findMany: {
+          args: Prisma.TwoFactorCredentialFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>[]
+        }
+        create: {
+          args: Prisma.TwoFactorCredentialCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>
+        }
+        createMany: {
+          args: Prisma.TwoFactorCredentialCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TwoFactorCredentialCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>[]
+        }
+        delete: {
+          args: Prisma.TwoFactorCredentialDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>
+        }
+        update: {
+          args: Prisma.TwoFactorCredentialUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>
+        }
+        deleteMany: {
+          args: Prisma.TwoFactorCredentialDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TwoFactorCredentialUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TwoFactorCredentialUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>[]
+        }
+        upsert: {
+          args: Prisma.TwoFactorCredentialUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorCredentialPayload>
+        }
+        aggregate: {
+          args: Prisma.TwoFactorCredentialAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTwoFactorCredential>
+        }
+        groupBy: {
+          args: Prisma.TwoFactorCredentialGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorCredentialGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TwoFactorCredentialCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
+    TwoFactorBackupCode: {
+      payload: Prisma.$TwoFactorBackupCodePayload<ExtArgs>
+      fields: Prisma.TwoFactorBackupCodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TwoFactorBackupCodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TwoFactorBackupCodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>
+        }
+        findFirst: {
+          args: Prisma.TwoFactorBackupCodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TwoFactorBackupCodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>
+        }
+        findMany: {
+          args: Prisma.TwoFactorBackupCodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>[]
+        }
+        create: {
+          args: Prisma.TwoFactorBackupCodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>
+        }
+        createMany: {
+          args: Prisma.TwoFactorBackupCodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TwoFactorBackupCodeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>[]
+        }
+        delete: {
+          args: Prisma.TwoFactorBackupCodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>
+        }
+        update: {
+          args: Prisma.TwoFactorBackupCodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>
+        }
+        deleteMany: {
+          args: Prisma.TwoFactorBackupCodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TwoFactorBackupCodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TwoFactorBackupCodeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>[]
+        }
+        upsert: {
+          args: Prisma.TwoFactorBackupCodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorBackupCodePayload>
+        }
+        aggregate: {
+          args: Prisma.TwoFactorBackupCodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTwoFactorBackupCode>
+        }
+        groupBy: {
+          args: Prisma.TwoFactorBackupCodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorBackupCodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TwoFactorBackupCodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorBackupCodeCountAggregateOutputType> | number
         }
       }
     }
@@ -1878,6 +2028,33 @@ export const PasswordResetTokenScalarFieldEnum = {
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
+export const TwoFactorCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  encryptedSecret: 'encryptedSecret',
+  initializationVector: 'initializationVector',
+  authenticationTag: 'authenticationTag',
+  encryptionKeyVersion: 'encryptionKeyVersion',
+  enabledAt: 'enabledAt',
+  lastUsedTimeStep: 'lastUsedTimeStep',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TwoFactorCredentialScalarFieldEnum = (typeof TwoFactorCredentialScalarFieldEnum)[keyof typeof TwoFactorCredentialScalarFieldEnum]
+
+
+export const TwoFactorBackupCodeScalarFieldEnum = {
+  id: 'id',
+  credentialId: 'credentialId',
+  codeHash: 'codeHash',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TwoFactorBackupCodeScalarFieldEnum = (typeof TwoFactorBackupCodeScalarFieldEnum)[keyof typeof TwoFactorBackupCodeScalarFieldEnum]
+
+
 export const OrganizationScalarFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
@@ -2199,6 +2376,48 @@ export type ListEnumSessionRevocationReasonFieldRefInput<$PrismaModel> = FieldRe
 
 
 /**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes[]'
+ */
+export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
  * Reference to a field of type 'MembershipRole'
  */
 export type EnumMembershipRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipRole'>
@@ -2251,20 +2470,6 @@ export type EnumEmailDeliveryStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'EmailDeliveryStatus[]'
  */
 export type ListEnumEmailDeliveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailDeliveryStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2570,6 +2775,8 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   emailVerificationToken?: Prisma.EmailVerificationTokenOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
+  twoFactorCredential?: Prisma.TwoFactorCredentialOmit
+  twoFactorBackupCode?: Prisma.TwoFactorBackupCodeOmit
   organization?: Prisma.OrganizationOmit
   membership?: Prisma.MembershipOmit
   invitation?: Prisma.InvitationOmit

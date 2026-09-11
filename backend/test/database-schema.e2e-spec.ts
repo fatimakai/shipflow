@@ -162,6 +162,74 @@ describe('Database schema (e2e)', () => {
     }
   });
 
+  it('enforces encrypted 2FA credential and single-use backup-code invariants', async () => {
+    const marker = randomUUID();
+    const email = `two-factor-${marker}@example.test`;
+    const user = await prisma.user.create({ data: { email } });
+    const credential = await prisma.twoFactorCredential.create({
+      data: {
+        userId: user.id,
+        encryptedSecret: Buffer.from('encrypted-secret'),
+        initializationVector: Buffer.alloc(12, 1),
+        authenticationTag: Buffer.alloc(16, 2),
+        encryptionKeyVersion: 1,
+      },
+    });
+    const codeHash = Buffer.from(`backup-${marker}`)
+      .toString('hex')
+      .slice(0, 64);
+
+    try {
+      await prisma.twoFactorBackupCode.create({
+        data: { credentialId: credential.id, codeHash },
+      });
+
+      await expect(
+        prisma.twoFactorCredential.create({
+          data: {
+            userId: user.id,
+            encryptedSecret: Buffer.from('another-secret'),
+            initializationVector: Buffer.alloc(12, 3),
+            authenticationTag: Buffer.alloc(16, 4),
+            encryptionKeyVersion: 1,
+          },
+        }),
+      ).rejects.toThrow();
+
+      await expect(
+        prisma.twoFactorBackupCode.create({
+          data: { credentialId: credential.id, codeHash },
+        }),
+      ).rejects.toThrow();
+
+      await expect(
+        prisma.twoFactorBackupCode.updateMany({
+          where: { codeHash, consumedAt: null },
+          data: { consumedAt: new Date() },
+        }),
+      ).resolves.toMatchObject({ count: 1 });
+      await expect(
+        prisma.twoFactorBackupCode.updateMany({
+          where: { codeHash, consumedAt: null },
+          data: { consumedAt: new Date() },
+        }),
+      ).resolves.toMatchObject({ count: 0 });
+
+      await prisma.user.delete({ where: { id: user.id } });
+
+      await expect(
+        prisma.twoFactorCredential.count({ where: { id: credential.id } }),
+      ).resolves.toBe(0);
+      await expect(
+        prisma.twoFactorBackupCode.count({
+          where: { credentialId: credential.id },
+        }),
+      ).resolves.toBe(0);
+    } finally {
+      await prisma.user.deleteMany({ where: { email } });
+    }
+  });
+
   afterAll(async () => {
     await app.close();
   });

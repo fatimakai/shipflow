@@ -11,6 +11,9 @@ import { OAuthController } from './oauth.controller';
 import { GitHubOAuthGuard, GoogleOAuthGuard } from './oauth.guard';
 import { OAuthStateStore } from './oauth-state.store';
 import { GitHubStrategy, GoogleStrategy } from './oauth.strategy';
+import { BackupCodeService } from './two-factor/backup-code.service';
+import { TotpService } from './two-factor/totp.service';
+import { TwoFactorCryptoService } from './two-factor/two-factor-crypto.service';
 
 @Module({
   imports: [
@@ -29,7 +32,17 @@ import { GitHubStrategy, GoogleStrategy } from './oauth.strategy';
     GitHubStrategy,
     GoogleOAuthGuard,
     GitHubOAuthGuard,
+    TwoFactorCryptoService,
+    TotpService,
+    BackupCodeService,
   ],
-  exports: [AuthService, AccessTokenGuard, TokenService],
+  exports: [
+    AuthService,
+    AccessTokenGuard,
+    TokenService,
+    TwoFactorCryptoService,
+    TotpService,
+    BackupCodeService,
+  ],
 })
 export class AuthModule {}
