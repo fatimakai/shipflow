@@ -5,7 +5,7 @@
 
 ## Context
 
-Shipflow needs an explicit tenant boundary before billing, notifications, files,
+ShipFlow needs an explicit tenant boundary before billing, notifications, files,
 and other organization-owned resources are added. Users may belong to multiple
 organizations, while every tenant-scoped operation must reject valid resource
 identifiers from organizations the caller cannot access.

@@ -7,7 +7,7 @@ import { TransactionalEmailService } from './transactional-email.service';
 
 const configValues: Record<string, string> = {
   EMAIL_FROM_ADDRESS: 'no-reply@mail.example.com',
-  EMAIL_FROM_NAME: 'NestShip',
+  EMAIL_FROM_NAME: 'ShipFlow',
   EMAIL_REPLY_TO: 'support@example.com',
   EMAIL_SUPPORT_ADDRESS: 'support@example.com',
   FRONTEND_URL: 'https://app.example.com',

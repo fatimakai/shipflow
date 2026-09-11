@@ -103,7 +103,7 @@ describe('Authentication (e2e)', () => {
         expect.stringMatching(/HttpOnly.*SameSite=Lax/i),
       ]),
     );
-    expect(originalRefreshCookie).toContain('nestship_refresh=');
+    expect(originalRefreshCookie).toContain('shipflow_refresh=');
 
     await request(app.getHttpServer())
       .post('/api/v1/auth/register')
@@ -332,7 +332,7 @@ describe('Authentication (e2e)', () => {
 function getRefreshCookie(headers: Record<string, unknown>): string {
   const setCookie = headers['set-cookie'];
   const values = Array.isArray(setCookie) ? (setCookie as string[]) : [];
-  const cookie = values.find((value) => value.startsWith('nestship_refresh='));
+  const cookie = values.find((value) => value.startsWith('shipflow_refresh='));
 
   if (!cookie) {
     throw new Error('Expected a refresh cookie');

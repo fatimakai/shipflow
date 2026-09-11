@@ -3,7 +3,7 @@ import { CaptureEmailProvider, ResendEmailProvider } from './email.providers';
 
 const message: EmailMessage = {
   category: 'EMAIL_VERIFICATION',
-  from: 'NestShip <no-reply@mail.example.com>',
+  from: 'ShipFlow <no-reply@mail.example.com>',
   html: '<p>Verify</p>',
   replyTo: 'support@example.com',
   subject: 'Verify your email',

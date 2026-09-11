@@ -43,6 +43,8 @@ import { Files } from "./Files"
 
 const organizationId = "11111111-1111-4111-8111-111111111111"
 const filesUrl = `http://localhost:3000/api/v1/organizations/${organizationId}/files`
+const activeTransferExpiry = () =>
+  new Date(Date.now() + 10 * 60 * 1000).toISOString()
 
 const readyFile: FileResponseDto = {
   createdAt: "2026-08-13T10:00:00.000Z",
@@ -167,7 +169,7 @@ describe("Files", () => {
           {
             file: { ...readyFile, id: "upload-file", status: "PENDING" },
             upload: {
-              expiresAt: "2026-08-14T00:00:00.000Z",
+              expiresAt: activeTransferExpiry(),
               fields: { token: "signed-field" },
               fileField: "file",
               method: "POST",
@@ -209,7 +211,7 @@ describe("Files", () => {
     server.use(
       http.get(`${filesUrl}/:fileId/download-url`, () =>
         HttpResponse.json({
-          expiresAt: "2026-08-14T00:00:00.000Z",
+          expiresAt: activeTransferExpiry(),
           method: "GET",
           url: "/api/v1/file-content/download",
         })

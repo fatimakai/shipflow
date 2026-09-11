@@ -1,4 +1,4 @@
-# Shipflow Backend Roadmap
+# ShipFlow Backend Roadmap
 
 > Superseded on 2026-08-11 by the [unified project roadmap](project-roadmap.md).
 > Retained as a historical team-specific planning view.
@@ -11,7 +11,7 @@
 
 ## Purpose
 
-This document contains only backend-owned work for Shipflow. It preserves the
+This document contains only backend-owned work for ShipFlow. It preserves the
 phase numbers from the original project plan so that cross-team references stay
 stable. Phase numbers that belong entirely to the frontend are intentionally
 omitted.
@@ -484,7 +484,7 @@ buyers and contributors.
 **Status:** Pending
 
 **Objective:** Supply a stable backend artifact and operational support for the
-Shipflow v1 release.
+ShipFlow v1 release.
 
 ### Ordered Steps
 

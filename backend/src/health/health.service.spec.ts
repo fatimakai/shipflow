@@ -6,7 +6,7 @@ import { HealthService } from './health.service';
 
 describe('HealthService', () => {
   const configService = new ConfigService<EnvironmentVariables, true>({
-    APP_NAME: 'NestShip API',
+    APP_NAME: 'ShipFlow API',
   });
   const checkConnection = jest.fn<() => Promise<void>>();
   const prismaService = { checkConnection } as unknown as PrismaService;

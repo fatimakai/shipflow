@@ -24,7 +24,7 @@ async function run(): Promise<void> {
       .get(TransactionalEmailService)
       .sendSecurityNotice(
         recipient,
-        'NestShip transactional email smoke test',
+        'ShipFlow transactional email smoke test',
         'Transactional email delivery is configured correctly for this environment.',
       );
 

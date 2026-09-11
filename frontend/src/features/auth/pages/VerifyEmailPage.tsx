@@ -88,7 +88,7 @@ export function VerifyEmailPage() {
             }
           >
             {authStatus === "authenticated"
-              ? "Continue to NestShip"
+              ? "Continue to ShipFlow"
               : "Continue to sign in"}
           </Button>
         </div>

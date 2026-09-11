@@ -5,7 +5,7 @@
 
 ## Context
 
-Shipflow needs persistent in-app notifications for account security,
+ShipFlow needs persistent in-app notifications for account security,
 organization activity, and billing lifecycle changes. Notifications must remain
 user-owned and tenant-safe, avoid duplicate records during retries, respect
 optional preferences at creation time, and support efficient polling without

@@ -24,7 +24,7 @@ export function AuthLayout({
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <Hexagon className="h-4 w-4 fill-primary-foreground text-primary-foreground" />
           </span>
-          <span className="font-heading text-xl font-bold">NestShip</span>
+          <span className="font-heading text-xl font-bold">ShipFlow</span>
         </Link>
 
         <section className="rounded-lg border border-border bg-background p-6 shadow-sm sm:p-7">

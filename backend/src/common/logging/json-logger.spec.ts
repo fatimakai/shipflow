@@ -10,14 +10,14 @@ describe('production logging', () => {
         email: 'person@example.test',
         safe: 'https://app.test/reset?token=action-secret&next=home',
         database:
-          'postgresql://nestship:database-secret@database.test:5432/nestship',
+          'postgresql://shipflow:database-secret@database.test:5432/shipflow',
       }),
     ).toEqual({
       authorization: '[REDACTED]',
       password: '[REDACTED]',
       email: '[REDACTED]',
       safe: 'https://app.test/reset?token=[REDACTED]&next=home',
-      database: 'postgresql://nestship:[REDACTED]@database.test:5432/nestship',
+      database: 'postgresql://shipflow:[REDACTED]@database.test:5432/shipflow',
     });
   });
 
@@ -25,7 +25,7 @@ describe('production logging', () => {
     const stdout = jest
       .spyOn(process.stdout, 'write')
       .mockImplementation(() => true);
-    const logger = new JsonLogger('NestShip API', 'info');
+    const logger = new JsonLogger('ShipFlow API', 'info');
 
     logger.debug('hidden');
     logger.log(

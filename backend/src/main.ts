@@ -29,7 +29,7 @@ async function bootstrap() {
 }
 
 void bootstrap().catch((error: unknown) => {
-  new JsonLogger('NestShip API', 'error').fatal({
+  new JsonLogger('ShipFlow API', 'error').fatal({
     event: 'application.bootstrap_failed',
     error,
   });

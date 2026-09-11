@@ -1,4 +1,4 @@
-# Shipflow Frontend Roadmap
+# ShipFlow Frontend Roadmap
 
 > Superseded on 2026-08-11 by the [unified project roadmap](project-roadmap.md).
 > Retained as a historical team-specific planning view.
@@ -7,11 +7,11 @@
 - Team ownership: Frontend team
 - Baseline date: 2026-08-07
 - Current status: Repository not yet represented in this backend workspace
-- Backend contract source: Shipflow Swagger/OpenAPI under `/api/docs-json`
+- Backend contract source: ShipFlow Swagger/OpenAPI under `/api/docs-json`
 
 ## Purpose
 
-This document contains only frontend-owned work for Shipflow. It preserves the
+This document contains only frontend-owned work for ShipFlow. It preserves the
 phase numbers from the original project plan, so numbering is intentionally
 non-contiguous where a phase is owned entirely by the backend.
 
@@ -318,7 +318,7 @@ application interface.
 8. Add skeleton, loading, empty, stale, error, and offline states for every data surface.
 9. Add light and dark themes through tokens rather than component-specific colors.
 10. Audit responsive layouts, text containment, accessibility, focus, and reduced motion.
-11. Document reusable frontend patterns separately from Shipflow example content.
+11. Document reusable frontend patterns separately from ShipFlow example content.
 
 ### Completion Criteria
 
@@ -428,7 +428,7 @@ compatibility, and deployment standards.
 
 **Status:** Pending
 
-**Objective:** Present and validate the complete Shipflow experience for beta
+**Objective:** Present and validate the complete ShipFlow experience for beta
 users and commercial buyers.
 
 ### Ordered Steps

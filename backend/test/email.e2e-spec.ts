@@ -161,7 +161,7 @@ describe('Transactional email webhooks (e2e)', () => {
       data: {
         created_at: createdAt.toISOString(),
         email_id: providerMessageId,
-        from: 'NestShip <no-reply@mail.example.com>',
+        from: 'ShipFlow <no-reply@mail.example.com>',
         subject: 'Security notice',
         to: ['webhook-test@example.com'],
         ...(type === 'email.failed'

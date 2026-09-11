@@ -8,12 +8,12 @@ describe('PrismaService', () => {
   beforeEach(() => {
     const configService = new ConfigService<EnvironmentVariables, true>({
       DATABASE_URL:
-        'postgresql://nestship:nestship_local_password@localhost:5432/nestship?schema=public',
+        'postgresql://shipflow:shipflow_local_password@localhost:5432/shipflow?schema=public',
       DATABASE_POOL_MAX: 10,
       DATABASE_CONNECTION_TIMEOUT_MS: 5000,
       DATABASE_STATEMENT_TIMEOUT_MS: 15000,
       DATABASE_SLOW_QUERY_MS: 500,
-      APP_NAME: 'NestShip API',
+      APP_NAME: 'ShipFlow API',
     });
 
     prismaService = new PrismaService(configService);

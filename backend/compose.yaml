@@ -1,13 +1,13 @@
-name: nestship
+name: shipflow
 
 services:
   postgres:
     image: postgres:18.4
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-nestship}
-      POSTGRES_USER: ${POSTGRES_USER:-nestship}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nestship_local_password}
+      POSTGRES_DB: ${POSTGRES_DB:-shipflow}
+      POSTGRES_USER: ${POSTGRES_USER:-shipflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shipflow_local_password}
       POSTGRES_INITDB_ARGS: --data-checksums
     ports:
       - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'

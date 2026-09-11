@@ -44,10 +44,10 @@ export function LoginPage() {
   return (
     <AuthLayout
       title="Welcome back"
-      description="Sign in to continue to your NestShip workspace."
+      description="Sign in to continue to your ShipFlow workspace."
       footer={
         <>
-          New to NestShip?{" "}
+          New to ShipFlow?{" "}
           <Link
             className="font-medium text-primary hover:underline"
             to="/register"

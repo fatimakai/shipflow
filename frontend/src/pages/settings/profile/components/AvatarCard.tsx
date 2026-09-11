@@ -19,7 +19,7 @@ export function AvatarCard() {
         <div className="space-y-1 md:w-1/3">
           <CardTitle>Account profile</CardTitle>
           <CardDescription>
-            Your identity across NestShip workspaces.
+            Your identity across ShipFlow workspaces.
           </CardDescription>
         </div>
 

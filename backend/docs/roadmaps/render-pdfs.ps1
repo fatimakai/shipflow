@@ -18,9 +18,9 @@ $buildDirectory = Join-Path ([System.IO.Path]::GetTempPath()) 'shipflow-roadmap-
 New-Item -ItemType Directory -Path $buildDirectory -Force | Out-Null
 
 $documents = @(
-    @{ Name = 'project-roadmap'; Footer = 'Shipflow Unified Project Roadmap' },
-    @{ Name = 'backend-roadmap'; Footer = 'Shipflow Backend Roadmap' },
-    @{ Name = 'frontend-roadmap'; Footer = 'Shipflow Frontend Roadmap' }
+    @{ Name = 'project-roadmap'; Footer = 'ShipFlow Unified Project Roadmap' },
+    @{ Name = 'backend-roadmap'; Footer = 'ShipFlow Backend Roadmap' },
+    @{ Name = 'frontend-roadmap'; Footer = 'ShipFlow Frontend Roadmap' }
 )
 
 foreach ($document in $documents) {

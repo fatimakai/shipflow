@@ -25,6 +25,7 @@ export function AccessRestricted({
       </p>
       <Button
         className="mt-5"
+        nativeButton={false}
         variant="outline"
         render={<Link to="/dashboard" />}
       >

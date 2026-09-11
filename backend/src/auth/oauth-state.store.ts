@@ -14,7 +14,7 @@ type VerifyCallback = (
 
 @Injectable()
 export class OAuthStateStore {
-  private readonly cookieName = 'nestship_oauth_state';
+  private readonly cookieName = 'shipflow_oauth_state';
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables, true>,

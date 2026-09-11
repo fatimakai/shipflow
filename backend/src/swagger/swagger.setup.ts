@@ -11,7 +11,7 @@ export function setupSwagger(
   const appName = configService.getOrThrow<string>('APP_NAME');
   const documentConfig = new DocumentBuilder()
     .setTitle(appName)
-    .setDescription('NestShip backend API')
+    .setDescription('ShipFlow backend API')
     .setVersion(API_VERSION)
     .addBearerAuth(
       {
@@ -21,7 +21,7 @@ export function setupSwagger(
       },
       'access-token',
     )
-    .addCookieAuth('nestship_refresh', {
+    .addCookieAuth('shipflow_refresh', {
       type: 'apiKey',
       in: 'cookie',
     })

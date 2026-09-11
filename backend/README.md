@@ -1,6 +1,6 @@
-# Shipflow Backend
+# ShipFlow Backend
 
-Shipflow is a commercial SaaS boilerplate built with a decoupled NestJS API and
+ShipFlow is a commercial SaaS boilerplate built with a decoupled NestJS API and
 React frontend. This repository contains the backend REST API.
 
 ## Project Roadmaps
@@ -48,7 +48,7 @@ backup, and restore workflows.
 | -------------------------------- | ------------------------- | ----------------------------------------------------------------- |
 | `NODE_ENV`                       | `development`             | Runtime environment: `development`, `test`, or `production`       |
 | `PORT`                           | `3000`                    | HTTP port used by the API                                         |
-| `APP_NAME`                       | `Shipflow API`            | Service name used in API documentation and health responses       |
+| `APP_NAME`                       | `ShipFlow API`            | Service name used in API documentation and health responses       |
 | `LOG_LEVEL`                      | `debug` locally           | Minimum structured log level; production defaults to `info`       |
 | `CORS_ORIGINS`                   | `http://localhost:5173`   | Comma-separated allowlist of browser origins                      |
 | `SWAGGER_ENABLED`                | `true` outside production | Enables Swagger UI and the OpenAPI document                       |
@@ -64,7 +64,7 @@ backup, and restore workflows.
 | `POSTGRES_USER`                  | `shipflow`                | Local Compose database user                                       |
 | `POSTGRES_PASSWORD`              | `shipflow_local_password` | Local-only Compose database password                              |
 | `POSTGRES_PORT`                  | `5432`                    | Loopback port exposed by Compose                                  |
-| `DATABASE_URL`                   | Local Shipflow URL        | PostgreSQL connection URL used by Prisma                          |
+| `DATABASE_URL`                   | Local ShipFlow URL        | PostgreSQL connection URL used by Prisma                          |
 | `DATABASE_POOL_MAX`              | `10`                      | Maximum connections in the application pool                       |
 | `DATABASE_CONNECTION_TIMEOUT_MS` | `5000`                    | PostgreSQL connection timeout in milliseconds                     |
 | `DATABASE_STATEMENT_TIMEOUT_MS`  | `15000`                   | PostgreSQL statement execution limit                              |
@@ -76,7 +76,7 @@ backup, and restore workflows.
 | `AUTH_COOKIE_SECURE`             | `false` locally           | Requires HTTPS cookies and must be `true` in production           |
 | `FRONTEND_URL`                   | `http://localhost:5173`   | Frontend base URL for account links and OAuth redirects           |
 | `EMAIL_PROVIDER`                 | `log` (`capture` in test) | Email adapter; production requires `resend`                       |
-| `EMAIL_FROM_NAME`                | `Shipflow`                | Friendly sender name                                              |
+| `EMAIL_FROM_NAME`                | `ShipFlow`                | Friendly sender name                                              |
 | `EMAIL_FROM_ADDRESS`             | Example no-reply address  | Verified sender address                                           |
 | `EMAIL_REPLY_TO`                 | Example support address   | Reply-to address                                                  |
 | `EMAIL_SUPPORT_ADDRESS`          | Example support address   | Support address rendered in templates                             |
@@ -417,6 +417,6 @@ pnpm start:prod
 
 ## Repository Model
 
-Shipflow uses a polyrepo architecture. The frontend and backend are deployed
+ShipFlow uses a polyrepo architecture. The frontend and backend are deployed
 independently, and this API's Swagger/OpenAPI document is the initial contract
 between them.

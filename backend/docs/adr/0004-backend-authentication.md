@@ -5,7 +5,7 @@
 
 ## Context
 
-Shipflow needs a complete backend account lifecycle that supports browser
+ShipFlow needs a complete backend account lifecycle that supports browser
 clients, concurrent devices, local credentials, and optional OAuth providers.
 Authentication must remain usable without Redis or a production email provider
 while preserving clear replacement points for later phases.

@@ -60,7 +60,7 @@ export class S3FileStorageProvider implements ObjectStorageProvider {
       'x-amz-checksum-sha256': checksum,
       'x-amz-meta-file-id': input.fileId,
       'x-amz-meta-organization-id': input.organizationId,
-      'x-amz-tagging': 'nestship-state=pending',
+      'x-amz-tagging': 'shipflow-state=pending',
     };
     const result = await createPresignedPost(this.client, {
       Bucket: this.options.bucket,
@@ -210,9 +210,9 @@ export class S3FileStorageProvider implements ObjectStorageProvider {
       new GetObjectTaggingCommand({ Bucket: this.options.bucket, Key: key }),
     );
     const tagSet = (existing.TagSet ?? []).filter(
-      (tag) => tag.Key !== 'nestship-state',
+      (tag) => tag.Key !== 'shipflow-state',
     );
-    tagSet.push({ Key: 'nestship-state', Value: state });
+    tagSet.push({ Key: 'shipflow-state', Value: state });
     await this.client.send(
       new PutObjectTaggingCommand({
         Bucket: this.options.bucket,

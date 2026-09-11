@@ -5,7 +5,7 @@
 
 ## Context
 
-Shipflow uses separate frontend and backend repositories. The frontend needs a
+ShipFlow uses separate frontend and backend repositories. The frontend needs a
 small, typed foundation that follows the backend OpenAPI contract and preserves
 the existing React/Vite UI.
 

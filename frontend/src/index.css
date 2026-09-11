@@ -36,7 +36,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* ── Semantic colors (new — NestShip brand) ── */
+  /* ── Semantic colors (new — ShipFlow brand) ── */
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
@@ -68,7 +68,7 @@
 }
 
 /* ══════════════════════════════════════════
-   NestShip Brand Palette — Light Mode
+   ShipFlow Brand Palette — Light Mode
    ══════════════════════════════════════════ */
 :root {
   --background: #ffffff;
@@ -96,7 +96,7 @@
   --input: #e7e7f0;
   --ring: #5b4fe9;
 
-  /* NestShip semantic */
+  /* ShipFlow semantic */
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;

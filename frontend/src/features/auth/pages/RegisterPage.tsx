@@ -44,7 +44,7 @@ export function RegisterPage() {
   return (
     <AuthLayout
       title="Create your account"
-      description="Set up your NestShip account and start a workspace."
+      description="Set up your ShipFlow account and start a workspace."
       footer={
         <>
           Already have an account?{" "}

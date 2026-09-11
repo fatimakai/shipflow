@@ -1,6 +1,6 @@
-# Shipflow Unified Project Roadmap
+# ShipFlow Unified Project Roadmap
 
-- Product: Shipflow commercial SaaS boilerplate
+- Product: ShipFlow commercial SaaS boilerplate
 - Architecture: Separate `shipflow-backend` and `shipflow-frontend` repositories
 - Backend stack: NestJS 11, Node.js 24, pnpm 11, PostgreSQL, and Prisma
 - Frontend stack: React 19, Vite 8, TypeScript, npm, Tailwind CSS, shadcn, Base UI, and React Router
@@ -10,7 +10,7 @@
 
 ## Purpose
 
-This is the authoritative implementation roadmap for the complete Shipflow
+This is the authoritative implementation roadmap for the complete ShipFlow
 product. It replaces separate frontend and backend planning documents with one
 phase sequence that shows both sides of each product capability.
 
@@ -654,7 +654,7 @@ buyer-ready.
 
 **Status:** Pending
 
-**Objective:** Ship a reproducible, documented, supportable Shipflow v1 product.
+**Objective:** Ship a reproducible, documented, supportable ShipFlow v1 product.
 
 ### Ordered Work
 

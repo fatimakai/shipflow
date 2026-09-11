@@ -1,6 +1,6 @@
 # Local PostgreSQL
 
-The Shipflow development database runs as PostgreSQL 18.4 through Docker
+The ShipFlow development database runs as PostgreSQL 18.4 through Docker
 Compose. Docker Desktop or another Compose-compatible Docker engine must be
 running before using these commands.
 

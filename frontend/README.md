@@ -1,13 +1,13 @@
-# Shipflow Frontend
+# ShipFlow Frontend
 
-React frontend for the Shipflow SaaS application. It consumes the versioned
-Shipflow REST API from the separate `shipflow-backend` repository.
+React frontend for the ShipFlow SaaS application. It consumes the versioned
+ShipFlow REST API from the separate `shipflow-backend` repository.
 
 ## Requirements
 
 - Node.js 24
 - npm 11
-- Shipflow backend and PostgreSQL for live API development
+- ShipFlow backend and PostgreSQL for live API development
 
 ## Local Setup
 

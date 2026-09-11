@@ -26,12 +26,12 @@ describe('OAuthStateStore', () => {
 
     expect(state).not.toBe('');
     expect(cookie).toHaveBeenCalledWith(
-      'nestship_oauth_state',
+      'shipflow_oauth_state',
       state,
       expect.objectContaining({ httpOnly: true, sameSite: 'lax' }),
     );
 
-    request.cookies = { nestship_oauth_state: state };
+    request.cookies = { shipflow_oauth_state: state };
     let verified = false;
     store.verify(request, state, {}, (_error, result) => {
       verified = result;
@@ -43,7 +43,7 @@ describe('OAuthStateStore', () => {
 
   it('rejects a tampered state', () => {
     const request = {
-      cookies: { nestship_oauth_state: 'tampered.state' },
+      cookies: { shipflow_oauth_state: 'tampered.state' },
       res: { clearCookie: jest.fn() } as unknown as Response,
     } as Request;
     let verified = true;

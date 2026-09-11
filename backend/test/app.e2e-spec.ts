@@ -81,7 +81,7 @@ describe('AppController (e2e)', () => {
 
         expect(body).toMatchObject({
           status: 'ok',
-          service: 'NestShip API',
+          service: 'ShipFlow API',
         });
         expect(body.timestamp).toEqual(expect.any(String));
         expect(body.uptime).toEqual(expect.any(Number));
@@ -103,7 +103,7 @@ describe('AppController (e2e)', () => {
   it('rejects properties outside a DTO allowlist', () => {
     return request(app.getHttpServer())
       .post('/api/v1/validation-probe')
-      .send({ name: 'NestShip', unexpected: true })
+      .send({ name: 'ShipFlow', unexpected: true })
       .expect(400)
       .expect((response) => {
         const body = response.body as ApiErrorResponseDto;
@@ -122,7 +122,7 @@ describe('AppController (e2e)', () => {
   it('rejects JSON request bodies above the configured limit', () => {
     return request(app.getHttpServer())
       .post('/api/v1/validation-probe')
-      .send({ name: 'NestShip', padding: 'x'.repeat(1024 * 1024) })
+      .send({ name: 'ShipFlow', padding: 'x'.repeat(1024 * 1024) })
       .expect(413);
   });
 
@@ -192,7 +192,7 @@ describe('AppController (e2e)', () => {
         const body = response.body as OpenApiDocumentResponse;
 
         expect(body.info).toMatchObject({
-          title: 'NestShip API',
+          title: 'ShipFlow API',
           version: API_VERSION,
         });
         expect(body.paths).toHaveProperty('/api/v1/health/live');

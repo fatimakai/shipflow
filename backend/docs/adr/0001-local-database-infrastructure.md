@@ -5,7 +5,7 @@
 
 ## Context
 
-Shipflow uses separate backend and frontend repositories. The backend needs a
+ShipFlow uses separate backend and frontend repositories. The backend needs a
 repeatable local PostgreSQL service before Prisma and the initial database
 schema can be introduced. Redis does not yet have an approved product or
 operational responsibility.

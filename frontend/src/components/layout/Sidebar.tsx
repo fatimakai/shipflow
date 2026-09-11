@@ -65,7 +65,7 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
   const location = useLocation()
   const user = useAuthStore((state) => state.user)
   const organization = useActiveOrganization()
-  const displayName = user ? getUserDisplayName(user) : "NestShip user"
+  const displayName = user ? getUserDisplayName(user) : "ShipFlow user"
 
   const getLinkClass = (item: { name: string; path: string }) => {
     const isActive =
@@ -103,7 +103,7 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
                 <Hexagon className="h-4 w-4 text-primary-foreground fill-primary-foreground" />
               </div>
               <span className="font-heading font-bold text-lg text-foreground tracking-tight">
-                NestShip
+                ShipFlow
               </span>
             </div>
             <button

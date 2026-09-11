@@ -106,7 +106,7 @@ export const environmentValidationSchema = Joi.object({
 
   PORT: Joi.number().port().default(3000),
 
-  APP_NAME: Joi.string().trim().min(1).default('NestShip API'),
+  APP_NAME: Joi.string().trim().min(1).default('ShipFlow API'),
 
   LOG_LEVEL: Joi.string()
     .valid('debug', 'info', 'warn', 'error')
@@ -212,7 +212,7 @@ export const environmentValidationSchema = Joi.object({
 
   AUTH_REFRESH_COOKIE_NAME: Joi.string()
     .pattern(/^[A-Za-z0-9_-]+$/)
-    .default('nestship_refresh'),
+    .default('shipflow_refresh'),
 
   AUTH_COOKIE_SECURE: Joi.boolean().when('NODE_ENV', {
     is: 'production',
@@ -240,7 +240,7 @@ export const environmentValidationSchema = Joi.object({
     }),
   }),
 
-  EMAIL_FROM_NAME: Joi.string().trim().min(1).max(100).default('NestShip'),
+  EMAIL_FROM_NAME: Joi.string().trim().min(1).max(100).default('ShipFlow'),
   EMAIL_FROM_ADDRESS: Joi.string()
     .trim()
     .lowercase()

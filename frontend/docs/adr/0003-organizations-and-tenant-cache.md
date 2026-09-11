@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-Shipflow users can belong to multiple organizations. The frontend must select an
+ShipFlow users can belong to multiple organizations. The frontend must select an
 active organization, present only actions allowed by the backend capability
 contract, and prevent cached data from one organization appearing after a
 tenant switch or membership loss.

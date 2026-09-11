@@ -4,7 +4,7 @@ export class LivenessResponseDto {
   @ApiProperty({ example: 'ok' })
   status!: 'ok';
 
-  @ApiProperty({ example: 'NestShip API' })
+  @ApiProperty({ example: 'ShipFlow API' })
   service!: string;
 
   @ApiProperty({ example: '2026-08-07T08:00:00.000Z' })

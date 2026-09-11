@@ -79,7 +79,7 @@ export function NotificationSettings({ canManage }: { canManage: boolean }) {
       <div className="max-w-3xl">
         <h2 className="font-heading text-lg font-semibold">Preferences</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Choose which account updates appear in NestShip.
+          Choose which account updates appear in ShipFlow.
         </p>
 
         <div className="mt-6 divide-y divide-border border-y border-border">

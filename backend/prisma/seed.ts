@@ -19,45 +19,45 @@ async function main(): Promise<void> {
   }
 
   const owner = await prisma.user.upsert({
-    where: { email: 'owner@nestship.local' },
+    where: { email: 'owner@shipflow.local' },
     update: {
-      displayName: 'NestShip Owner',
+      displayName: 'ShipFlow Owner',
       status: UserStatus.ACTIVE,
       deletedAt: null,
     },
     create: {
-      email: 'owner@nestship.local',
-      displayName: 'NestShip Owner',
+      email: 'owner@shipflow.local',
+      displayName: 'ShipFlow Owner',
       status: UserStatus.ACTIVE,
       emailVerifiedAt: new Date(),
     },
   });
 
   const member = await prisma.user.upsert({
-    where: { email: 'member@nestship.local' },
+    where: { email: 'member@shipflow.local' },
     update: {
-      displayName: 'NestShip Member',
+      displayName: 'ShipFlow Member',
       status: UserStatus.ACTIVE,
       deletedAt: null,
     },
     create: {
-      email: 'member@nestship.local',
-      displayName: 'NestShip Member',
+      email: 'member@shipflow.local',
+      displayName: 'ShipFlow Member',
       status: UserStatus.ACTIVE,
       emailVerifiedAt: new Date(),
     },
   });
 
   const organization = await prisma.organization.upsert({
-    where: { slug: 'nestship-demo' },
+    where: { slug: 'shipflow-demo' },
     update: {
-      name: 'NestShip Demo',
+      name: 'ShipFlow Demo',
       ownerId: owner.id,
       deletedAt: null,
     },
     create: {
-      name: 'NestShip Demo',
-      slug: 'nestship-demo',
+      name: 'ShipFlow Demo',
+      slug: 'shipflow-demo',
       ownerId: owner.id,
     },
   });

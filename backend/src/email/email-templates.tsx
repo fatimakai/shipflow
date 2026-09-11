@@ -63,7 +63,7 @@ function EmailLayout({
           }}
         >
           <p style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 28px' }}>
-            NestShip
+            ShipFlow
           </p>
           {children}
           <hr
@@ -152,7 +152,7 @@ function templateFor(input: TemplateInput): {
 } {
   switch (input.category) {
     case EmailCategory.EMAIL_VERIFICATION: {
-      const subject = 'Verify your NestShip email';
+      const subject = 'Verify your ShipFlow email';
       return {
         subject,
         node: (
@@ -168,7 +168,7 @@ function templateFor(input: TemplateInput): {
       };
     }
     case EmailCategory.PASSWORD_RESET: {
-      const subject = 'Reset your NestShip password';
+      const subject = 'Reset your ShipFlow password';
       return {
         subject,
         node: (
@@ -185,7 +185,7 @@ function templateFor(input: TemplateInput): {
     }
     case EmailCategory.ORGANIZATION_INVITATION: {
       const organizationName = input.organizationName ?? 'an organization';
-      const subject = `Join ${organizationName} on NestShip`;
+      const subject = `Join ${organizationName} on ShipFlow`;
       return {
         subject,
         node: (
@@ -201,7 +201,7 @@ function templateFor(input: TemplateInput): {
       };
     }
     case EmailCategory.SECURITY_NOTICE: {
-      const subject = input.securityTitle ?? 'NestShip security notice';
+      const subject = input.securityTitle ?? 'ShipFlow security notice';
       return {
         subject,
         node: (

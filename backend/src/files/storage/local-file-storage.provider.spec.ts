@@ -10,7 +10,7 @@ describe('LocalFileStorageProvider', () => {
   let key: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), 'nestship-file-provider-'));
+    root = await mkdtemp(join(tmpdir(), 'shipflow-file-provider-'));
     provider = new LocalFileStorageProvider(root, 'test-signing-secret');
     key = `objects/${randomUUID()}/${randomUUID()}`;
   });

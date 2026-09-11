@@ -81,7 +81,7 @@ export class StripeBillingProvider implements BillingProvider {
       {
         email: input.ownerEmail,
         name: input.organizationName,
-        description: `NestShip organization ${input.organizationId}`,
+        description: `ShipFlow organization ${input.organizationId}`,
         metadata: { organizationId: input.organizationId },
       },
       { idempotencyKey },

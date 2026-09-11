@@ -414,7 +414,12 @@ export function Dashboard() {
             </CardDescription>
           </div>
           <CardAction>
-            <Button variant="ghost" size="sm" render={<Link to="/team" />}>
+            <Button
+              nativeButton={false}
+              variant="ghost"
+              size="sm"
+              render={<Link to="/team" />}
+            >
               View team
             </Button>
           </CardAction>

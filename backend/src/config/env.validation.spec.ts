@@ -5,7 +5,7 @@ import {
 
 describe('environmentValidationSchema', () => {
   const databaseUrl =
-    'postgresql://nestship:nestship_local_password@localhost:5432/nestship?schema=public';
+    'postgresql://shipflow:shipflow_local_password@localhost:5432/shipflow?schema=public';
   const jwtSecret = 'a-production-jwt-secret-that-is-at-least-32-characters';
   const productionEmail = {
     EMAIL_PROVIDER: 'resend',
@@ -29,14 +29,14 @@ describe('environmentValidationSchema', () => {
     FILE_STORAGE_PROVIDER: 's3',
     FILE_MALWARE_SCAN_ENABLED: true,
     AWS_REGION: 'us-east-1',
-    S3_BUCKET: 'nestship-production-files',
+    S3_BUCKET: 'shipflow-production-files',
   };
 
   it('coerces values and normalizes a comma-separated CORS allowlist', () => {
     const result = environmentValidationSchema.validate({
       NODE_ENV: 'development',
       PORT: '4000',
-      APP_NAME: 'NestShip API',
+      APP_NAME: 'ShipFlow API',
       CORS_ORIGINS: 'http://localhost:5173/, https://app.example.com',
       SWAGGER_ENABLED: 'true',
       DATABASE_URL: databaseUrl,
@@ -214,7 +214,7 @@ describe('environmentValidationSchema', () => {
         FILE_STORAGE_PROVIDER: 's3',
         FILE_MALWARE_SCAN_ENABLED: false,
         AWS_REGION: 'us-east-1',
-        S3_BUCKET: 'nestship-production-files',
+        S3_BUCKET: 'shipflow-production-files',
       },
       { abortEarly: false },
     );

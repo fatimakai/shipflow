@@ -14,12 +14,12 @@ export function getSafeNotificationPath(
 
   let url: URL
   try {
-    url = new URL(actionPath, "https://nestship.local")
+    url = new URL(actionPath, "https://shipflow.local")
   } catch {
     return null
   }
 
-  if (url.origin !== "https://nestship.local") return null
+  if (url.origin !== "https://shipflow.local") return null
   const path = LEGACY_PATHS[url.pathname] ?? url.pathname
 
   if (

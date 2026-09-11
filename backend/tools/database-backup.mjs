@@ -16,7 +16,7 @@ if (!['postgres:', 'postgresql:'].includes(url.protocol)) {
 }
 
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-const output = resolve(process.argv[2] ?? `backups/nestship-${timestamp}.dump`);
+const output = resolve(process.argv[2] ?? `backups/shipflow-${timestamp}.dump`);
 await mkdir(dirname(output), { recursive: true });
 
 const environment = postgresEnvironment(url);

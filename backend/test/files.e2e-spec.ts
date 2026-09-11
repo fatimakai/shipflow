@@ -105,7 +105,7 @@ describe('File storage backend (e2e)', () => {
   });
 
   it('enforces upload permissions, tenant isolation, and private file lifecycle', async () => {
-    const body = Buffer.from('%PDF-1.7\nNestShip private file test');
+    const body = Buffer.from('%PDF-1.7\nShipFlow private file test');
     const requestBody = {
       fileName: 'private-report.pdf',
       mimeType: 'application/pdf',

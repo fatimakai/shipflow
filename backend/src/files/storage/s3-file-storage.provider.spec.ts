@@ -20,7 +20,7 @@ describe('S3FileStorageProvider', () => {
   it('creates a constrained, encrypted presigned POST without network access', async () => {
     const provider = new S3FileStorageProvider({
       region: 'us-east-1',
-      bucket: 'nestship-test-files',
+      bucket: 'shipflow-test-files',
       forcePathStyle: false,
       malwareScanningEnabled: true,
     });
@@ -35,11 +35,11 @@ describe('S3FileStorageProvider', () => {
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });
 
-    expect(target.url).toContain('nestship-test-files');
+    expect(target.url).toContain('shipflow-test-files');
     expect(target.fields).toMatchObject({
       'Content-Type': 'application/pdf',
       'x-amz-server-side-encryption': 'AES256',
-      'x-amz-tagging': 'nestship-state=pending',
+      'x-amz-tagging': 'shipflow-state=pending',
     });
     expect(
       Object.keys(target.fields).some((key) => key.toLowerCase() === 'policy'),
