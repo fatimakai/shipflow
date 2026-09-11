@@ -75,6 +75,11 @@ export type TwoFactorCredential = Prisma.TwoFactorCredentialModel
  */
 export type TwoFactorBackupCode = Prisma.TwoFactorBackupCodeModel
 /**
+ * Model TwoFactorChallenge
+ * 
+ */
+export type TwoFactorChallenge = Prisma.TwoFactorChallengeModel
+/**
  * Model Organization
  * 
  */

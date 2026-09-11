@@ -18,9 +18,12 @@ import {
   UserStatus,
 } from '../generated/prisma/enums';
 import { writeNotification } from '../notifications/notification.writer';
+import type {
+  AuthenticationAttempt,
+  IssuedAuthentication,
+} from './authentication-result.types';
 import type { ClientContext, OAuthProfile } from './auth.types';
 import {
-  AuthResponseDto,
   AuthUserResponseDto,
   MessageResponseDto,
 } from './dto/auth-response.dto';
@@ -34,12 +37,7 @@ import {
 } from './dto/auth-request.dto';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
-
-interface IssuedAuthentication {
-  response: AuthResponseDto;
-  refreshToken: string;
-  refreshExpiresAt: Date;
-}
+import { TwoFactorService } from './two-factor/two-factor.service';
 
 interface UserForResponse {
   id: string;
@@ -55,6 +53,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
     private readonly tokenService: TokenService,
+    private readonly twoFactorService: TwoFactorService,
     private readonly configService: ConfigService<EnvironmentVariables, true>,
     @InjectTransactionalEmailDelivery()
     private readonly delivery: TransactionalEmailDelivery,
@@ -124,7 +123,7 @@ export class AuthService {
   async login(
     dto: LoginDto,
     context: ClientContext,
-  ): Promise<IssuedAuthentication> {
+  ): Promise<AuthenticationAttempt> {
     const email = this.normalizeEmail(dto.email);
     const user = await this.prisma.user.findUnique({
       where: { email },
@@ -150,35 +149,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const refreshToken = this.tokenService.createOpaqueToken();
-    const refreshExpiresAt = this.tokenService.getRefreshExpiration();
-    const now = new Date();
-
-    await this.prisma.$transaction([
-      this.prisma.user.update({
-        where: { id: user.id },
-        data: { lastLoginAt: now },
-      }),
-      this.prisma.session.create({
-        data: {
-          userId: user.id,
-          tokenHash: this.tokenService.hashOpaqueToken(refreshToken),
-          expiresAt: refreshExpiresAt,
-          ...this.sessionContext(context),
-        },
-      }),
-    ]);
-
-    return this.buildAuthentication(user, refreshToken, refreshExpiresAt);
+    return this.completeFirstFactor(user, context);
   }
 
   async authenticateOAuth(
     profile: OAuthProfile,
     context: ClientContext,
-  ): Promise<IssuedAuthentication> {
+  ): Promise<AuthenticationAttempt> {
     const email = this.normalizeEmail(profile.email);
-    const refreshToken = this.tokenService.createOpaqueToken();
-    const refreshExpiresAt = this.tokenService.getRefreshExpiration();
     const now = new Date();
 
     const user = await this.prisma.$transaction(async (transaction) => {
@@ -225,25 +203,15 @@ export class AuthService {
       authenticatedUser = await transaction.user.update({
         where: { id: authenticatedUser.id },
         data: {
-          lastLoginAt: now,
           avatarUrl: authenticatedUser.avatarUrl ?? profile.avatarUrl,
           displayName: authenticatedUser.displayName ?? profile.displayName,
           emailVerifiedAt: authenticatedUser.emailVerifiedAt ?? now,
         },
       });
-      await transaction.session.create({
-        data: {
-          userId: authenticatedUser.id,
-          tokenHash: this.tokenService.hashOpaqueToken(refreshToken),
-          expiresAt: refreshExpiresAt,
-          ...this.sessionContext(context),
-        },
-      });
-
       return authenticatedUser;
     });
 
-    return this.buildAuthentication(user, refreshToken, refreshExpiresAt);
+    return this.completeFirstFactor(user, context);
   }
 
   async refresh(
@@ -340,13 +308,16 @@ export class AuthService {
   }
 
   async logoutAll(userId: string): Promise<MessageResponseDto> {
-    await this.prisma.session.updateMany({
-      where: { userId, revokedAt: null },
-      data: {
-        revokedAt: new Date(),
-        revocationReason: SessionRevocationReason.LOGOUT_ALL,
-      },
-    });
+    await this.prisma.$transaction([
+      this.prisma.session.updateMany({
+        where: { userId, revokedAt: null },
+        data: {
+          revokedAt: new Date(),
+          revocationReason: SessionRevocationReason.LOGOUT_ALL,
+        },
+      }),
+      this.prisma.twoFactorChallenge.deleteMany({ where: { userId } }),
+    ]);
 
     return { message: 'Signed out from all sessions' };
   }
@@ -512,6 +483,9 @@ export class AuthService {
           revocationReason: SessionRevocationReason.LOGOUT_ALL,
         },
       });
+      await transaction.twoFactorChallenge.deleteMany({
+        where: { userId: token.userId },
+      });
       await writeNotification(transaction, {
         userId: token.userId,
         category: NotificationCategory.SECURITY,
@@ -534,6 +508,7 @@ export class AuthService {
     refreshExpiresAt: Date,
   ): Promise<IssuedAuthentication> {
     return {
+      kind: 'authenticated',
       response: {
         accessToken: await this.tokenService.signAccessToken(user),
         tokenType: 'Bearer',
@@ -543,6 +518,42 @@ export class AuthService {
       refreshToken,
       refreshExpiresAt,
     };
+  }
+
+  private async completeFirstFactor(
+    user: UserForResponse,
+    context: ClientContext,
+  ): Promise<AuthenticationAttempt> {
+    if (await this.twoFactorService.isEnabled(user.id)) {
+      return {
+        kind: 'two-factor',
+        response: await this.twoFactorService.createLoginChallenge(
+          user.id,
+          context,
+        ),
+      };
+    }
+
+    const refreshToken = this.tokenService.createOpaqueToken();
+    const refreshExpiresAt = this.tokenService.getRefreshExpiration();
+    const now = new Date();
+
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: now },
+      }),
+      this.prisma.session.create({
+        data: {
+          userId: user.id,
+          tokenHash: this.tokenService.hashOpaqueToken(refreshToken),
+          expiresAt: refreshExpiresAt,
+          ...this.sessionContext(context),
+        },
+      }),
+    ]);
+
+    return this.buildAuthentication(user, refreshToken, refreshExpiresAt);
   }
 
   private toUserResponse(user: UserForResponse): AuthUserResponseDto {

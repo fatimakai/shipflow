@@ -14,13 +14,15 @@ import { GitHubStrategy, GoogleStrategy } from './oauth.strategy';
 import { BackupCodeService } from './two-factor/backup-code.service';
 import { TotpService } from './two-factor/totp.service';
 import { TwoFactorCryptoService } from './two-factor/two-factor-crypto.service';
+import { TwoFactorService } from './two-factor/two-factor.service';
+import { TwoFactorController } from './two-factor.controller';
 
 @Module({
   imports: [
     JwtModule.register({}),
     PassportModule.register({ session: false }),
   ],
-  controllers: [AuthController, OAuthController],
+  controllers: [AuthController, OAuthController, TwoFactorController],
   providers: [
     AuthService,
     PasswordService,
@@ -35,6 +37,7 @@ import { TwoFactorCryptoService } from './two-factor/two-factor-crypto.service';
     TwoFactorCryptoService,
     TotpService,
     BackupCodeService,
+    TwoFactorService,
   ],
   exports: [
     AuthService,
@@ -43,6 +46,7 @@ import { TwoFactorCryptoService } from './two-factor/two-factor-crypto.service';
     TwoFactorCryptoService,
     TotpService,
     BackupCodeService,
+    TwoFactorService,
   ],
 })
 export class AuthModule {}

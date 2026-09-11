@@ -294,6 +294,23 @@ export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBigIntNullableFilter<$PrismaModel>
 }
 
+export type EnumTwoFactorChallengePurposeFilter<$PrismaModel = never> = {
+  equals?: $Enums.TwoFactorChallengePurpose | Prisma.EnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  in?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel> | $Enums.TwoFactorChallengePurpose
+}
+
+export type EnumTwoFactorChallengePurposeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TwoFactorChallengePurpose | Prisma.EnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  in?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTwoFactorChallengePurposeWithAggregatesFilter<$PrismaModel> | $Enums.TwoFactorChallengePurpose
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel>
+}
+
 export type EnumMembershipRoleFilter<$PrismaModel = never> = {
   equals?: $Enums.MembershipRole | Prisma.EnumMembershipRoleFieldRefInput<$PrismaModel>
   in?: $Enums.MembershipRole[] | Prisma.ListEnumMembershipRoleFieldRefInput<$PrismaModel>
@@ -860,6 +877,23 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel = never> = {
+  equals?: $Enums.TwoFactorChallengePurpose | Prisma.EnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  in?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel> | $Enums.TwoFactorChallengePurpose
+}
+
+export type NestedEnumTwoFactorChallengePurposeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TwoFactorChallengePurpose | Prisma.EnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  in?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TwoFactorChallengePurpose[] | Prisma.ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTwoFactorChallengePurposeWithAggregatesFilter<$PrismaModel> | $Enums.TwoFactorChallengePurpose
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTwoFactorChallengePurposeFilter<$PrismaModel>
 }
 
 export type NestedEnumMembershipRoleFilter<$PrismaModel = never> = {

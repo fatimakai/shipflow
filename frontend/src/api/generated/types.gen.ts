@@ -54,11 +54,6 @@ export type PortalSessionResponseDto = {
     url: string;
 };
 
-export type RegisterDto = {
-    email: string;
-    displayName?: string;
-};
-
 export type AuthUserResponseDto = {
     id: string;
     email: string;
@@ -75,6 +70,23 @@ export type AuthResponseDto = {
      */
     expiresIn: number;
     user: AuthUserResponseDto;
+};
+
+export type TwoFactorChallengeResponseDto = {
+    requiresTwoFactor: true;
+    /**
+     * Opaque token required to complete the challenge
+     */
+    challengeToken: string;
+    /**
+     * Challenge lifetime in seconds
+     */
+    expiresIn: number;
+};
+
+export type RegisterDto = {
+    email: string;
+    displayName?: string;
 };
 
 export type LoginDto = {
@@ -100,6 +112,54 @@ export type EmailDto = {
 export type ResetPasswordDto = {
     token: string;
     password: string;
+};
+
+export type TwoFactorStatusResponseDto = {
+    enabled: boolean;
+    setupPending: boolean;
+    backupCodesRemaining: number;
+};
+
+export type TwoFactorSetupResponseDto = {
+    /**
+     * Authenticator provisioning URI used to render a QR code
+     */
+    provisioningUri: string;
+    /**
+     * Base32 key for manual authenticator setup
+     */
+    manualEntryKey: string;
+};
+
+export type TotpCodeDto = {
+    code: string;
+};
+
+export type TwoFactorEnabledResponseDto = {
+    enabled: true;
+    /**
+     * Single-display recovery codes; store them securely
+     */
+    backupCodes: Array<string>;
+};
+
+export type TwoFactorStepUpDto = {
+    /**
+     * A six-digit authenticator code or a recovery code
+     */
+    code: string;
+    /**
+     * Required when the account has a local password
+     */
+    currentPassword?: string;
+};
+
+export type TwoFactorChallengeDto = {
+    /**
+     * A six-digit authenticator code or a recovery code
+     */
+    code: string;
+    challengeToken: string;
 };
 
 export type InitiateFileUploadDto = {
@@ -492,7 +552,7 @@ export type AuthControllerLoginV1Errors = {
 export type AuthControllerLoginV1Error = AuthControllerLoginV1Errors[keyof AuthControllerLoginV1Errors];
 
 export type AuthControllerLoginV1Responses = {
-    200: AuthResponseDto;
+    200: AuthResponseDto | TwoFactorChallengeResponseDto;
 };
 
 export type AuthControllerLoginV1Response = AuthControllerLoginV1Responses[keyof AuthControllerLoginV1Responses];
@@ -771,6 +831,144 @@ export type OAuthControllerCompleteGitHubV1Error = OAuthControllerCompleteGitHub
 export type OAuthControllerCompleteGitHubV1Responses = {
     200: unknown;
 };
+
+export type TwoFactorControllerGetStatusV1Data = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/2fa/status';
+};
+
+export type TwoFactorControllerGetStatusV1Errors = {
+    /**
+     * Unexpected server error
+     */
+    500: ApiErrorResponseDto;
+};
+
+export type TwoFactorControllerGetStatusV1Error = TwoFactorControllerGetStatusV1Errors[keyof TwoFactorControllerGetStatusV1Errors];
+
+export type TwoFactorControllerGetStatusV1Responses = {
+    200: TwoFactorStatusResponseDto;
+};
+
+export type TwoFactorControllerGetStatusV1Response = TwoFactorControllerGetStatusV1Responses[keyof TwoFactorControllerGetStatusV1Responses];
+
+export type TwoFactorControllerBeginSetupV1Data = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/2fa/setup';
+};
+
+export type TwoFactorControllerBeginSetupV1Errors = {
+    409: ApiErrorResponseDto;
+    /**
+     * Unexpected server error
+     */
+    500: ApiErrorResponseDto;
+};
+
+export type TwoFactorControllerBeginSetupV1Error = TwoFactorControllerBeginSetupV1Errors[keyof TwoFactorControllerBeginSetupV1Errors];
+
+export type TwoFactorControllerBeginSetupV1Responses = {
+    200: TwoFactorSetupResponseDto;
+};
+
+export type TwoFactorControllerBeginSetupV1Response = TwoFactorControllerBeginSetupV1Responses[keyof TwoFactorControllerBeginSetupV1Responses];
+
+export type TwoFactorControllerConfirmSetupV1Data = {
+    body: TotpCodeDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/2fa/setup/confirm';
+};
+
+export type TwoFactorControllerConfirmSetupV1Errors = {
+    401: ApiErrorResponseDto;
+    409: ApiErrorResponseDto;
+    /**
+     * Unexpected server error
+     */
+    500: ApiErrorResponseDto;
+};
+
+export type TwoFactorControllerConfirmSetupV1Error = TwoFactorControllerConfirmSetupV1Errors[keyof TwoFactorControllerConfirmSetupV1Errors];
+
+export type TwoFactorControllerConfirmSetupV1Responses = {
+    200: TwoFactorEnabledResponseDto;
+};
+
+export type TwoFactorControllerConfirmSetupV1Response = TwoFactorControllerConfirmSetupV1Responses[keyof TwoFactorControllerConfirmSetupV1Responses];
+
+export type TwoFactorControllerRegenerateBackupCodesV1Data = {
+    body: TwoFactorStepUpDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/2fa/backup-codes/regenerate';
+};
+
+export type TwoFactorControllerRegenerateBackupCodesV1Errors = {
+    401: ApiErrorResponseDto;
+    /**
+     * Unexpected server error
+     */
+    500: ApiErrorResponseDto;
+};
+
+export type TwoFactorControllerRegenerateBackupCodesV1Error = TwoFactorControllerRegenerateBackupCodesV1Errors[keyof TwoFactorControllerRegenerateBackupCodesV1Errors];
+
+export type TwoFactorControllerRegenerateBackupCodesV1Responses = {
+    200: TwoFactorEnabledResponseDto;
+};
+
+export type TwoFactorControllerRegenerateBackupCodesV1Response = TwoFactorControllerRegenerateBackupCodesV1Responses[keyof TwoFactorControllerRegenerateBackupCodesV1Responses];
+
+export type TwoFactorControllerDisableV1Data = {
+    body: TwoFactorStepUpDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/2fa';
+};
+
+export type TwoFactorControllerDisableV1Errors = {
+    401: ApiErrorResponseDto;
+    /**
+     * Unexpected server error
+     */
+    500: ApiErrorResponseDto;
+};
+
+export type TwoFactorControllerDisableV1Error = TwoFactorControllerDisableV1Errors[keyof TwoFactorControllerDisableV1Errors];
+
+export type TwoFactorControllerDisableV1Responses = {
+    200: MessageResponseDto;
+};
+
+export type TwoFactorControllerDisableV1Response = TwoFactorControllerDisableV1Responses[keyof TwoFactorControllerDisableV1Responses];
+
+export type TwoFactorControllerVerifyChallengeV1Data = {
+    body: TwoFactorChallengeDto;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/2fa/challenge/verify';
+};
+
+export type TwoFactorControllerVerifyChallengeV1Errors = {
+    401: ApiErrorResponseDto;
+    /**
+     * Unexpected server error
+     */
+    500: ApiErrorResponseDto;
+};
+
+export type TwoFactorControllerVerifyChallengeV1Error = TwoFactorControllerVerifyChallengeV1Errors[keyof TwoFactorControllerVerifyChallengeV1Errors];
+
+export type TwoFactorControllerVerifyChallengeV1Responses = {
+    200: AuthResponseDto;
+};
+
+export type TwoFactorControllerVerifyChallengeV1Response = TwoFactorControllerVerifyChallengeV1Responses[keyof TwoFactorControllerVerifyChallengeV1Responses];
 
 export type FilesControllerInitiateUploadV1Data = {
     body: InitiateFileUploadDto;

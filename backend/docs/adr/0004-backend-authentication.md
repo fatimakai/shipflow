@@ -51,7 +51,9 @@ while preserving clear replacement points for later phases.
 - Deployments should keep frontend and API on the same site while
   `SameSite=Lax` is the supported cookie policy.
 - OAuth callbacks set a refresh cookie and redirect to `/auth/callback`; the
-  frontend then calls the refresh endpoint to obtain an access token.
+  frontend then calls the refresh endpoint to obtain an access token. ADR 0013
+  supersedes this behavior for users with 2FA: those callbacks redirect with a
+  login challenge and do not create a session first.
 - OAuth-only users have no local password unless a later account-settings flow
   explicitly adds one.
 - Password-reset and verification delivery now uses the provider-neutral

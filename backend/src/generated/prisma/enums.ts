@@ -48,6 +48,13 @@ export const SessionRevocationReason = {
 export type SessionRevocationReason = (typeof SessionRevocationReason)[keyof typeof SessionRevocationReason]
 
 
+export const TwoFactorChallengePurpose = {
+  LOGIN: 'LOGIN'
+} as const
+
+export type TwoFactorChallengePurpose = (typeof TwoFactorChallengePurpose)[keyof typeof TwoFactorChallengePurpose]
+
+
 export const EmailCategory = {
   EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
   PASSWORD_RESET: 'PASSWORD_RESET',

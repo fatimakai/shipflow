@@ -68,6 +68,18 @@ export class OAuthController {
       this.getClientContext(request),
     );
 
+    if (authentication.kind === 'two-factor') {
+      const challengeUrl = new URL(
+        'auth/two-factor',
+        `${this.configService.getOrThrow<string>('FRONTEND_URL')}/`,
+      );
+      challengeUrl.hash = new URLSearchParams({
+        challenge: authentication.response.challengeToken,
+      }).toString();
+      response.redirect(challengeUrl.toString());
+      return;
+    }
+
     response.cookie(
       this.configService.getOrThrow<string>('AUTH_REFRESH_COOKIE_NAME'),
       authentication.refreshToken,

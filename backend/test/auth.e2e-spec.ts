@@ -297,6 +297,15 @@ describe('Authentication (e2e)', () => {
       {},
     );
 
+    expect(oauthAuthentication.kind).toBe('authenticated');
+    expect(repeatedOAuthAuthentication.kind).toBe('authenticated');
+    if (
+      oauthAuthentication.kind !== 'authenticated' ||
+      repeatedOAuthAuthentication.kind !== 'authenticated'
+    ) {
+      throw new Error('Expected OAuth authentication to complete');
+    }
+
     expect(oauthAuthentication.response.user).toMatchObject({
       email: oauthEmail,
       emailVerified: true,

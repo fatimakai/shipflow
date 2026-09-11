@@ -44,6 +44,12 @@ enum SessionRevocationReason {
   @@map("session_revocation_reason")
 }
 
+enum TwoFactorChallengePurpose {
+  LOGIN @map("login")
+
+  @@map("two_factor_challenge_purpose")
+}
+
 enum EmailCategory {
   EMAIL_VERIFICATION      @map("email_verification")
   PASSWORD_RESET          @map("password_reset")
@@ -172,6 +178,7 @@ model User {
   notificationPreference  NotificationPreference?
   uploadedFiles           StoredFile[]             @relation("FileUploader")
   twoFactorCredential     TwoFactorCredential?
+  twoFactorChallenges     TwoFactorChallenge[]
 
   @@index([status], map: "users_status_idx")
   @@index([deletedAt], map: "users_deleted_at_idx")
@@ -273,6 +280,23 @@ model TwoFactorBackupCode {
 
   @@index([credentialId, consumedAt], map: "two_factor_backup_codes_credential_consumed_idx")
   @@map("two_factor_backup_codes")
+}
+
+model TwoFactorChallenge {
+  id         String                    @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId     String                    @map("user_id") @db.Uuid
+  tokenHash  String                    @unique(map: "two_factor_challenges_token_hash_key") @map("token_hash") @db.VarChar(64)
+  purpose    TwoFactorChallengePurpose @default(LOGIN)
+  expiresAt  DateTime                  @map("expires_at") @db.Timestamptz(3)
+  consumedAt DateTime?                 @map("consumed_at") @db.Timestamptz(3)
+  ipAddress  String?                   @map("ip_address") @db.Inet
+  userAgent  String?                   @map("user_agent") @db.VarChar(512)
+  createdAt  DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  user       User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, consumedAt], map: "two_factor_challenges_user_consumed_idx")
+  @@index([expiresAt], map: "two_factor_challenges_expires_at_idx")
+  @@map("two_factor_challenges")
 }
 
 model Organization {

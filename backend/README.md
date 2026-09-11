@@ -157,25 +157,35 @@ organization. It does not create passwords or authentication secrets.
 
 Local authentication supports registration, login, current-user lookup,
 atomic refresh-token rotation, reuse detection, current/all-session logout,
-email verification, and password reset. Access tokens are returned in response
-bodies and refresh tokens are stored in `HttpOnly`, `SameSite=Lax` cookies.
-The security and lifecycle decisions are recorded in
-[ADR 0004](docs/adr/0004-backend-authentication.md).
+email verification, password reset, and authenticator-app two-factor
+authentication. When 2FA is enabled, password and OAuth first factors return a
+five-minute opaque challenge instead of creating a session. Access and refresh
+tokens are issued only after a valid TOTP or single-use recovery code. The
+security and lifecycle decisions are recorded in
+[ADR 0004](docs/adr/0004-backend-authentication.md),
+[ADR 0012](docs/adr/0012-two-factor-security-foundation.md), and
+[ADR 0013](docs/adr/0013-two-factor-lifecycle.md).
 
-| Endpoint                                       | Purpose                            |
-| ---------------------------------------------- | ---------------------------------- |
-| `POST /api/v1/auth/register`                   | Create an account and session      |
-| `POST /api/v1/auth/login`                      | Authenticate local credentials     |
-| `POST /api/v1/auth/refresh`                    | Rotate a refresh token             |
-| `POST /api/v1/auth/logout`                     | Revoke the current refresh session |
-| `POST /api/v1/auth/logout-all`                 | Revoke all refresh sessions        |
-| `GET /api/v1/auth/me`                          | Return the authenticated user      |
-| `POST /api/v1/auth/email-verification/request` | Issue a verification token         |
-| `POST /api/v1/auth/email-verification/confirm` | Consume a verification token       |
-| `POST /api/v1/auth/password/forgot`            | Issue a password-reset token       |
-| `POST /api/v1/auth/password/reset`             | Consume a password-reset token     |
-| `GET /api/v1/auth/oauth/google`                | Start configured Google OAuth      |
-| `GET /api/v1/auth/oauth/github`                | Start configured GitHub OAuth      |
+| Endpoint                                        | Purpose                              |
+| ----------------------------------------------- | ------------------------------------ |
+| `POST /api/v1/auth/register`                    | Create an account and session        |
+| `POST /api/v1/auth/login`                       | Authenticate local credentials       |
+| `POST /api/v1/auth/refresh`                     | Rotate a refresh token               |
+| `POST /api/v1/auth/logout`                      | Revoke the current refresh session   |
+| `POST /api/v1/auth/logout-all`                  | Revoke all refresh sessions          |
+| `GET /api/v1/auth/me`                           | Return the authenticated user        |
+| `POST /api/v1/auth/email-verification/request`  | Issue a verification token           |
+| `POST /api/v1/auth/email-verification/confirm`  | Consume a verification token         |
+| `POST /api/v1/auth/password/forgot`             | Issue a password-reset token         |
+| `POST /api/v1/auth/password/reset`              | Consume a password-reset token       |
+| `GET /api/v1/auth/oauth/google`                 | Start configured Google OAuth        |
+| `GET /api/v1/auth/oauth/github`                 | Start configured GitHub OAuth        |
+| `GET /api/v1/auth/2fa/status`                   | Return current 2FA status            |
+| `POST /api/v1/auth/2fa/setup`                   | Begin authenticator setup            |
+| `POST /api/v1/auth/2fa/setup/confirm`           | Enable 2FA and show recovery codes   |
+| `POST /api/v1/auth/2fa/challenge/verify`        | Complete a login challenge           |
+| `POST /api/v1/auth/2fa/backup-codes/regenerate` | Replace recovery codes after step-up |
+| `DELETE /api/v1/auth/2fa`                       | Disable 2FA after step-up            |
 
 Verification and reset messages use the shared transactional email interface.
 The local log adapter records safe acceptance metadata without writing raw

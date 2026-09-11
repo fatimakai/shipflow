@@ -16,10 +16,12 @@ import {
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiExtraModels,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { minutes, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
@@ -36,6 +38,7 @@ import {
   AuthResponseDto,
   AuthUserResponseDto,
   MessageResponseDto,
+  TwoFactorChallengeResponseDto,
 } from './dto/auth-response.dto';
 import {
   EmailDto,
@@ -48,6 +51,7 @@ import {
 
 @ApiTags('Authentication')
 @ApiStandardErrors()
+@ApiExtraModels(AuthResponseDto, TwoFactorChallengeResponseDto)
 @Controller({ path: 'auth', version: API_VERSION })
 export class AuthController {
   constructor(
@@ -85,17 +89,29 @@ export class AuthController {
   @UseGuards(CookieOriginGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(1) } })
   @ApiOperation({ summary: 'Authenticate with email and password' })
-  @ApiOkResponse({ type: AuthResponseDto })
+  @ApiOkResponse({
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(AuthResponseDto) },
+        { $ref: getSchemaPath(TwoFactorChallengeResponseDto) },
+      ],
+    },
+  })
   @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
   async login(
     @Body() dto: LoginDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<AuthResponseDto> {
+  ): Promise<AuthResponseDto | TwoFactorChallengeResponseDto> {
     const authentication = await this.authService.login(
       dto,
       this.getClientContext(request),
     );
+
+    if (authentication.kind === 'two-factor') {
+      return authentication.response;
+    }
+
     this.setRefreshCookie(
       response,
       authentication.refreshToken,

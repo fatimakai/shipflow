@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -92,4 +93,48 @@ export class ResetPasswordDto extends TokenDto {
   @MinLength(PASSWORD_MIN_LENGTH)
   @MaxLength(PASSWORD_MAX_LENGTH)
   password!: string;
+}
+
+export class TotpCodeDto {
+  @ApiProperty({ example: '123456', writeOnly: true })
+  @Transform(trim)
+  @IsString()
+  @Matches(/^\d{6}$/)
+  code!: string;
+}
+
+export class TwoFactorCodeDto {
+  @ApiProperty({
+    description: 'A six-digit authenticator code or a recovery code',
+    example: '2345-ABCD-EFGH-JKLM',
+    minLength: 6,
+    maxLength: 32,
+    writeOnly: true,
+  })
+  @Transform(trim)
+  @IsString()
+  @MinLength(6)
+  @MaxLength(32)
+  code!: string;
+}
+
+export class TwoFactorChallengeDto extends TwoFactorCodeDto {
+  @ApiProperty({ minLength: 32, maxLength: 256, writeOnly: true })
+  @IsString()
+  @MinLength(32)
+  @MaxLength(256)
+  challengeToken!: string;
+}
+
+export class TwoFactorStepUpDto extends TwoFactorCodeDto {
+  @ApiPropertyOptional({
+    description: 'Required when the account has a local password',
+    format: 'password',
+    maxLength: PASSWORD_MAX_LENGTH,
+    writeOnly: true,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(PASSWORD_MAX_LENGTH)
+  currentPassword?: string;
 }

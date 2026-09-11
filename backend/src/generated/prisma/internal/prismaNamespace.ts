@@ -404,6 +404,7 @@ export const ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   TwoFactorCredential: 'TwoFactorCredential',
   TwoFactorBackupCode: 'TwoFactorBackupCode',
+  TwoFactorChallenge: 'TwoFactorChallenge',
   Organization: 'Organization',
   Membership: 'Membership',
   Invitation: 'Invitation',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "oAuthAccount" | "session" | "emailVerificationToken" | "passwordResetToken" | "twoFactorCredential" | "twoFactorBackupCode" | "organization" | "membership" | "invitation" | "emailDelivery" | "emailWebhookEvent" | "plan" | "stripeCustomer" | "billingCheckoutSession" | "subscription" | "processedStripeEvent" | "notification" | "notificationPreference" | "storedFile"
+    modelProps: "user" | "oAuthAccount" | "session" | "emailVerificationToken" | "passwordResetToken" | "twoFactorCredential" | "twoFactorBackupCode" | "twoFactorChallenge" | "organization" | "membership" | "invitation" | "emailDelivery" | "emailWebhookEvent" | "plan" | "stripeCustomer" | "billingCheckoutSession" | "subscription" | "processedStripeEvent" | "notification" | "notificationPreference" | "storedFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -951,6 +952,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TwoFactorBackupCodeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TwoFactorBackupCodeCountAggregateOutputType> | number
+        }
+      }
+    }
+    TwoFactorChallenge: {
+      payload: Prisma.$TwoFactorChallengePayload<ExtArgs>
+      fields: Prisma.TwoFactorChallengeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TwoFactorChallengeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TwoFactorChallengeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>
+        }
+        findFirst: {
+          args: Prisma.TwoFactorChallengeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TwoFactorChallengeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>
+        }
+        findMany: {
+          args: Prisma.TwoFactorChallengeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>[]
+        }
+        create: {
+          args: Prisma.TwoFactorChallengeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>
+        }
+        createMany: {
+          args: Prisma.TwoFactorChallengeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TwoFactorChallengeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>[]
+        }
+        delete: {
+          args: Prisma.TwoFactorChallengeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>
+        }
+        update: {
+          args: Prisma.TwoFactorChallengeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>
+        }
+        deleteMany: {
+          args: Prisma.TwoFactorChallengeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TwoFactorChallengeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TwoFactorChallengeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>[]
+        }
+        upsert: {
+          args: Prisma.TwoFactorChallengeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TwoFactorChallengePayload>
+        }
+        aggregate: {
+          args: Prisma.TwoFactorChallengeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTwoFactorChallenge>
+        }
+        groupBy: {
+          args: Prisma.TwoFactorChallengeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorChallengeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TwoFactorChallengeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorChallengeCountAggregateOutputType> | number
         }
       }
     }
@@ -2055,6 +2130,21 @@ export const TwoFactorBackupCodeScalarFieldEnum = {
 export type TwoFactorBackupCodeScalarFieldEnum = (typeof TwoFactorBackupCodeScalarFieldEnum)[keyof typeof TwoFactorBackupCodeScalarFieldEnum]
 
 
+export const TwoFactorChallengeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  purpose: 'purpose',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type TwoFactorChallengeScalarFieldEnum = (typeof TwoFactorChallengeScalarFieldEnum)[keyof typeof TwoFactorChallengeScalarFieldEnum]
+
+
 export const OrganizationScalarFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
@@ -2418,6 +2508,20 @@ export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'TwoFactorChallengePurpose'
+ */
+export type EnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TwoFactorChallengePurpose'>
+    
+
+
+/**
+ * Reference to a field of type 'TwoFactorChallengePurpose[]'
+ */
+export type ListEnumTwoFactorChallengePurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TwoFactorChallengePurpose[]'>
+    
+
+
+/**
  * Reference to a field of type 'MembershipRole'
  */
 export type EnumMembershipRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipRole'>
@@ -2777,6 +2881,7 @@ export type GlobalOmitConfig = {
   passwordResetToken?: Prisma.PasswordResetTokenOmit
   twoFactorCredential?: Prisma.TwoFactorCredentialOmit
   twoFactorBackupCode?: Prisma.TwoFactorBackupCodeOmit
+  twoFactorChallenge?: Prisma.TwoFactorChallengeOmit
   organization?: Prisma.OrganizationOmit
   membership?: Prisma.MembershipOmit
   invitation?: Prisma.InvitationOmit
