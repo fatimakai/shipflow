@@ -42,5 +42,6 @@ OAuth `/auth/two-factor#challenge=...` redirect, removes fragment-carried
 tokens from the URL, and issues an application session only after successful
 second-factor verification.
 
-Audit events and the documented support-admin recovery operation depend on the
-dedicated audit and administration phases and are not introduced here.
+Two-factor audit events are implemented by ADR 0014. The documented
+support-admin recovery operation remains isolated to its dedicated
+administration phase.

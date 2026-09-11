@@ -383,6 +383,21 @@ during graceful shutdown.
 The accepted local infrastructure decisions are recorded in
 [ADR 0001](docs/adr/0001-local-database-infrastructure.md).
 
+## Application Audit Log
+
+Security-sensitive authentication, 2FA, organization, membership, billing, and
+file operations produce structured PostgreSQL audit records. Records contain
+bounded request context and stable entity identifiers, never request/response
+bodies, passwords, tokens, TOTP secrets, recovery codes, cookies, or provider
+signatures. Authentication and authorization failures are included even when a
+request is rejected by a guard before reaching its controller.
+
+Audit rows are backend-only, append-only, and retained for 365 days. A database
+trigger normalizes the expiry deadline and rejects updates and premature
+deletes; an idempotent startup and daily maintenance pass removes only expired
+records. The schema, failure behavior, privacy boundary, and event coverage are recorded in
+[ADR 0014](docs/adr/0014-application-audit-log.md).
+
 ## Production Baseline
 
 The provider-independent Phase 14 baseline emits redacted newline-delimited JSON

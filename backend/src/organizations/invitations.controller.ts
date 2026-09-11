@@ -17,6 +17,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
 import { AccessTokenGuard } from '../auth/access-token.guard';
 import type { AuthenticatedUser } from '../auth/auth.types';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -39,6 +41,11 @@ export class InvitationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post('accept')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_INVITATION_ACCEPTED,
+    organization: { source: 'response', key: 'organizationId' },
+    target: { type: 'membership', source: 'response', key: 'id' },
+  })
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Accept an email-bound organization invitation' })
   @ApiOkResponse({ type: MembershipResponseDto })

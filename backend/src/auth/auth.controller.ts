@@ -25,6 +25,8 @@ import {
 } from '@nestjs/swagger';
 import { minutes, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
 import { API_PREFIX, API_VERSION } from '../common/http/api.constants';
 import { ApiStandardErrors } from '../common/http/decorators/api-standard-errors.decorator';
 import { ApiErrorResponseDto } from '../common/http/dto/api-error-response.dto';
@@ -60,6 +62,11 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @Audit({
+    eventType: AuditEvent.AUTH_REGISTERED,
+    actor: 'response-user',
+    target: { type: 'user', source: 'response', key: 'user.id' },
+  })
   @UseGuards(CookieOriginGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(1) } })
   @ApiOperation({
@@ -85,6 +92,11 @@ export class AuthController {
   }
 
   @Post('login')
+  @Audit({
+    eventType: AuditEvent.AUTH_LOGIN,
+    actor: 'response-user',
+    target: { type: 'user', source: 'response', key: 'user.id' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(CookieOriginGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(1) } })
@@ -152,6 +164,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @Audit({ eventType: AuditEvent.AUTH_LOGOUT, actor: 'anonymous' })
   @HttpCode(HttpStatus.OK)
   @UseGuards(CookieOriginGuard)
   @ApiOperation({ summary: 'Revoke the current refresh session' })
@@ -168,6 +181,10 @@ export class AuthController {
   }
 
   @Post('logout-all')
+  @Audit({
+    eventType: AuditEvent.AUTH_LOGOUT_ALL,
+    target: { type: 'user', source: 'request-user' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth('access-token')
@@ -195,6 +212,10 @@ export class AuthController {
   }
 
   @Patch('me')
+  @Audit({
+    eventType: AuditEvent.AUTH_PROFILE_UPDATED,
+    target: { type: 'user', source: 'request-user' },
+  })
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Update the current authenticated user profile' })
@@ -208,6 +229,10 @@ export class AuthController {
   }
 
   @Post('email-verification/request')
+  @Audit({
+    eventType: AuditEvent.AUTH_EMAIL_VERIFICATION_REQUESTED,
+    target: { type: 'user', source: 'request-user' },
+  })
   @HttpCode(HttpStatus.ACCEPTED)
   @UseGuards(AccessTokenGuard)
   @Throttle({ default: { limit: 3, ttl: minutes(15) } })
@@ -221,6 +246,10 @@ export class AuthController {
   }
 
   @Post('email-verification/confirm')
+  @Audit({
+    eventType: AuditEvent.AUTH_EMAIL_VERIFICATION_COMPLETED,
+    actor: 'anonymous',
+  })
   @HttpCode(HttpStatus.OK)
   @Throttle({ default: { limit: 10, ttl: minutes(15) } })
   @ApiOperation({ summary: 'Verify an email using a single-use token' })
@@ -230,6 +259,10 @@ export class AuthController {
   }
 
   @Post('password/forgot')
+  @Audit({
+    eventType: AuditEvent.AUTH_PASSWORD_RESET_REQUESTED,
+    actor: 'anonymous',
+  })
   @HttpCode(HttpStatus.ACCEPTED)
   @Throttle({ default: { limit: 3, ttl: minutes(15) } })
   @ApiOperation({
@@ -241,6 +274,10 @@ export class AuthController {
   }
 
   @Post('password/reset')
+  @Audit({
+    eventType: AuditEvent.AUTH_PASSWORD_RESET_COMPLETED,
+    actor: 'anonymous',
+  })
   @HttpCode(HttpStatus.OK)
   @Throttle({ default: { limit: 10, ttl: minutes(15) } })
   @ApiOperation({ summary: 'Reset a password using a single-use token' })

@@ -10,6 +10,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
 import { AccessTokenGuard } from '../auth/access-token.guard';
 import {
   CurrentOrganizationContext,
@@ -67,6 +69,11 @@ export class OrganizationBillingController {
   }
 
   @Post('checkout-session')
+  @Audit({
+    eventType: AuditEvent.BILLING_CHECKOUT_CREATED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'organization', source: 'param', key: 'organizationId' },
+  })
   @RequireOrganizationCapabilities(Capability.BILLING_MANAGE)
   @ApiOperation({ summary: 'Create a hosted Stripe Checkout session' })
   @ApiCreatedResponse({ type: CheckoutSessionResponseDto })
@@ -79,6 +86,11 @@ export class OrganizationBillingController {
   }
 
   @Post('portal-session')
+  @Audit({
+    eventType: AuditEvent.BILLING_PORTAL_CREATED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'organization', source: 'param', key: 'organizationId' },
+  })
   @RequireOrganizationCapabilities(Capability.BILLING_MANAGE)
   @ApiOperation({ summary: 'Create a hosted Stripe Customer Portal session' })
   @ApiCreatedResponse({ type: PortalSessionResponseDto })

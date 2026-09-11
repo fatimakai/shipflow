@@ -88,6 +88,23 @@ off-site retention, and recovery objectives remain deployment decisions.
 - A backup restores successfully into an isolated recovery database.
 - Tenant, authentication, webhook, billing, and file regressions pass.
 
+## Temporary Security Overrides
+
+The workspace pins the following patched transitive versions until their
+direct parents adopt them. Remove an override only after updating the parent,
+regenerating Prisma, and rerunning the full verification matrix.
+
+| Package        | Pinned version | Current parent path                           |
+| -------------- | -------------- | --------------------------------------------- |
+| `deepmerge-ts` | `8.0.1`        | Prisma configuration loader                   |
+| `fast-uri`     | `3.1.6`        | AJV validation dependencies                   |
+| `multer`       | `2.3.0`        | Nest platform Express adapter                 |
+| `mysql2`       | `3.23.1`       | Prisma CLI tooling; ShipFlow itself uses `pg` |
+| `qs`           | `6.16.0`       | Express and body-parser query/form parsing    |
+
+These are dependency-hygiene controls, not substitutes for bounded request
+bodies, endpoint throttling, private file storage, or application validation.
+
 ## Remaining Provider Decisions
 
 Before commercial production, select error monitoring and alert delivery,

@@ -154,6 +154,30 @@ enum FileStorageProvider {
   @@map("file_storage_provider")
 }
 
+enum AuditActorType {
+  ANONYMOUS     @map("anonymous")
+  USER          @map("user")
+  SYSTEM        @map("system")
+  SUPPORT_ADMIN @map("support_admin")
+
+  @@map("audit_actor_type")
+}
+
+enum AuditOutcome {
+  SUCCESS @map("success")
+  FAILURE @map("failure")
+
+  @@map("audit_outcome")
+}
+
+enum AuditSeverity {
+  INFO     @map("info")
+  WARNING  @map("warning")
+  CRITICAL @map("critical")
+
+  @@map("audit_severity")
+}
+
 model User {
   id                      String                   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   email                   String                   @unique(map: "users_email_key") @db.VarChar(320)
@@ -551,4 +575,29 @@ model StoredFile {
   @@index([status, purgeAfter], map: "stored_files_status_purge_after_idx")
   @@index([auditExpiresAt], map: "stored_files_audit_expires_at_idx")
   @@map("stored_files")
+}
+
+model AuditLog {
+  id             String         @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  eventType      String         @map("event_type") @db.VarChar(100)
+  actorType      AuditActorType @map("actor_type")
+  actorUserId    String?        @map("actor_user_id") @db.Uuid
+  organizationId String?        @map("organization_id") @db.Uuid
+  targetType     String?        @map("target_type") @db.VarChar(64)
+  targetId       String?        @map("target_id") @db.VarChar(255)
+  outcome        AuditOutcome
+  severity       AuditSeverity
+  reasonCode     String?        @map("reason_code") @db.VarChar(100)
+  requestId      String?        @map("request_id") @db.VarChar(128)
+  ipAddress      String?        @map("ip_address") @db.Inet
+  userAgent      String?        @map("user_agent") @db.VarChar(512)
+  metadata       Json           @default("{}") @db.JsonB
+  occurredAt     DateTime       @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  expiresAt      DateTime       @map("expires_at") @db.Timestamptz(3)
+
+  @@index([expiresAt], map: "audit_logs_expires_at_idx")
+  @@index([actorUserId, occurredAt], map: "audit_logs_actor_occurred_at_idx")
+  @@index([organizationId, occurredAt], map: "audit_logs_organization_occurred_at_idx")
+  @@index([eventType, occurredAt], map: "audit_logs_event_type_occurred_at_idx")
+  @@map("audit_logs")
 }

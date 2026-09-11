@@ -23,6 +23,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
+import { AuditSeverity } from '../generated/prisma/enums';
 import { AccessTokenGuard } from '../auth/access-token.guard';
 import type { AuthenticatedUser } from '../auth/auth.types';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -67,6 +70,11 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_CREATED,
+    organization: { source: 'response', key: 'id' },
+    target: { type: 'organization', source: 'response', key: 'id' },
+  })
   @ApiOperation({ summary: 'Create an organization and Owner membership' })
   @ApiCreatedResponse({ type: OrganizationResponseDto })
   @ApiConflictResponse({ type: ApiErrorResponseDto })
@@ -98,6 +106,11 @@ export class OrganizationsController {
   }
 
   @Patch(':organizationId')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_UPDATED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'organization', source: 'param', key: 'organizationId' },
+  })
   @RequireOrganizationCapabilities(Capability.ORGANIZATION_UPDATE)
   @ApiOperation({ summary: 'Update an organization name' })
   @ApiOkResponse({ type: OrganizationResponseDto })
@@ -109,6 +122,12 @@ export class OrganizationsController {
   }
 
   @Delete(':organizationId')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_DELETED,
+    severity: AuditSeverity.CRITICAL,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'organization', source: 'param', key: 'organizationId' },
+  })
   @RequireOrganizationCapabilities(Capability.ORGANIZATION_DELETE)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Soft-delete an organization' })
@@ -120,6 +139,11 @@ export class OrganizationsController {
   }
 
   @Post(':organizationId/invitations')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_INVITATION_CREATED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'invitation', source: 'response', key: 'id' },
+  })
   @RequireOrganizationCapabilities(Capability.INVITATION_CREATE)
   @ApiOperation({ summary: 'Invite a user to an organization' })
   @ApiCreatedResponse({ type: InvitationResponseDto })
@@ -144,6 +168,11 @@ export class OrganizationsController {
   }
 
   @Post(':organizationId/invitations/:invitationId/resend')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_INVITATION_RESENT,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'invitation', source: 'param', key: 'invitationId' },
+  })
   @RequireOrganizationCapabilities(Capability.INVITATION_RESEND)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Rotate and resend an organization invitation' })
@@ -161,6 +190,11 @@ export class OrganizationsController {
   }
 
   @Delete(':organizationId/invitations/:invitationId')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_INVITATION_REVOKED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'invitation', source: 'param', key: 'invitationId' },
+  })
   @RequireOrganizationCapabilities(Capability.INVITATION_REVOKE)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Revoke a pending organization invitation' })
@@ -184,6 +218,12 @@ export class OrganizationsController {
   }
 
   @Patch(':organizationId/members/:membershipId')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_MEMBER_ROLE_CHANGED,
+    severity: AuditSeverity.WARNING,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'membership', source: 'param', key: 'membershipId' },
+  })
   @RequireOrganizationCapabilities(Capability.MEMBERSHIP_CHANGE_ROLE)
   @ApiOperation({ summary: 'Update an organization member role' })
   @ApiOkResponse({ type: MembershipResponseDto })
@@ -200,6 +240,12 @@ export class OrganizationsController {
   }
 
   @Delete(':organizationId/members/:membershipId')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_MEMBER_REMOVED,
+    severity: AuditSeverity.WARNING,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'membership', source: 'param', key: 'membershipId' },
+  })
   @RequireOrganizationCapabilities(Capability.MEMBERSHIP_REMOVE)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Remove a member from an organization' })
@@ -212,6 +258,11 @@ export class OrganizationsController {
   }
 
   @Post(':organizationId/leave')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_MEMBER_LEFT,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'user', source: 'request-user' },
+  })
   @RequireOrganizationCapabilities(Capability.ORGANIZATION_LEAVE)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Leave an organization' })
@@ -223,6 +274,12 @@ export class OrganizationsController {
   }
 
   @Post(':organizationId/ownership-transfer')
+  @Audit({
+    eventType: AuditEvent.ORGANIZATION_OWNERSHIP_TRANSFERRED,
+    severity: AuditSeverity.CRITICAL,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'organization', source: 'param', key: 'organizationId' },
+  })
   @RequireOrganizationCapabilities(Capability.OWNERSHIP_TRANSFER)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Transfer organization ownership to a member' })

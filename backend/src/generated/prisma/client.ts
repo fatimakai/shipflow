@@ -144,3 +144,8 @@ export type NotificationPreference = Prisma.NotificationPreferenceModel
  * 
  */
 export type StoredFile = Prisma.StoredFileModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

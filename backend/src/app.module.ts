@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
 import { BillingModule } from './billing/billing.module';
 import {
@@ -38,6 +39,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
       ],
     }),
     DatabaseModule,
+    AuditModule,
     BillingModule,
     EmailModule,
     FilesModule,

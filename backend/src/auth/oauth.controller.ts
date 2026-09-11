@@ -6,6 +6,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
 import { API_PREFIX, API_VERSION } from '../common/http/api.constants';
 import { ApiStandardErrors } from '../common/http/decorators/api-standard-errors.decorator';
 import { ApiErrorResponseDto } from '../common/http/dto/api-error-response.dto';
@@ -34,6 +36,7 @@ export class OAuthController {
   startGoogle(): void {}
 
   @Get('google/callback')
+  @Audit({ eventType: AuditEvent.AUTH_OAUTH_LOGIN, actor: 'anonymous' })
   @UseGuards(GoogleOAuthGuard)
   @ApiOperation({ summary: 'Complete Google OAuth authentication' })
   completeGoogle(
@@ -50,6 +53,7 @@ export class OAuthController {
   startGitHub(): void {}
 
   @Get('github/callback')
+  @Audit({ eventType: AuditEvent.AUTH_OAUTH_LOGIN, actor: 'anonymous' })
   @UseGuards(GitHubOAuthGuard)
   @ApiOperation({ summary: 'Complete GitHub OAuth authentication' })
   completeGitHub(

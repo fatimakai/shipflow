@@ -20,6 +20,9 @@ import {
 } from '@nestjs/swagger';
 import { minutes, Throttle } from '@nestjs/throttler';
 import type { Response } from 'express';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
+import { AuditSeverity } from '../generated/prisma/enums';
 import { API_PREFIX, API_VERSION } from '../common/http/api.constants';
 import { ApiStandardErrors } from '../common/http/decorators/api-standard-errors.decorator';
 import { ApiErrorResponseDto } from '../common/http/dto/api-error-response.dto';
@@ -63,6 +66,10 @@ export class TwoFactorController {
   }
 
   @Post('setup')
+  @Audit({
+    eventType: AuditEvent.TWO_FACTOR_SETUP_STARTED,
+    target: { type: 'user', source: 'request-user' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(15) } })
@@ -77,6 +84,11 @@ export class TwoFactorController {
   }
 
   @Post('setup/confirm')
+  @Audit({
+    eventType: AuditEvent.TWO_FACTOR_ENABLED,
+    severity: AuditSeverity.WARNING,
+    target: { type: 'user', source: 'request-user' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(5) } })
@@ -96,6 +108,11 @@ export class TwoFactorController {
   }
 
   @Post('backup-codes/regenerate')
+  @Audit({
+    eventType: AuditEvent.TWO_FACTOR_BACKUP_CODES_REGENERATED,
+    severity: AuditSeverity.WARNING,
+    target: { type: 'user', source: 'request-user' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(15) } })
@@ -111,6 +128,11 @@ export class TwoFactorController {
   }
 
   @Delete()
+  @Audit({
+    eventType: AuditEvent.TWO_FACTOR_DISABLED,
+    severity: AuditSeverity.CRITICAL,
+    target: { type: 'user', source: 'request-user' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard, CookieOriginGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(15) } })
@@ -129,6 +151,11 @@ export class TwoFactorController {
   }
 
   @Post('challenge/verify')
+  @Audit({
+    eventType: AuditEvent.TWO_FACTOR_CHALLENGE_VERIFIED,
+    actor: 'response-user',
+    target: { type: 'user', source: 'response', key: 'user.id' },
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(CookieOriginGuard)
   @Throttle({ default: { limit: 5, ttl: minutes(1) } })

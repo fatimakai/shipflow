@@ -167,3 +167,30 @@ export const FileStorageProvider = {
 } as const
 
 export type FileStorageProvider = (typeof FileStorageProvider)[keyof typeof FileStorageProvider]
+
+
+export const AuditActorType = {
+  ANONYMOUS: 'ANONYMOUS',
+  USER: 'USER',
+  SYSTEM: 'SYSTEM',
+  SUPPORT_ADMIN: 'SUPPORT_ADMIN'
+} as const
+
+export type AuditActorType = (typeof AuditActorType)[keyof typeof AuditActorType]
+
+
+export const AuditOutcome = {
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE'
+} as const
+
+export type AuditOutcome = (typeof AuditOutcome)[keyof typeof AuditOutcome]
+
+
+export const AuditSeverity = {
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type AuditSeverity = (typeof AuditSeverity)[keyof typeof AuditSeverity]

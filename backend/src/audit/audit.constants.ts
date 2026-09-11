@@ -1,0 +1,44 @@
+export const AUDIT_RETENTION_DAYS = 365;
+export const AUDIT_RETENTION_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+export const AuditEvent = {
+  AUTH_EMAIL_VERIFICATION_COMPLETED: 'auth.email_verification.completed',
+  AUTH_EMAIL_VERIFICATION_REQUESTED: 'auth.email_verification.requested',
+  AUTH_LOGIN: 'auth.login',
+  AUTH_LOGOUT: 'auth.logout',
+  AUTH_LOGOUT_ALL: 'auth.logout_all',
+  AUTH_OAUTH_LOGIN: 'auth.oauth_login',
+  AUTH_PASSWORD_RESET_COMPLETED: 'auth.password_reset.completed',
+  AUTH_PASSWORD_RESET_REQUESTED: 'auth.password_reset.requested',
+  AUTH_PROFILE_UPDATED: 'auth.profile.updated',
+  AUTH_REGISTERED: 'auth.registered',
+  AUTH_ACCESS_TOKEN_REJECTED: 'auth.access_token.rejected',
+  AUTHORIZATION_ORGANIZATION_ACCESS_DENIED:
+    'authorization.organization_access.denied',
+  BILLING_CHECKOUT_CREATED: 'billing.checkout.created',
+  BILLING_PORTAL_CREATED: 'billing.portal.created',
+  BILLING_WEBHOOK_PROCESSED: 'billing.webhook.processed',
+  FILE_DOWNLOAD_AUTHORIZED: 'file.download.authorized',
+  FILE_RESTORED: 'file.restored',
+  FILE_SOFT_DELETED: 'file.soft_deleted',
+  FILE_UPLOAD_COMPLETED: 'file.upload.completed',
+  FILE_UPLOAD_INITIATED: 'file.upload.initiated',
+  ORGANIZATION_CREATED: 'organization.created',
+  ORGANIZATION_DELETED: 'organization.deleted',
+  ORGANIZATION_INVITATION_ACCEPTED: 'organization.invitation.accepted',
+  ORGANIZATION_INVITATION_CREATED: 'organization.invitation.created',
+  ORGANIZATION_INVITATION_RESENT: 'organization.invitation.resent',
+  ORGANIZATION_INVITATION_REVOKED: 'organization.invitation.revoked',
+  ORGANIZATION_MEMBER_LEFT: 'organization.member.left',
+  ORGANIZATION_MEMBER_REMOVED: 'organization.member.removed',
+  ORGANIZATION_MEMBER_ROLE_CHANGED: 'organization.member_role.changed',
+  ORGANIZATION_OWNERSHIP_TRANSFERRED: 'organization.ownership.transferred',
+  ORGANIZATION_UPDATED: 'organization.updated',
+  TWO_FACTOR_BACKUP_CODES_REGENERATED: 'two_factor.backup_codes.regenerated',
+  TWO_FACTOR_CHALLENGE_VERIFIED: 'two_factor.challenge.verified',
+  TWO_FACTOR_DISABLED: 'two_factor.disabled',
+  TWO_FACTOR_ENABLED: 'two_factor.enabled',
+  TWO_FACTOR_SETUP_STARTED: 'two_factor.setup.started',
+} as const;
+
+export type AuditEventType = (typeof AuditEvent)[keyof typeof AuditEvent];

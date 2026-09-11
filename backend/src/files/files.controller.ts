@@ -18,6 +18,9 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
+import { AuditSeverity } from '../generated/prisma/enums';
 import { AccessTokenGuard } from '../auth/access-token.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthenticatedUser } from '../auth/auth.types';
@@ -54,6 +57,11 @@ export class FilesController {
   constructor(private readonly files: FilesService) {}
 
   @Post('uploads')
+  @Audit({
+    eventType: AuditEvent.FILE_UPLOAD_INITIATED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'file', source: 'response', key: 'file.id' },
+  })
   @RequireOrganizationCapabilities(Capability.FILE_UPLOAD)
   @ApiOperation({
     summary: 'Reserve storage and create a signed upload target',
@@ -68,6 +76,11 @@ export class FilesController {
   }
 
   @Post(':fileId/complete')
+  @Audit({
+    eventType: AuditEvent.FILE_UPLOAD_COMPLETED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'file', source: 'param', key: 'fileId' },
+  })
   @HttpCode(HttpStatus.OK)
   @RequireOrganizationCapabilities(Capability.FILE_UPLOAD)
   @ApiOperation({ summary: 'Validate an uploaded object and start its scan' })
@@ -112,6 +125,11 @@ export class FilesController {
   }
 
   @Get(':fileId/download-url')
+  @Audit({
+    eventType: AuditEvent.FILE_DOWNLOAD_AUTHORIZED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'file', source: 'param', key: 'fileId' },
+  })
   @RequireOrganizationCapabilities(Capability.FILE_READ)
   @ApiOperation({ summary: 'Create a short-lived private download URL' })
   @ApiOkResponse({ type: FileDownloadTargetResponseDto })
@@ -123,6 +141,12 @@ export class FilesController {
   }
 
   @Delete(':fileId')
+  @Audit({
+    eventType: AuditEvent.FILE_SOFT_DELETED,
+    severity: AuditSeverity.WARNING,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'file', source: 'param', key: 'fileId' },
+  })
   @RequireOrganizationCapabilities(Capability.FILE_DELETE)
   @ApiOperation({ summary: 'Soft-delete an organization file' })
   @ApiOkResponse({ type: FileResponseDto })
@@ -134,6 +158,11 @@ export class FilesController {
   }
 
   @Post(':fileId/restore')
+  @Audit({
+    eventType: AuditEvent.FILE_RESTORED,
+    organization: { source: 'param', key: 'organizationId' },
+    target: { type: 'file', source: 'param', key: 'fileId' },
+  })
   @HttpCode(HttpStatus.OK)
   @RequireOrganizationCapabilities(Capability.FILE_DELETE)
   @ApiOperation({ summary: 'Restore a file during its recovery period' })

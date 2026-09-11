@@ -71,7 +71,8 @@ export const ModelName = {
   ProcessedStripeEvent: 'ProcessedStripeEvent',
   Notification: 'Notification',
   NotificationPreference: 'NotificationPreference',
-  StoredFile: 'StoredFile'
+  StoredFile: 'StoredFile',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -421,6 +422,28 @@ export const StoredFileScalarFieldEnum = {
 } as const
 
 export type StoredFileScalarFieldEnum = (typeof StoredFileScalarFieldEnum)[keyof typeof StoredFileScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  actorType: 'actorType',
+  actorUserId: 'actorUserId',
+  organizationId: 'organizationId',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  outcome: 'outcome',
+  severity: 'severity',
+  reasonCode: 'reasonCode',
+  requestId: 'requestId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  metadata: 'metadata',
+  occurredAt: 'occurredAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {

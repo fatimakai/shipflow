@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import type { Request } from 'express';
+import { Audit } from '../audit/audit-event.decorator';
+import { AuditEvent } from '../audit/audit.constants';
 import { API_VERSION } from '../common/http/api.constants';
 import { StripeWebhookService } from './stripe-webhook.service';
 
@@ -18,6 +20,10 @@ export class StripeWebhookController {
   constructor(private readonly webhookService: StripeWebhookService) {}
 
   @Post()
+  @Audit({
+    eventType: AuditEvent.BILLING_WEBHOOK_PROCESSED,
+    actor: 'system',
+  })
   @HttpCode(204)
   async receive(
     @Req() request: RawBodyRequest<Request>,
