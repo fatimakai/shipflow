@@ -64,9 +64,13 @@ describe('AppController (e2e)', () => {
       .get('/api/v1')
       .expect(200)
       .expect('cache-control', 'no-store')
+      .expect(
+        'permissions-policy',
+        'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
+      )
       .expect('referrer-policy', 'no-referrer')
       .expect('x-content-type-options', 'nosniff')
-      .expect('x-frame-options', 'SAMEORIGIN')
+      .expect('x-frame-options', 'DENY')
       .expect((response) => {
         expect(response.headers).not.toHaveProperty('x-powered-by');
       });
@@ -182,6 +186,31 @@ describe('AppController (e2e)', () => {
         password: 'Valid-password-123',
       })
       .expect(403);
+  });
+
+  it('blocks cross-site Fetch Metadata on cookie endpoints', () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/auth/login')
+      .set('origin', 'http://localhost:5173')
+      .set('sec-fetch-site', 'cross-site')
+      .send({
+        email: 'fetch-metadata@example.test',
+        password: 'Valid-password-123',
+      })
+      .expect(403)
+      .expect('vary', /Origin/)
+      .expect('vary', /Sec-Fetch-Site/);
+  });
+
+  it('uses the Referer origin when Origin is unavailable', () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/auth/login')
+      .set('referer', 'http://localhost:5173/login?source=test')
+      .send({
+        email: 'referer-fallback@example.test',
+        password: 'Valid-password-123',
+      })
+      .expect(401);
   });
 
   it('publishes the OpenAPI document', () => {

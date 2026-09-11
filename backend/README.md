@@ -6,6 +6,7 @@ React frontend. This repository contains the backend REST API.
 ## Project Roadmaps
 
 - [Unified project roadmap](docs/roadmaps/project-roadmap.md)
+- [Security architecture and OWASP hardening](docs/security.md)
 
 The unified roadmap preserves the original phase numbers while showing backend
 and frontend ownership, dependencies, implementation steps, and completion

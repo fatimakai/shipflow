@@ -36,8 +36,10 @@ Accepted on 2026-08-10 as the first portion of Phase 14.
 
 - Refresh and OAuth cookies are HttpOnly, `SameSite=Lax`, and required to be
   Secure in production.
-- Browser endpoints that create or rotate refresh cookies enforce the configured
-  Origin allowlist. OAuth callbacks additionally require one-time state.
+- Browser endpoints that create, rotate, consume, or clear refresh cookies
+  enforce the configured Origin allowlist with Referer fallback and Fetch
+  Metadata checks. Rejections are audited. OAuth callbacks additionally require
+  one-time state.
 - Access tokens accept only HS256 and are validated against active users.
 - Stripe and Resend callbacks require provider signatures over raw request bytes.
 - Organization controllers enforce membership and named capabilities before

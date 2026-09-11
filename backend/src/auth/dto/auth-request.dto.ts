@@ -49,10 +49,12 @@ export class LoginDto {
 
   @ApiProperty({
     format: 'password',
+    minLength: 1,
     maxLength: PASSWORD_MAX_LENGTH,
     writeOnly: true,
   })
   @IsString()
+  @MinLength(1)
   @MaxLength(PASSWORD_MAX_LENGTH)
   password!: string;
 }
@@ -130,11 +132,13 @@ export class TwoFactorStepUpDto extends TwoFactorCodeDto {
   @ApiPropertyOptional({
     description: 'Required when the account has a local password',
     format: 'password',
+    minLength: 1,
     maxLength: PASSWORD_MAX_LENGTH,
     writeOnly: true,
   })
   @IsOptional()
   @IsString()
+  @MinLength(1)
   @MaxLength(PASSWORD_MAX_LENGTH)
   currentPassword?: string;
 }

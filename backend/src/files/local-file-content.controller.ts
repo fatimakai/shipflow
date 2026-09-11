@@ -34,7 +34,14 @@ export class LocalFileContentController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(
     FileInterceptor('file', {
-      limits: { fileSize: FILE_MAX_SIZE_BYTES, files: 1 },
+      limits: {
+        fieldNameSize: 100,
+        fieldSize: 1024,
+        fields: 1,
+        fileSize: FILE_MAX_SIZE_BYTES,
+        files: 1,
+        parts: 2,
+      },
     }),
   )
   @ApiConsumes('multipart/form-data')

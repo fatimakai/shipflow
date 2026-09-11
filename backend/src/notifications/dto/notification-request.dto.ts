@@ -8,6 +8,7 @@ import {
   Max,
   MaxLength,
   Min,
+  MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -26,9 +27,14 @@ export class NotificationListQueryDto {
   @Max(100)
   limit = 20;
 
-  @ApiPropertyOptional({ description: 'Opaque pagination cursor' })
+  @ApiPropertyOptional({
+    description: 'Opaque pagination cursor',
+    minLength: 1,
+    maxLength: 500,
+  })
   @IsOptional()
   @IsString()
+  @MinLength(1)
   @MaxLength(500)
   cursor?: string;
 

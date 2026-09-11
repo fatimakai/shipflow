@@ -13,6 +13,7 @@ export const AuditEvent = {
   AUTH_PROFILE_UPDATED: 'auth.profile.updated',
   AUTH_REGISTERED: 'auth.registered',
   AUTH_ACCESS_TOKEN_REJECTED: 'auth.access_token.rejected',
+  SECURITY_COOKIE_REQUEST_REJECTED: 'security.cookie_request.rejected',
   AUTHORIZATION_ORGANIZATION_ACCESS_DENIED:
     'authorization.organization_access.denied',
   BILLING_CHECKOUT_CREATED: 'billing.checkout.created',

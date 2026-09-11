@@ -13,6 +13,10 @@ import { API_PREFIX, API_VERSION } from './common/http/api.constants';
 import { requestIdMiddleware } from './common/http/request-id.middleware';
 import { RequestLoggingInterceptor } from './common/http/request-logging.interceptor';
 import { RequestTimeoutInterceptor } from './common/http/request-timeout.interceptor';
+import {
+  createHelmetOptions,
+  PERMISSIONS_POLICY,
+} from './common/http/security-headers';
 import { EnvironmentVariables } from './config/env.validation';
 import { setupSwagger } from './swagger/swagger.setup';
 
@@ -34,23 +38,16 @@ export function configureApplication(
     'trust proxy',
     configService.getOrThrow<number>('HTTP_TRUST_PROXY_HOPS'),
   );
-  app.use(
-    helmet({
-      contentSecurityPolicy: isProduction ? undefined : false,
-      hsts: isProduction
-        ? { maxAge: 31536000, includeSubDomains: true, preload: false }
-        : false,
-      referrerPolicy: { policy: 'no-referrer' },
-    }),
-  );
+  app.use(helmet(createHelmetOptions(isProduction)));
   app.use(requestIdMiddleware);
   expressApp.useBodyParser('json', { limit: bodyLimit });
   expressApp.useBodyParser('urlencoded', {
-    extended: true,
+    extended: false,
     limit: bodyLimit,
   });
   app.use((_request: Request, response: Response, next: NextFunction): void => {
     response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Permissions-Policy', PERMISSIONS_POLICY);
     next();
   });
 

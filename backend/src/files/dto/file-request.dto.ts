@@ -8,6 +8,7 @@ import {
   Max,
   MaxLength,
   Min,
+  MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { FileStatus } from '../../generated/prisma/enums';
@@ -29,9 +30,14 @@ const visibleFileStatuses = [
 ] as const;
 
 export class InitiateFileUploadDto {
-  @ApiProperty({ example: 'quarterly-report.pdf', maxLength: 255 })
+  @ApiProperty({
+    example: 'quarterly-report.pdf',
+    minLength: 1,
+    maxLength: 255,
+  })
   @Transform(trim)
   @IsString()
+  @MinLength(1)
   @MaxLength(255)
   fileName!: string;
 
