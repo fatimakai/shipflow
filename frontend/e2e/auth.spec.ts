@@ -95,6 +95,137 @@ test("signs in and signs out", async ({ page }) => {
   await expect(page).toHaveURL(/\/login$/)
 })
 
+test("completes a password sign-in two-factor challenge", async ({ page }) => {
+  await page.route("**/api/v1/auth/login", (route) =>
+    route.fulfill({
+      body: JSON.stringify({
+        challengeToken: "browser-password-challenge-token",
+        expiresIn: 300,
+        requiresTwoFactor: true,
+      }),
+      contentType: "application/json",
+      status: 200,
+    })
+  )
+  await page.route("**/api/v1/auth/2fa/challenge/verify", async (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      challengeToken: "browser-password-challenge-token",
+      code: "123456",
+    })
+    await route.fulfill({
+      body: JSON.stringify(authentication),
+      contentType: "application/json",
+      status: 200,
+    })
+  })
+
+  await page.goto("/login")
+  await page.getByLabel("Email address").fill("browser@example.com")
+  await page
+    .getByLabel("Password", { exact: true })
+    .fill("correct horse battery staple")
+  await page.getByRole("button", { name: "Sign in" }).click()
+
+  await expect(page).toHaveURL(/\/auth\/two-factor$/)
+  await page.getByLabel("Authenticator or recovery code").fill("123456")
+  await page.getByRole("button", { name: "Verify and continue" }).click()
+
+  await expect(page).toHaveURL(/\/dashboard$/)
+  await expect(page.getByText("API connected")).toBeVisible()
+})
+
+test("consumes an OAuth two-factor challenge from the URL fragment", async ({
+  page,
+}) => {
+  await page.route("**/api/v1/auth/2fa/challenge/verify", async (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      challengeToken: "browser-oauth-challenge-token",
+      code: "RECOVERY-1",
+    })
+    await route.fulfill({
+      body: JSON.stringify(authentication),
+      contentType: "application/json",
+      status: 200,
+    })
+  })
+
+  await page.goto("/auth/two-factor#challenge=browser-oauth-challenge-token")
+  await expect(page).toHaveURL(/\/auth\/two-factor$/)
+  await page.getByLabel("Authenticator or recovery code").fill("RECOVERY-1")
+  await page.getByRole("button", { name: "Verify and continue" }).click()
+
+  await expect(page).toHaveURL(/\/dashboard$/)
+})
+
+test("sets up an authenticator and reveals recovery codes once", async ({
+  page,
+}) => {
+  const recoveryCodes = Array.from(
+    { length: 10 },
+    (_, index) => `BROWSER-${String(index + 1).padStart(2, "0")}`
+  )
+  await page.route("**/api/v1/auth/login", (route) =>
+    route.fulfill({
+      body: JSON.stringify(authentication),
+      contentType: "application/json",
+      status: 200,
+    })
+  )
+  await page.route("**/api/v1/auth/2fa/status", (route) =>
+    route.fulfill({
+      body: JSON.stringify({
+        backupCodesRemaining: 0,
+        enabled: false,
+        setupPending: false,
+      }),
+      contentType: "application/json",
+      status: 200,
+    })
+  )
+  await page.route("**/api/v1/auth/2fa/setup", (route) =>
+    route.fulfill({
+      body: JSON.stringify({
+        manualEntryKey: "JBSWY3DPEHPK3PXP",
+        provisioningUri:
+          "otpauth://totp/ShipFlow:browser@example.com?secret=JBSWY3DPEHPK3PXP&issuer=ShipFlow",
+      }),
+      contentType: "application/json",
+      status: 200,
+    })
+  )
+  await page.route("**/api/v1/auth/2fa/setup/confirm", async (route) => {
+    expect(route.request().postDataJSON()).toEqual({ code: "123456" })
+    await route.fulfill({
+      body: JSON.stringify({ backupCodes: recoveryCodes, enabled: true }),
+      contentType: "application/json",
+      status: 200,
+    })
+  })
+
+  await page.goto("/login")
+  await page.getByLabel("Email address").fill("browser@example.com")
+  await page
+    .getByLabel("Password", { exact: true })
+    .fill("correct horse battery staple")
+  await page.getByRole("button", { name: "Sign in" }).click()
+  await expect(page).toHaveURL(/\/dashboard$/)
+  await page.getByRole("button", { name: "Open account menu" }).click()
+  await page.getByText("Security", { exact: true }).click()
+  await expect(page).toHaveURL(/\/settings\/security$/)
+
+  await page.getByRole("button", { name: "Enable 2FA" }).click()
+  await expect(
+    page.getByAltText("QR code for adding ShipFlow to an authenticator app")
+  ).toBeVisible()
+  await expect(page.getByText("JBSWY3DPEHPK3PXP")).toBeVisible()
+  await page.getByLabel("Six-digit code").fill("123456")
+  await page.getByRole("button", { name: "Verify and enable" }).click()
+
+  await expect(page.getByText("Save these recovery codes now")).toBeVisible()
+  await expect(page.getByText("BROWSER-01")).toBeVisible()
+  await expect(page.getByText("BROWSER-10")).toBeVisible()
+})
+
 test("creates an account", async ({ page }) => {
   await page.unroute("**/api/v1/organizations?**")
   await page.route("**/api/v1/organizations?**", (route) =>

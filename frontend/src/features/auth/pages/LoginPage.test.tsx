@@ -3,13 +3,29 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { http, HttpResponse } from "msw"
 import { afterEach, describe, expect, it } from "vitest"
-import { MemoryRouter, Route, Routes } from "react-router-dom"
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom"
 
 import { createQueryClient } from "@/api/query-client"
 import { useAuthStore } from "@/stores/auth.store"
 import { server } from "@/test/mocks/server"
 
 import { LoginPage } from "./LoginPage"
+
+function ChallengeDestination() {
+  const location = useLocation()
+  const state = location.state as {
+    challengeToken?: string
+    from?: { pathname?: string; search?: string }
+  } | null
+
+  return (
+    <div>
+      <span>Two-factor challenge</span>
+      <span>{state?.challengeToken}</span>
+      <span>{`${state?.from?.pathname ?? ""}${state?.from?.search ?? ""}`}</span>
+    </div>
+  )
+}
 
 afterEach(() => useAuthStore.getState().clearSession())
 
@@ -31,6 +47,7 @@ function renderLogin(
             path="/invitations/accept"
             element={<div>Invitation return route</div>}
           />
+          <Route path="/auth/two-factor" element={<ChallengeDestination />} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>
@@ -97,6 +114,46 @@ describe("LoginPage", () => {
         "Too many attempts. Please wait a few minutes and try again."
       )
     ).toBeInTheDocument()
+  })
+
+  it("routes a second-factor response without creating a session", async () => {
+    server.use(
+      http.post("http://localhost:3000/api/v1/auth/login", () =>
+        HttpResponse.json({
+          challengeToken: "challenge-token-that-is-long-enough-for-validation",
+          expiresIn: 300,
+          requiresTwoFactor: true,
+        })
+      )
+    )
+    const user = userEvent.setup()
+    renderLogin([
+      {
+        pathname: "/login",
+        state: {
+          from: {
+            pathname: "/invitations/accept",
+            search: "?token=invitation-token",
+          },
+        },
+      },
+    ])
+
+    await user.type(screen.getByLabelText("Email address"), "user@example.com")
+    await user.type(
+      screen.getByLabelText("Password"),
+      "correct horse battery staple"
+    )
+    await user.click(screen.getByRole("button", { name: "Sign in" }))
+
+    expect(await screen.findByText("Two-factor challenge")).toBeVisible()
+    expect(
+      screen.getByText("challenge-token-that-is-long-enough-for-validation")
+    ).toBeVisible()
+    expect(
+      screen.getByText("/invitations/accept?token=invitation-token")
+    ).toBeVisible()
+    expect(useAuthStore.getState().accessToken).toBeNull()
   })
 
   it("preserves the invitation query string after authentication", async () => {

@@ -57,6 +57,11 @@ const OAuthCallbackPage = lazy(() =>
     default: module.OAuthCallbackPage,
   }))
 )
+const TwoFactorChallengePage = lazy(() =>
+  import("./features/auth/pages/TwoFactorChallengePage").then((module) => ({
+    default: module.TwoFactorChallengePage,
+  }))
+)
 const RegisterPage = lazy(() =>
   import("./features/auth/pages/RegisterPage").then((module) => ({
     default: module.RegisterPage,
@@ -91,6 +96,7 @@ export function AppRoutes() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/auth/callback" element={<OAuthCallbackPage />} />
+        <Route path="/auth/two-factor" element={<TwoFactorChallengePage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route

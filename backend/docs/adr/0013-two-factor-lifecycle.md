@@ -37,9 +37,10 @@ No application session exists between first- and second-factor verification.
 Possession of a challenge alone grants no account access, and replaying a
 consumed challenge, TOTP time step, or recovery code fails.
 
-The frontend must recognize the challenge response from password login and the
-OAuth `/auth/two-factor#challenge=...` redirect. Screens and client-side flow
-integration are intentionally handled in the next frontend phase.
+The frontend recognizes the challenge response from password login and the
+OAuth `/auth/two-factor#challenge=...` redirect, removes fragment-carried
+tokens from the URL, and issues an application session only after successful
+second-factor verification.
 
 Audit events and the documented support-admin recovery operation depend on the
 dedicated audit and administration phases and are not introduced here.

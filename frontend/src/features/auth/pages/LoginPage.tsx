@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { authApi } from "../auth-api"
+import { authApi, isTwoFactorChallenge } from "../auth-api"
 import { getAuthErrorMessage } from "../auth-errors"
 import { loginSchema, type LoginValues } from "../auth-schemas"
 import { applyAuthentication } from "../auth-session"
@@ -33,6 +33,16 @@ export function LoginPage() {
   const login = useMutation({
     mutationFn: authApi.login,
     onSuccess: (authentication) => {
+      if (isTwoFactorChallenge(authentication)) {
+        navigate("/auth/two-factor", {
+          state: {
+            challengeToken: authentication.challengeToken,
+            from: state?.from,
+          },
+        })
+        return
+      }
+
       applyAuthentication(authentication)
       const returnPath = state?.from?.pathname
         ? `${state.from.pathname}${state.from.search ?? ""}${state.from.hash ?? ""}`

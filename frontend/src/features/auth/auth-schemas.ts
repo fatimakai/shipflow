@@ -44,7 +44,16 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   })
 
+export const twoFactorCodeSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(6, "Enter your authenticator or recovery code")
+    .max(32, "The code is too long"),
+})
+
 export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>
 export type LoginValues = z.infer<typeof loginSchema>
 export type RegisterValues = z.infer<typeof registerSchema>
 export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>
+export type TwoFactorCodeValues = z.infer<typeof twoFactorCodeSchema>

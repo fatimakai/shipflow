@@ -67,7 +67,14 @@ without a running backend.
 Access tokens must not be written to local storage, session storage, cookies,
 URLs, or logs. Refresh tokens remain in backend-managed HttpOnly cookies.
 
+Password and OAuth sign-ins with two-factor authentication enabled are routed
+through the same five-minute verification screen. Authenticator setup and
+recovery-code management live in Profile > Security; QR codes are generated
+locally in the browser and recovery codes are displayed only from the response
+that creates them.
+
 See [ADR 0001](docs/adr/0001-frontend-foundation.md) for the foundation and
-[ADR 0002](docs/adr/0002-frontend-authentication.md) for authentication. The
-authoritative product plan is
+[ADR 0002](docs/adr/0002-frontend-authentication.md) for authentication, and
+[ADR 0004](docs/adr/0004-two-factor-experience.md) for the two-factor client
+flow. The authoritative product plan is
 `shipflow-backend/docs/roadmaps/project-roadmap.md`.
