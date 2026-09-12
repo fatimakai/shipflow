@@ -13,7 +13,8 @@ export function createFileStorageProvider(
       bucket: config.getOrThrow('S3_BUCKET'),
       endpoint: config.get('S3_ENDPOINT'),
       forcePathStyle: config.getOrThrow('S3_FORCE_PATH_STYLE'),
-      malwareScanningEnabled: config.getOrThrow('FILE_MALWARE_SCAN_ENABLED'),
+      accessKeyId: config.getOrThrow('AWS_ACCESS_KEY_ID'),
+      secretAccessKey: config.getOrThrow('AWS_SECRET_ACCESS_KEY'),
     });
   }
 

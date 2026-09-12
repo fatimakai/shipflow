@@ -16,10 +16,11 @@ export interface CreateUploadTargetInput {
 }
 
 export interface FileUploadTarget {
-  method: 'POST';
+  method: 'POST' | 'PUT';
   url: string;
   fields: Record<string, string>;
-  fileField: 'file';
+  headers: Record<string, string>;
+  fileField?: 'file';
   expiresAt: Date;
 }
 
@@ -40,12 +41,8 @@ export interface StoredObjectReference {
   lastModified: Date | null;
 }
 
-export type ProviderMalwareResult =
-  'pending' | 'clean' | 'infected' | 'unsupported' | 'failed';
-
 export interface ObjectStorageProvider {
   readonly provider: FileStorageProvider;
-  readonly malwareScanningEnabled: boolean;
   createUploadTarget(input: CreateUploadTargetInput): Promise<FileUploadTarget>;
   verifyLocalSignature(
     action: 'upload' | 'download',
@@ -64,7 +61,6 @@ export interface ObjectStorageProvider {
   deleteObject(key: string): Promise<void>;
   objectExists(key: string): Promise<boolean>;
   listObjects(prefix: string): Promise<StoredObjectReference[]>;
-  getMalwareResult(key: string): Promise<ProviderMalwareResult>;
   setLifecycleState(
     key: string,
     state: 'pending' | 'scanning' | 'ready' | 'deleted' | 'rejected',

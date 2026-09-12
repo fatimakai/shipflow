@@ -26,6 +26,10 @@ import {
   FILE_UPLOAD_URL_TTL_SECONDS,
 } from './file.constants';
 import { FileValidationService } from './file-validation.service';
+import {
+  InjectMalwareScanner,
+  type MalwareScanner,
+} from './malware/malware-scanner.types';
 import type {
   FileListQueryDto,
   InitiateFileUploadDto,
@@ -61,6 +65,7 @@ export class FilesService {
     private readonly entitlements: BillingEntitlementService,
     private readonly validation: FileValidationService,
     @InjectFileStorage() private readonly storage: ObjectStorageProvider,
+    @InjectMalwareScanner() private readonly malwareScanner: MalwareScanner,
   ) {}
 
   async initiateUpload(
@@ -144,7 +149,7 @@ export class FilesService {
           declaredMimeType: declaration.mimeType,
           sizeBytes: dto.sizeBytes,
           checksumSha256: dto.checksumSha256,
-          malwareStatus: this.storage.malwareScanningEnabled
+          malwareStatus: this.malwareScanner.enabled
             ? FileMalwareStatus.PENDING
             : FileMalwareStatus.NOT_REQUIRED,
           reservationExpiresAt,
@@ -243,7 +248,7 @@ export class FilesService {
     }
 
     const uploadedAt = new Date();
-    const ready = !this.storage.malwareScanningEnabled;
+    const ready = !this.malwareScanner.enabled;
     const updated = await this.prisma.storedFile.update({
       where: { id: file.id },
       data: {

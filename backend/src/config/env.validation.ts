@@ -106,6 +106,11 @@ export interface EnvironmentVariables {
   FILE_STORAGE_PROVIDER: 'local' | 's3';
   FILE_LOCAL_ROOT: string;
   FILE_MALWARE_SCAN_ENABLED: boolean;
+  CLAMAV_HOST?: string;
+  CLAMAV_PORT: number;
+  CLAMAV_TIMEOUT_MS: number;
+  AWS_ACCESS_KEY_ID?: string;
+  AWS_SECRET_ACCESS_KEY?: string;
   AWS_REGION?: string;
   S3_BUCKET?: string;
   S3_ENDPOINT?: string;
@@ -390,11 +395,42 @@ export const environmentValidationSchema = Joi.object({
     }),
     otherwise: Joi.boolean().valid(false).default(false),
   }),
+  CLAMAV_HOST: Joi.string()
+    .trim()
+    .hostname()
+    .empty('')
+    .when('FILE_MALWARE_SCAN_ENABLED', {
+      is: true,
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
+  CLAMAV_PORT: Joi.number().port().default(3310),
+  CLAMAV_TIMEOUT_MS: Joi.number()
+    .integer()
+    .min(1000)
+    .max(120000)
+    .default(30000),
   AWS_REGION: Joi.string().trim().empty('').when('FILE_STORAGE_PROVIDER', {
     is: 's3',
     then: Joi.required(),
     otherwise: Joi.optional(),
   }),
+  AWS_ACCESS_KEY_ID: Joi.string()
+    .trim()
+    .empty('')
+    .when('FILE_STORAGE_PROVIDER', {
+      is: 's3',
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
+  AWS_SECRET_ACCESS_KEY: Joi.string()
+    .trim()
+    .empty('')
+    .when('FILE_STORAGE_PROVIDER', {
+      is: 's3',
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
   S3_BUCKET: Joi.string()
     .trim()
     .empty('')
@@ -407,7 +443,17 @@ export const environmentValidationSchema = Joi.object({
   S3_ENDPOINT: Joi.string()
     .uri({ scheme: ['http', 'https'] })
     .empty('')
-    .optional(),
+    .when('FILE_STORAGE_PROVIDER', {
+      is: 's3',
+      then: Joi.when('NODE_ENV', {
+        is: 'production',
+        then: Joi.string()
+          .uri({ scheme: ['https'] })
+          .required(),
+        otherwise: Joi.required(),
+      }),
+      otherwise: Joi.optional(),
+    }),
   S3_FORCE_PATH_STYLE: Joi.boolean().default(false),
 
   GOOGLE_CLIENT_ID: Joi.string().trim().empty('').optional(),

@@ -171,6 +171,7 @@ describe("Files", () => {
             upload: {
               expiresAt: activeTransferExpiry(),
               fields: { token: "signed-field" },
+              headers: {},
               fileField: "file",
               method: "POST",
               url: "https://storage.example/upload",

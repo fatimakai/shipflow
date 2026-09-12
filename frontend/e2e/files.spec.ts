@@ -135,6 +135,7 @@ test("uploads, downloads, and deletes a workspace file on mobile", async ({
           upload: {
             expiresAt: "2027-08-13T00:00:00.000Z",
             fields: { token: "signed-upload" },
+            headers: {},
             fileField: "file",
             method: "POST",
             url: "/api/v1/file-content/upload-file?token=signed-upload",

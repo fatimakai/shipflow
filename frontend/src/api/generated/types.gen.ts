@@ -190,12 +190,15 @@ export type FileResponseDto = {
 };
 
 export type FileUploadTargetResponseDto = {
-    method: 'POST';
+    method: 'POST' | 'PUT';
     url: string;
     fields: {
         [key: string]: string;
     };
-    fileField: 'file';
+    headers: {
+        [key: string]: string;
+    };
+    fileField?: 'file';
     expiresAt: string;
 };
 
@@ -232,6 +235,7 @@ export type FileDownloadTargetResponseDto = {
 export type ReadinessChecksDto = {
     configuration: string;
     database: string;
+    malwareScanner: string;
 };
 
 export type ReadinessResponseDto = {

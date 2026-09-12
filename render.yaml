@@ -1,0 +1,166 @@
+services:
+  - type: pserv
+    name: shipflow-clamav
+    runtime: image
+    region: singapore
+    plan: 1c-2g
+    image:
+      url: docker.io/clamav/clamav:1.5.4-debian13-slim
+
+  - type: web
+    name: shipflow-api
+    runtime: docker
+    region: singapore
+    plan: 0.5c-512mb
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health/ready
+    preDeployCommand: ./node_modules/.bin/prisma migrate deploy
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: APP_NAME
+        value: ShipFlow API
+      - key: LOG_LEVEL
+        value: info
+      - key: SWAGGER_ENABLED
+        value: "false"
+      - key: HTTP_TRUST_PROXY_HOPS
+        value: 1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: shipflow-postgres
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: TWO_FACTOR_ENCRYPTION_KEY
+        generateValue: true
+      - key: TWO_FACTOR_ENCRYPTION_KEY_VERSION
+        value: 1
+      - key: AUTH_COOKIE_SECURE
+        value: "true"
+      - key: FRONTEND_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: EMAIL_PROVIDER
+        value: resend
+      - key: EMAIL_FROM_NAME
+        value: ShipFlow
+      - key: EMAIL_FROM_ADDRESS
+        sync: false
+      - key: EMAIL_REPLY_TO
+        sync: false
+      - key: EMAIL_SUPPORT_ADDRESS
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
+      - key: BILLING_PROVIDER
+        value: stripe
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRO_PRODUCT_ID
+        sync: false
+      - key: STRIPE_PRO_MONTHLY_PRICE_ID
+        sync: false
+      - key: STRIPE_PRO_ANNUAL_PRICE_ID
+        sync: false
+      - key: STRIPE_AUTOMATIC_TAX_ENABLED
+        value: "true"
+      - key: FILE_STORAGE_PROVIDER
+        value: s3
+      - key: FILE_MALWARE_SCAN_ENABLED
+        value: "true"
+      - key: CLAMAV_HOST
+        fromService:
+          type: pserv
+          name: shipflow-clamav
+          property: host
+      - key: CLAMAV_PORT
+        value: 3310
+      - key: CLAMAV_TIMEOUT_MS
+        value: 30000
+      - key: AWS_REGION
+        value: auto
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_FORCE_PATH_STYLE
+        value: "false"
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CALLBACK_URL
+        sync: false
+
+  - type: web
+    name: shipflow-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+      - key: VITE_APP_URL
+        sync: false
+      - key: VITE_GOOGLE_OAUTH_ENABLED
+        value: "true"
+      - key: VITE_GITHUB_OAUTH_ENABLED
+        value: "true"
+    headers:
+      - path: /*
+        name: Content-Security-Policy
+        value: >-
+          default-src 'self'; base-uri 'self'; connect-src 'self' https:;
+          font-src 'self' data:; form-action 'self'; frame-ancestors 'none';
+          img-src 'self' data: https:; object-src 'none'; script-src 'self';
+          style-src 'self' 'unsafe-inline'; upgrade-insecure-requests
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), geolocation=(), microphone=()
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: shipflow-postgres
+    region: singapore
+    plan: 0.5c-1g
+    postgresMajorVersion: "18"
+    databaseName: shipflow
+    user: shipflow
+    diskSizeGB: 15
+    storageAutoscalingEnabled: true
+    ipAllowList: []

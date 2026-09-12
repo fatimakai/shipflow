@@ -40,6 +40,8 @@ describe('LocalFileStorageProvider', () => {
         url.searchParams.get('signature')!,
       ),
     ).toBe(true);
+    expect(target.method).toBe('POST');
+    expect(target.headers).toEqual({});
     expect(target.fileField).toBe('file');
 
     await provider.putObject(key, Buffer.from('{}'), 'application/json');

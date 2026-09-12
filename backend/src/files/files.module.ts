@@ -9,6 +9,8 @@ import { FileValidationService } from './file-validation.service';
 import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
 import { LocalFileContentController } from './local-file-content.controller';
+import { createMalwareScanner } from './malware/malware-scanner.providers';
+import { MALWARE_SCANNER } from './malware/malware-scanner.types';
 import { createFileStorageProvider } from './storage/file-storage.providers';
 import { FILE_STORAGE } from './storage/file-storage.types';
 
@@ -22,10 +24,16 @@ import { FILE_STORAGE } from './storage/file-storage.types';
       useFactory: (config: ConfigService<EnvironmentVariables, true>) =>
         createFileStorageProvider(config),
     },
+    {
+      provide: MALWARE_SCANNER,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<EnvironmentVariables, true>) =>
+        createMalwareScanner(config),
+    },
     FileValidationService,
     FilesService,
     FileMaintenanceService,
   ],
-  exports: [FILE_STORAGE, FilesService],
+  exports: [FILE_STORAGE, MALWARE_SCANNER, FilesService],
 })
 export class FilesModule {}

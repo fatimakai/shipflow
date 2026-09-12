@@ -16,14 +16,12 @@ import type {
   FileDownloadTarget,
   FileUploadTarget,
   ObjectStorageProvider,
-  ProviderMalwareResult,
   StoredObject,
   StoredObjectReference,
 } from './file-storage.types';
 
 export class LocalFileStorageProvider implements ObjectStorageProvider {
   readonly provider = FileStorageProvider.LOCAL;
-  readonly malwareScanningEnabled = false;
   private readonly root: string;
 
   constructor(
@@ -42,6 +40,7 @@ export class LocalFileStorageProvider implements ObjectStorageProvider {
       method: 'POST',
       url: `${input.uploadPath}?expires=${expires}&signature=${signature}`,
       fields: {},
+      headers: {},
       fileField: 'file',
       expiresAt: input.expiresAt,
     });
@@ -139,10 +138,6 @@ export class LocalFileStorageProvider implements ObjectStorageProvider {
     };
     await visit(start);
     return objects;
-  }
-
-  getMalwareResult(): Promise<ProviderMalwareResult> {
-    return Promise.resolve('clean');
   }
 
   setLifecycleState(): Promise<void> {

@@ -100,6 +100,11 @@ backup, and restore workflows.
 | `FILE_STORAGE_PROVIDER`             | `local`                   | File adapter; production requires `s3`                              |
 | `FILE_LOCAL_ROOT`                   | `.data/files`             | Private non-public local object root                                |
 | `FILE_MALWARE_SCAN_ENABLED`         | `false` locally           | Must be `true` for production S3 storage                            |
+| `CLAMAV_HOST`                       | None                      | Required ClamAV hostname when malware scanning is enabled           |
+| `CLAMAV_PORT`                       | `3310`                    | Private clamd TCP port                                              |
+| `CLAMAV_TIMEOUT_MS`                 | `30000`                   | Maximum time for one clamd stream scan                              |
+| `AWS_ACCESS_KEY_ID`                 | None                      | Bucket-scoped R2 access key                                         |
+| `AWS_SECRET_ACCESS_KEY`             | None                      | Bucket-scoped R2 secret key                                         |
 | `AWS_REGION`                        | None                      | Required AWS Region for the S3 adapter                              |
 | `S3_BUCKET`                         | None                      | Required private production bucket                                  |
 | `S3_ENDPOINT`                       | None                      | Optional S3-compatible endpoint for controlled environments         |
@@ -287,9 +292,10 @@ recorded in [ADR 0008](docs/adr/0008-stripe-billing.md).
 ## File Storage
 
 File storage is organization-scoped and capability-protected. Development and
-tests use private local storage under `.data/files`; production requires a
-private S3 bucket with GuardDuty malware scanning. A provider switch requires
-environment changes, not application code changes.
+tests use private local storage under `.data/files`; production uses a private
+Cloudflare R2 bucket and a private ClamAV service. R2 is accessed through its
+S3-compatible API. A provider switch requires environment changes, not
+application code changes.
 
 | Endpoint                                                               | Purpose                                      |
 | ---------------------------------------------------------------------- | -------------------------------------------- |
@@ -303,19 +309,23 @@ environment changes, not application code changes.
 | `POST /api/v1/organizations/:organizationId/files/:fileId/restore`     | Restore a recoverable file                   |
 
 Upload clients calculate the exact byte length and SHA-256 checksum, request a
-reservation, submit a multipart form using every returned `fields` entry and
-the returned `fileField`, then call the completion endpoint. Local signed URLs
-pass through the API; S3 signed URLs transfer directly to the bucket.
+reservation, follow the returned method, fields, and headers, then call the
+completion endpoint. Local signed URLs use multipart `POST` through the API;
+R2 uses a raw-file presigned `PUT` directly to the private bucket.
 
 Files are limited to 25 MiB. The accepted allowlist is PDF, JPEG, PNG, WebP,
 UTF-8 TXT/CSV/JSON, DOCX, XLSX, and PPTX. Free organizations receive 100 MiB and
 100 files; Pro organizations receive 10 GiB and 10,000 files. Active,
 scanning, ready, and recoverable deleted objects count toward quota.
 
-Before production deployment, configure the bucket, IAM role, frontend CORS,
-GuardDuty result tagging and tag-based read policy, and S3 lifecycle safeguards.
+Before production deployment, configure the private R2 bucket and scoped keys,
+frontend CORS, and the private ClamAV service. File lifecycle state is held in
+PostgreSQL because R2 does not implement S3 object tagging.
 See [ADR 0010](docs/adr/0010-file-storage.md) for the exact provider, security,
 retention, malware, and cleanup decisions.
+
+See the repository-level `docs/deployment.md` for the full Render, R2, ClamAV,
+Resend, Stripe, and OAuth deployment runbook.
 
 ## Notifications
 

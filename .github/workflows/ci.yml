@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_DB: shipflow_test
+          POSTGRES_USER: shipflow
+          POSTGRES_PASSWORD: shipflow_ci_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U shipflow -d shipflow_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://shipflow:shipflow_ci_password@127.0.0.1:5432/shipflow_test?schema=public
+      FILE_STORAGE_PROVIDER: local
+      FILE_LOCAL_ROOT: .data/ci-files
+      FILE_MALWARE_SCAN_ENABLED: "false"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@11.20.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate source and schema
+        run: pnpm format:check && pnpm lint && pnpm prisma:validate
+
+      - name: Apply database migrations
+        run: pnpm prisma:migrate:deploy
+
+      - name: Run unit tests
+        run: pnpm test -- --runInBand
+
+      - name: Run PostgreSQL integration tests
+        run: pnpm test:e2e -- --runInBand
+
+      - name: Build backend
+        run: pnpm build
+
+      - name: Audit production dependencies
+        run: pnpm security:audit
+
+      - name: Build production container
+        working-directory: backend
+        run: docker build --target runtime --tag shipflow-backend:ci .
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate source
+        run: npm run format:check && npm run lint && npm run typecheck
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: npm run test:e2e
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high

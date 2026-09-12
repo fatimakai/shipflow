@@ -50,6 +50,9 @@ Run `npm run api:generate` while the backend Swagger endpoint is available.
 Generated contract types are committed so clean frontend checkouts can build
 without a running backend.
 
+The repository-level `docs/deployment.md` contains the Render production
+deployment and provider configuration runbook.
+
 ## Architecture
 
 - TanStack Query owns server state and request caching.

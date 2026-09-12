@@ -29,8 +29,12 @@ describe('environmentValidationSchema', () => {
   const productionStorage = {
     FILE_STORAGE_PROVIDER: 's3',
     FILE_MALWARE_SCAN_ENABLED: true,
+    CLAMAV_HOST: 'clamav.internal',
     AWS_REGION: 'us-east-1',
+    AWS_ACCESS_KEY_ID: 'r2-access-key',
+    AWS_SECRET_ACCESS_KEY: 'r2-secret-key',
     S3_BUCKET: 'shipflow-production-files',
+    S3_ENDPOINT: 'https://account-id.r2.cloudflarestorage.com',
   };
 
   it('coerces values and normalizes a comma-separated CORS allowlist', () => {
@@ -257,6 +261,21 @@ describe('environmentValidationSchema', () => {
     expect(scanningResult.error?.message).toContain(
       'FILE_MALWARE_SCAN_ENABLED',
     );
+  });
+
+  it('requires a ClamAV endpoint when malware scanning is enabled', () => {
+    const { error } = environmentValidationSchema.validate({
+      DATABASE_URL: databaseUrl,
+      FILE_STORAGE_PROVIDER: 's3',
+      FILE_MALWARE_SCAN_ENABLED: true,
+      AWS_REGION: 'auto',
+      AWS_ACCESS_KEY_ID: 'r2-access-key',
+      AWS_SECRET_ACCESS_KEY: 'r2-secret-key',
+      S3_BUCKET: 'shipflow-files',
+      S3_ENDPOINT: 'https://account-id.r2.cloudflarestorage.com',
+    });
+
+    expect(error?.message).toContain('CLAMAV_HOST');
   });
 
   it('requires OAuth client IDs and secrets in pairs', () => {

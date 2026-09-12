@@ -16,8 +16,12 @@ import {
 import {
   InjectFileStorage,
   type ObjectStorageProvider,
-  type ProviderMalwareResult,
 } from './storage/file-storage.types';
+import {
+  InjectMalwareScanner,
+  type MalwareScanner,
+  type MalwareScanResult,
+} from './malware/malware-scanner.types';
 
 @Injectable()
 export class FileMaintenanceService
@@ -31,6 +35,7 @@ export class FileMaintenanceService
   constructor(
     private readonly prisma: PrismaService,
     @InjectFileStorage() private readonly storage: ObjectStorageProvider,
+    @InjectMalwareScanner() private readonly malwareScanner: MalwareScanner,
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
@@ -105,7 +110,7 @@ export class FileMaintenanceService
   }
 
   private async processScans(): Promise<void> {
-    if (!this.storage.malwareScanningEnabled) return;
+    if (!this.malwareScanner.enabled) return;
     const files = await this.prisma.storedFile.findMany({
       where: {
         storageProvider: this.storage.provider,
@@ -127,7 +132,8 @@ export class FileMaintenanceService
         continue;
       }
       try {
-        const result = await this.storage.getMalwareResult(file.objectKey);
+        const object = await this.storage.inspectObject(file.objectKey);
+        const result = await this.malwareScanner.scan(object.body);
         await this.applyScanResult(file.id, file.scanAttempts, result);
       } catch {
         const attempts = file.scanAttempts + 1;
@@ -150,9 +156,8 @@ export class FileMaintenanceService
   private async applyScanResult(
     fileId: string,
     attempts: number,
-    result: ProviderMalwareResult,
+    result: MalwareScanResult,
   ): Promise<void> {
-    if (result === 'pending') return;
     if (result === 'clean') {
       const file = await this.prisma.storedFile.findUnique({
         where: { id: fileId },

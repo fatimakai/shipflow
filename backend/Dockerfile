@@ -44,6 +44,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 COPY --chown=node:node --from=production-dependencies /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
+COPY --chown=node:node prisma.config.ts ./prisma.config.ts
+COPY --chown=node:node prisma ./prisma
 COPY --chown=node:node package.json ./package.json
 USER node
 EXPOSE 3000

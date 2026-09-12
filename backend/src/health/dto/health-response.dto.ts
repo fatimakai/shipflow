@@ -20,6 +20,9 @@ export class ReadinessChecksDto {
 
   @ApiProperty({ example: 'up' })
   database!: 'up';
+
+  @ApiProperty({ example: 'up' })
+  malwareScanner!: 'up';
 }
 
 export class ReadinessResponseDto {

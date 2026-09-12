@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   FileMalwareStatus,
   FileStatus,
@@ -52,8 +52,8 @@ export class FileResponseDto {
 }
 
 export class FileUploadTargetResponseDto {
-  @ApiProperty({ enum: ['POST'] })
-  method!: 'POST';
+  @ApiProperty({ enum: ['POST', 'PUT'] })
+  method!: 'POST' | 'PUT';
 
   @ApiProperty()
   url!: string;
@@ -61,8 +61,11 @@ export class FileUploadTargetResponseDto {
   @ApiProperty({ type: 'object', additionalProperties: { type: 'string' } })
   fields!: Record<string, string>;
 
-  @ApiProperty({ enum: ['file'] })
-  fileField!: 'file';
+  @ApiProperty({ type: 'object', additionalProperties: { type: 'string' } })
+  headers!: Record<string, string>;
+
+  @ApiPropertyOptional({ enum: ['file'] })
+  fileField?: 'file';
 
   @ApiProperty({ type: String, format: 'date-time' })
   expiresAt!: Date;

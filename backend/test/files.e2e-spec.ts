@@ -35,7 +35,8 @@ interface UploadReservationBody {
     method: 'POST';
     url: string;
     fields: Record<string, string>;
-    fileField: 'file';
+    headers: Record<string, string>;
+    fileField?: 'file';
     expiresAt: string;
   };
 }
@@ -133,6 +134,7 @@ describe('File storage backend (e2e)', () => {
     expect(reservation.upload).toMatchObject({
       method: 'POST',
       fields: {},
+      headers: {},
       fileField: 'file',
     });
 

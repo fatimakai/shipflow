@@ -2,27 +2,13 @@ import { randomUUID } from 'node:crypto';
 import { S3FileStorageProvider } from './s3-file-storage.provider';
 
 describe('S3FileStorageProvider', () => {
-  const accessKey = process.env.AWS_ACCESS_KEY_ID;
-  const secretKey = process.env.AWS_SECRET_ACCESS_KEY;
-
-  beforeAll(() => {
-    process.env.AWS_ACCESS_KEY_ID = 'test-access-key';
-    process.env.AWS_SECRET_ACCESS_KEY = 'test-secret-key';
-  });
-
-  afterAll(() => {
-    if (accessKey) process.env.AWS_ACCESS_KEY_ID = accessKey;
-    else delete process.env.AWS_ACCESS_KEY_ID;
-    if (secretKey) process.env.AWS_SECRET_ACCESS_KEY = secretKey;
-    else delete process.env.AWS_SECRET_ACCESS_KEY;
-  });
-
-  it('creates a constrained, encrypted presigned POST without network access', async () => {
+  it('creates an R2-compatible presigned PUT without network access', async () => {
     const provider = new S3FileStorageProvider({
       region: 'us-east-1',
       bucket: 'shipflow-test-files',
       forcePathStyle: false,
-      malwareScanningEnabled: true,
+      accessKeyId: 'test-access-key',
+      secretAccessKey: 'test-secret-key',
     });
     const target = await provider.createUploadTarget({
       key: `objects/${randomUUID()}/${randomUUID()}`,
@@ -36,14 +22,18 @@ describe('S3FileStorageProvider', () => {
     });
 
     expect(target.url).toContain('shipflow-test-files');
-    expect(target.fields).toMatchObject({
-      'Content-Type': 'application/pdf',
-      'x-amz-server-side-encryption': 'AES256',
-      'x-amz-tagging': 'shipflow-state=pending',
+    expect(target).toMatchObject({
+      method: 'PUT',
+      fields: {},
     });
-    expect(
-      Object.keys(target.fields).some((key) => key.toLowerCase() === 'policy'),
-    ).toBe(true);
-    expect(target.fileField).toBe('file');
+    expect(target.fileField).toBeUndefined();
+    expect(target.headers).toEqual({ 'Content-Type': 'application/pdf' });
+    expect(target.url).toContain(
+      `x-amz-meta-checksum-sha256=${'a'.repeat(64)}`,
+    );
+    expect(target.url).toContain(
+      'X-Amz-SignedHeaders=content-length%3Bcontent-type%3Bhost',
+    );
+    expect(target.url).not.toContain('x-amz-sdk-checksum-algorithm');
   });
 });

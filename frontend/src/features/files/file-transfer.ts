@@ -65,11 +65,17 @@ export function uploadToSignedTarget(
   onProgress: (progress: number) => void
 ): FileTransfer {
   const request = new XMLHttpRequest()
-  const body = new FormData()
-  Object.entries(target.fields).forEach(([key, value]) =>
-    body.append(key, value)
-  )
-  body.append(target.fileField, file, file.name)
+  let body: File | FormData
+  if (target.method === "PUT") {
+    body = file
+  } else {
+    const formData = new FormData()
+    Object.entries(target.fields).forEach(([key, value]) =>
+      formData.append(key, value)
+    )
+    formData.append(target.fileField ?? "file", file, file.name)
+    body = formData
+  }
 
   const promise = new Promise<void>((resolve, reject) => {
     request.upload.addEventListener("progress", (event) => {
@@ -95,6 +101,9 @@ export function uploadToSignedTarget(
     )
 
     request.open(target.method, resolveFileTransferUrl(target.url))
+    Object.entries(target.headers).forEach(([key, value]) =>
+      request.setRequestHeader(key, value)
+    )
     request.send(body)
   })
 
