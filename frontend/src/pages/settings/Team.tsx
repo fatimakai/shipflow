@@ -1,5 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { AlertCircle, KeyRound, Mail, Users, X } from "lucide-react"
+import {
+  AlertCircle,
+  Copy,
+  KeyRound,
+  Link2,
+  Mail,
+  Users,
+  X,
+} from "lucide-react"
 import { useState } from "react"
 import { useEffect } from "react"
 
@@ -16,6 +24,7 @@ import type {
   PendingInvite,
 } from "@/components/team/types"
 import { Button } from "@/components/ui/button"
+import { env } from "@/config/env"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { hasOrganizationCapability } from "@/features/organizations/organization-capabilities"
 import { organizationApi } from "@/features/organizations/organization-api"
@@ -43,6 +52,7 @@ export function Team() {
   const [activeTab, setActiveTab] = useState("members")
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [inviteLinks, setInviteLinks] = useState<string[]>([])
 
   useEffect(() => {
     if (
@@ -109,10 +119,15 @@ export function Team() {
         )
       ),
     onError: (error) =>
-      handleActionError(error, "Unable to send the invitation."),
+      handleActionError(error, "Unable to create the invitation."),
     onSettled: (_, __, variables) =>
       void refreshInvitations(variables.tenantId),
-    onSuccess: () => {
+    onSuccess: (created) => {
+      setInviteLinks(
+        created.flatMap((invitation) =>
+          invitation.invitationUrl ? [invitation.invitationUrl] : []
+        )
+      )
       setIsInviteOpen(false)
       setActiveTab("invites")
     },
@@ -126,8 +141,11 @@ export function Team() {
       tenantId: string
     }) => organizationApi.resendInvitation(tenantId, invitation.id),
     onError: (error) =>
-      handleActionError(error, "Unable to resend the invitation."),
-    onSuccess: (_, variables) => void refreshInvitations(variables.tenantId),
+      handleActionError(error, "Unable to rotate the invitation."),
+    onSuccess: (invitation, variables) => {
+      setInviteLinks(invitation.invitationUrl ? [invitation.invitationUrl] : [])
+      void refreshInvitations(variables.tenantId)
+    },
   })
   const revokeInvitation = useMutation({
     mutationFn: ({
@@ -194,6 +212,53 @@ export function Team() {
         </div>
       )}
 
+      {inviteLinks.length > 0 && (
+        <div
+          className="rounded-lg border border-primary/20 bg-primary/5 p-4"
+          role="status"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 font-medium text-foreground">
+                <Link2 className="h-4 w-4" />
+                Shareable invitation{" "}
+                {inviteLinks.length === 1 ? "link" : "links"}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Copy and share securely. These links are displayed only after
+                creation or rotation.
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Dismiss invitation links"
+              onClick={() => setInviteLinks([])}
+            >
+              <X />
+            </Button>
+          </div>
+          <div className="mt-3 space-y-2">
+            {inviteLinks.map((link) => (
+              <div key={link} className="flex items-center gap-2">
+                <code className="min-w-0 flex-1 truncate rounded bg-background px-2.5 py-2 text-xs">
+                  {link}
+                </code>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => void navigator.clipboard.writeText(link)}
+                >
+                  <Copy />
+                  Copy
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="members" className="gap-2">
@@ -252,6 +317,7 @@ export function Team() {
                   tenantId: organizationId,
                 })
               }
+              shareLinks={env.isPublicDemo}
               onRevoke={(invitation) =>
                 revokeInvitation.mutate({
                   invitation,
@@ -274,6 +340,7 @@ export function Team() {
           error={createInvitations.isError ? actionError : null}
           isOpen={isInviteOpen}
           isPending={createInvitations.isPending}
+          shareLinks={env.isPublicDemo}
           onClose={() => setIsInviteOpen(false)}
           onSubmit={(emails, role) => {
             setActionError(null)

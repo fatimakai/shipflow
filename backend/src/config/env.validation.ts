@@ -56,6 +56,7 @@ const validateTwoFactorEncryptionKey = (
 
 export interface EnvironmentVariables {
   NODE_ENV: 'development' | 'test' | 'production';
+  DEPLOYMENT_PROFILE: 'standard' | 'public-demo';
   PORT: number;
   APP_NAME: string;
   LOG_LEVEL: 'debug' | 'info' | 'warn' | 'error';
@@ -127,6 +128,10 @@ export const environmentValidationSchema = Joi.object({
   NODE_ENV: Joi.string()
     .valid('development', 'test', 'production')
     .default('development'),
+
+  DEPLOYMENT_PROFILE: Joi.string()
+    .valid('standard', 'public-demo')
+    .default('standard'),
 
   PORT: Joi.number().port().default(3000),
 
@@ -271,13 +276,19 @@ export const environmentValidationSchema = Joi.object({
       otherwise: Joi.string().default('http://localhost:5173'),
     }),
 
-  EMAIL_PROVIDER: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().valid('resend').required(),
+  EMAIL_PROVIDER: Joi.when('DEPLOYMENT_PROFILE', {
+    is: 'public-demo',
+    then: Joi.string().valid('log').default('log'),
     otherwise: Joi.when('NODE_ENV', {
-      is: 'test',
-      then: Joi.string().valid('log', 'capture', 'resend').default('capture'),
-      otherwise: Joi.string().valid('log', 'capture', 'resend').default('log'),
+      is: 'production',
+      then: Joi.string().valid('resend').required(),
+      otherwise: Joi.when('NODE_ENV', {
+        is: 'test',
+        then: Joi.string().valid('log', 'capture', 'resend').default('capture'),
+        otherwise: Joi.string()
+          .valid('log', 'capture', 'resend')
+          .default('log'),
+      }),
     }),
   }),
 
@@ -286,19 +297,27 @@ export const environmentValidationSchema = Joi.object({
     .trim()
     .lowercase()
     .email()
-    .when('NODE_ENV', {
-      is: 'production',
-      then: Joi.required(),
-      otherwise: Joi.string().default('no-reply@mail.example.com'),
+    .when('DEPLOYMENT_PROFILE', {
+      is: 'public-demo',
+      then: Joi.string().default('no-reply@demo.invalid'),
+      otherwise: Joi.when('NODE_ENV', {
+        is: 'production',
+        then: Joi.required(),
+        otherwise: Joi.string().default('no-reply@mail.example.com'),
+      }),
     }),
   EMAIL_REPLY_TO: Joi.string()
     .trim()
     .lowercase()
     .email()
-    .when('NODE_ENV', {
-      is: 'production',
-      then: Joi.required(),
-      otherwise: Joi.string().default('support@example.com'),
+    .when('DEPLOYMENT_PROFILE', {
+      is: 'public-demo',
+      then: Joi.string().default('support@example.com'),
+      otherwise: Joi.when('NODE_ENV', {
+        is: 'production',
+        then: Joi.required(),
+        otherwise: Joi.string().default('support@example.com'),
+      }),
     }),
   EMAIL_SUPPORT_ADDRESS: Joi.string()
     .trim()
@@ -380,20 +399,28 @@ export const environmentValidationSchema = Joi.object({
     otherwise: Joi.boolean().default(false),
   }),
 
-  FILE_STORAGE_PROVIDER: Joi.when('NODE_ENV', {
-    is: 'production',
-    then: Joi.string().valid('s3').required(),
-    otherwise: Joi.string().valid('local', 's3').default('local'),
+  FILE_STORAGE_PROVIDER: Joi.when('DEPLOYMENT_PROFILE', {
+    is: 'public-demo',
+    then: Joi.string().valid('local').default('local'),
+    otherwise: Joi.when('NODE_ENV', {
+      is: 'production',
+      then: Joi.string().valid('s3').required(),
+      otherwise: Joi.string().valid('local', 's3').default('local'),
+    }),
   }),
   FILE_LOCAL_ROOT: Joi.string().trim().min(1).default('.data/files'),
-  FILE_MALWARE_SCAN_ENABLED: Joi.boolean().when('FILE_STORAGE_PROVIDER', {
-    is: 's3',
-    then: Joi.when('NODE_ENV', {
-      is: 'production',
-      then: Joi.boolean().valid(true).default(true),
-      otherwise: Joi.boolean().default(false),
+  FILE_MALWARE_SCAN_ENABLED: Joi.boolean().when('DEPLOYMENT_PROFILE', {
+    is: 'public-demo',
+    then: Joi.boolean().valid(false).default(false),
+    otherwise: Joi.when('FILE_STORAGE_PROVIDER', {
+      is: 's3',
+      then: Joi.when('NODE_ENV', {
+        is: 'production',
+        then: Joi.boolean().valid(true).default(true),
+        otherwise: Joi.boolean().default(false),
+      }),
+      otherwise: Joi.boolean().valid(false).default(false),
     }),
-    otherwise: Joi.boolean().valid(false).default(false),
   }),
   CLAMAV_HOST: Joi.string()
     .trim()
@@ -456,7 +483,11 @@ export const environmentValidationSchema = Joi.object({
     }),
   S3_FORCE_PATH_STYLE: Joi.boolean().default(false),
 
-  GOOGLE_CLIENT_ID: Joi.string().trim().empty('').optional(),
+  GOOGLE_CLIENT_ID: Joi.string().trim().empty('').when('DEPLOYMENT_PROFILE', {
+    is: 'public-demo',
+    then: Joi.required(),
+    otherwise: Joi.optional(),
+  }),
   GOOGLE_CLIENT_SECRET: Joi.string().trim().empty('').when('GOOGLE_CLIENT_ID', {
     is: Joi.exist(),
     then: Joi.required(),
@@ -464,9 +495,21 @@ export const environmentValidationSchema = Joi.object({
   }),
   GOOGLE_CALLBACK_URL: Joi.string()
     .uri({ scheme: ['http', 'https'] })
-    .default('http://localhost:3000/api/v1/auth/oauth/google/callback'),
+    .when('DEPLOYMENT_PROFILE', {
+      is: 'public-demo',
+      then: Joi.string()
+        .uri({ scheme: ['https'] })
+        .required(),
+      otherwise: Joi.string().default(
+        'http://localhost:3000/api/v1/auth/oauth/google/callback',
+      ),
+    }),
 
-  GITHUB_CLIENT_ID: Joi.string().trim().empty('').optional(),
+  GITHUB_CLIENT_ID: Joi.string().trim().empty('').when('DEPLOYMENT_PROFILE', {
+    is: 'public-demo',
+    then: Joi.required(),
+    otherwise: Joi.optional(),
+  }),
   GITHUB_CLIENT_SECRET: Joi.string().trim().empty('').when('GITHUB_CLIENT_ID', {
     is: Joi.exist(),
     then: Joi.required(),
@@ -474,7 +517,15 @@ export const environmentValidationSchema = Joi.object({
   }),
   GITHUB_CALLBACK_URL: Joi.string()
     .uri({ scheme: ['http', 'https'] })
-    .default('http://localhost:3000/api/v1/auth/oauth/github/callback'),
+    .when('DEPLOYMENT_PROFILE', {
+      is: 'public-demo',
+      then: Joi.string()
+        .uri({ scheme: ['https'] })
+        .required(),
+      otherwise: Joi.string().default(
+        'http://localhost:3000/api/v1/auth/oauth/github/callback',
+      ),
+    }),
 })
   .with('GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET')
   .with('GOOGLE_CLIENT_SECRET', 'GOOGLE_CLIENT_ID')

@@ -7,6 +7,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { TokenService } from '../auth/token.service';
 import type { AuthenticatedUser } from '../auth/auth.types';
 import { AuthorizationService } from '../authorization/authorization.service';
@@ -16,6 +17,7 @@ import {
   OrganizationContextService,
 } from '../authorization/organization-context.service';
 import { PrismaService } from '../database/prisma.service';
+import type { EnvironmentVariables } from '../config/env.validation';
 import {
   InjectTransactionalEmailDelivery,
   type TransactionalEmailDelivery,
@@ -97,6 +99,7 @@ export class OrganizationsService {
     private readonly contextService: OrganizationContextService,
     private readonly authorizationService: AuthorizationService,
     private readonly tokenService: TokenService,
+    private readonly config: ConfigService<EnvironmentVariables, true>,
     @InjectTransactionalEmailDelivery()
     private readonly delivery: TransactionalEmailDelivery,
   ) {}
@@ -288,13 +291,15 @@ export class OrganizationsService {
       throw error;
     }
 
-    await this.delivery.sendOrganizationInvitation(
-      invitation.email,
-      token,
-      context.organization.name,
-    );
+    if (!this.isPublicDemo()) {
+      await this.delivery.sendOrganizationInvitation(
+        invitation.email,
+        token,
+        context.organization.name,
+      );
+    }
 
-    return this.toInvitationResponse(invitation);
+    return this.toInvitationResponse(invitation, token);
   }
 
   async listInvitations(
@@ -378,13 +383,15 @@ export class OrganizationsService {
       select: this.invitationSelection,
     });
 
-    await this.delivery.sendOrganizationInvitation(
-      invitation.email,
-      token,
-      context.organization.name,
-    );
+    if (!this.isPublicDemo()) {
+      await this.delivery.sendOrganizationInvitation(
+        invitation.email,
+        token,
+        context.organization.name,
+      );
+    }
 
-    return this.toInvitationResponse(invitation);
+    return this.toInvitationResponse(invitation, token);
   }
 
   async revokeInvitation(
@@ -821,8 +828,9 @@ export class OrganizationsService {
 
   private toInvitationResponse(
     invitation: InvitationRecord,
+    token?: string,
   ): InvitationResponseDto {
-    return {
+    const response: InvitationResponseDto = {
       id: invitation.id,
       organizationId: invitation.organizationId,
       email: invitation.email,
@@ -835,6 +843,21 @@ export class OrganizationsService {
       createdAt: invitation.createdAt,
       updatedAt: invitation.updatedAt,
     };
+
+    if (token && this.isPublicDemo()) {
+      const invitationUrl = new URL(
+        '/invitations/accept',
+        this.config.getOrThrow<string>('FRONTEND_URL'),
+      );
+      invitationUrl.searchParams.set('token', token);
+      response.invitationUrl = invitationUrl.toString();
+    }
+
+    return response;
+  }
+
+  private isPublicDemo(): boolean {
+    return this.config.getOrThrow('DEPLOYMENT_PROFILE') === 'public-demo';
   }
 
   private isUniqueConstraintError(error: unknown): boolean {

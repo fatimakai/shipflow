@@ -15,6 +15,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiExcludeController } from '@nestjs/swagger';
 import { API_VERSION } from '../common/http/api.constants';
+import { UnavailableInPublicDemo } from '../config/public-demo.decorator';
 import { FILE_MAX_SIZE_BYTES } from './file.constants';
 import { SignedFileRequestQueryDto } from './dto/file-request.dto';
 import { FilesService } from './files.service';
@@ -26,6 +27,7 @@ interface MemoryUpload {
 }
 
 @ApiExcludeController()
+@UnavailableInPublicDemo()
 @Controller({ path: 'file-content', version: API_VERSION })
 export class LocalFileContentController {
   constructor(private readonly files: FilesService) {}

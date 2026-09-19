@@ -128,8 +128,9 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
               {mainNav
                 .filter(
                   (item) =>
-                    !item.capability ||
-                    hasOrganizationCapability(organization, item.capability)
+                    (item.path !== "/files" || !env.isPublicDemo) &&
+                    (!item.capability ||
+                      hasOrganizationCapability(organization, item.capability))
                 )
                 .map((item) => (
                   <NavLink

@@ -11,6 +11,7 @@ import {
   type EnvironmentVariables,
   environmentValidationSchema,
 } from './config/env.validation';
+import { PublicDemoGuard } from './config/public-demo.guard';
 import { DatabaseModule } from './database/database.module';
 import { EmailModule } from './email/email.module';
 import { FilesModule } from './files/files.module';
@@ -51,6 +52,10 @@ import { OrganizationsModule } from './organizations/organizations.module';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: PublicDemoGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

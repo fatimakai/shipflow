@@ -31,6 +31,7 @@ import { API_PREFIX, API_VERSION } from '../common/http/api.constants';
 import { ApiStandardErrors } from '../common/http/decorators/api-standard-errors.decorator';
 import { ApiErrorResponseDto } from '../common/http/dto/api-error-response.dto';
 import { EnvironmentVariables } from '../config/env.validation';
+import { UnavailableInPublicDemo } from '../config/public-demo.decorator';
 import { AccessTokenGuard } from './access-token.guard';
 import { AuthService } from './auth.service';
 import type { AuthenticatedUser, ClientContext } from './auth.types';
@@ -62,6 +63,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @UnavailableInPublicDemo()
   @Audit({
     eventType: AuditEvent.AUTH_REGISTERED,
     actor: 'response-user',
@@ -229,6 +231,7 @@ export class AuthController {
   }
 
   @Post('email-verification/request')
+  @UnavailableInPublicDemo()
   @Audit({
     eventType: AuditEvent.AUTH_EMAIL_VERIFICATION_REQUESTED,
     target: { type: 'user', source: 'request-user' },
@@ -246,6 +249,7 @@ export class AuthController {
   }
 
   @Post('email-verification/confirm')
+  @UnavailableInPublicDemo()
   @Audit({
     eventType: AuditEvent.AUTH_EMAIL_VERIFICATION_COMPLETED,
     actor: 'anonymous',
@@ -259,6 +263,7 @@ export class AuthController {
   }
 
   @Post('password/forgot')
+  @UnavailableInPublicDemo()
   @Audit({
     eventType: AuditEvent.AUTH_PASSWORD_RESET_REQUESTED,
     actor: 'anonymous',
@@ -274,6 +279,7 @@ export class AuthController {
   }
 
   @Post('password/reset')
+  @UnavailableInPublicDemo()
   @Audit({
     eventType: AuditEvent.AUTH_PASSWORD_RESET_COMPLETED,
     actor: 'anonymous',

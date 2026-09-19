@@ -124,12 +124,28 @@ TOTP provisioning material.
 - Objects are private and accessed only through short-lived signed operations.
 - Uploads are reservations with size, checksum, MIME, tenancy, and expiry
   validation. Completion revalidates stored object metadata.
-- Production requires S3-compatible private storage and malware scanning. The
-  current provider reads S3 GuardDuty result tags. The approved Cloudflare R2
-  and self-hosted ClamAV topology still requires its dedicated scanner adapter
-  in the production-integration phase.
+- The standard production profile requires S3-compatible private storage and
+  malware scanning. The current provider reads S3 GuardDuty result tags. The
+  approved Cloudflare R2 and self-hosted ClamAV topology still requires its
+  dedicated scanner adapter before that storage profile is enabled.
 - Provider webhook processing is signature-verified and idempotent. Stripe
   checkout uses server-owned price identifiers and no card data enters ShipFlow.
+
+## Public Demo Deployment Boundary
+
+The `public-demo` deployment profile is a deliberately reduced public surface,
+not a relaxation of the standard production checks. Startup validation requires
+Google and GitHub OAuth credentials and HTTPS callback URLs while rejecting
+live email delivery, object storage, and malware scanning. A global API guard
+returns `403 Forbidden` for password registration and recovery, email
+verification, file operations, local file transfer, and the Resend webhook.
+
+OAuth remains subject to ShipFlow's own 2FA challenge. Organization invitations
+are created as single-display, email-bound share links instead of being sent by
+email; later list responses never expose their bearer token. The frontend hides
+or redirects unavailable demo routes, but the API guard is the security
+boundary. Existing password accounts can still sign in so administrative and
+test fixtures remain usable. See [ADR 0015](adr/0015-public-demo-deployment-profile.md).
 
 ## Operational Requirements And Residual Risks
 
@@ -140,8 +156,8 @@ TOTP provisioning material.
 - Logs, alerts, uptime monitoring, encrypted off-site backups, and restoration
   evidence require the production providers and are deployment acceptance work.
 - Replace the current GuardDuty result-tag reader with the approved Cloudflare
-  R2 and self-hosted ClamAV scan path before the production storage provider is
-  enabled.
+  R2 and self-hosted ClamAV scan path before the standard production storage
+  profile is enabled. Files remain inaccessible in the public demo.
 - Account recovery never bypasses 2FA automatically. Support must verify identity
   out of band before an authorized administrator manually disables 2FA; that
   administration action is intentionally reserved for the recovery phase.

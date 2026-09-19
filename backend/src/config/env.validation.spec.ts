@@ -286,4 +286,56 @@ describe('environmentValidationSchema', () => {
 
     expect(error?.message).toContain('GOOGLE_CLIENT_SECRET');
   });
+
+  it('permits only the explicit no-email, no-files public demo profile', () => {
+    const result = environmentValidationSchema.validate({
+      NODE_ENV: 'production',
+      DEPLOYMENT_PROFILE: 'public-demo',
+      DATABASE_URL: databaseUrl,
+      JWT_ACCESS_SECRET: jwtSecret,
+      TWO_FACTOR_ENCRYPTION_KEY: twoFactorEncryptionKey,
+      FRONTEND_URL: 'https://shipflow.pages.dev',
+      CORS_ORIGINS: 'https://shipflow.pages.dev',
+      EMAIL_PROVIDER: 'log',
+      EMAIL_SUPPORT_ADDRESS: 'support@example.com',
+      ...productionBilling,
+      FILE_STORAGE_PROVIDER: 'local',
+      FILE_MALWARE_SCAN_ENABLED: false,
+      GOOGLE_CLIENT_ID: 'google-client-id',
+      GOOGLE_CLIENT_SECRET: 'google-client-secret',
+      GOOGLE_CALLBACK_URL:
+        'https://shipflow-api.onrender.com/api/v1/auth/oauth/google/callback',
+      GITHUB_CLIENT_ID: 'github-client-id',
+      GITHUB_CLIENT_SECRET: 'github-client-secret',
+      GITHUB_CALLBACK_URL:
+        'https://shipflow-api.onrender.com/api/v1/auth/oauth/github/callback',
+    });
+
+    expect(result.error).toBeUndefined();
+    expect(result.value).toMatchObject({
+      DEPLOYMENT_PROFILE: 'public-demo',
+      EMAIL_PROVIDER: 'log',
+      FILE_STORAGE_PROVIDER: 'local',
+      FILE_MALWARE_SCAN_ENABLED: false,
+    });
+  });
+
+  it('rejects email delivery or file storage in the public demo profile', () => {
+    const { error } = environmentValidationSchema.validate(
+      {
+        NODE_ENV: 'production',
+        DEPLOYMENT_PROFILE: 'public-demo',
+        DATABASE_URL: databaseUrl,
+        JWT_ACCESS_SECRET: jwtSecret,
+        EMAIL_PROVIDER: 'resend',
+        FILE_STORAGE_PROVIDER: 's3',
+        FILE_MALWARE_SCAN_ENABLED: true,
+      },
+      { abortEarly: false },
+    );
+
+    expect(error?.message).toContain('EMAIL_PROVIDER');
+    expect(error?.message).toContain('FILE_STORAGE_PROVIDER');
+    expect(error?.message).toContain('FILE_MALWARE_SCAN_ENABLED');
+  });
 });

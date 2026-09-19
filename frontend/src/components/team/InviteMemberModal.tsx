@@ -28,6 +28,7 @@ interface InviteMemberModalProps {
   isPending: boolean
   onClose: () => void
   onSubmit: (emails: string[], role: AssignableRole) => void
+  shareLinks?: boolean
 }
 
 export function InviteMemberModal({
@@ -37,6 +38,7 @@ export function InviteMemberModal({
   isPending,
   onClose,
   onSubmit,
+  shareLinks = false,
 }: InviteMemberModalProps) {
   const [emails, setEmails] = useState("")
   const [role, setRole] = useState<AssignableRole>("MEMBER")
@@ -83,7 +85,9 @@ export function InviteMemberModal({
         <DialogHeader>
           <DialogTitle>Invite team members</DialogTitle>
           <DialogDescription>
-            Send invitations to join the active organization.
+            {shareLinks
+              ? "Create secure links to share with invited team members."
+              : "Send invitations to join the active organization."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
@@ -136,7 +140,8 @@ export function InviteMemberModal({
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <LoaderCircle className="animate-spin" />}
-              Send {emails.includes(",") ? "invitations" : "invitation"}
+              {shareLinks ? "Create" : "Send"}{" "}
+              {emails.includes(",") ? "invitations" : "invitation"}
             </Button>
           </DialogFooter>
         </form>

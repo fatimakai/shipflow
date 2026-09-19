@@ -1,154 +1,158 @@
-# ShipFlow production deployment
+# ShipFlow public-demo deployment
 
-ShipFlow deploys from the repository-level `render.yaml` Blueprint. The
-Blueprint creates a paid Docker web service, a static frontend, a paid
-PostgreSQL 18 database, and a private ClamAV service. Cloudflare R2, Resend,
-Stripe, Google OAuth, and GitHub OAuth remain externally provisioned services.
+The public portfolio demo uses a deliberately constrained, zero-cost profile:
 
-## 1. Provision external services
+- Render Free Web Service for the Docker backend
+- Neon Free PostgreSQL 18 using a direct, TLS-protected connection string
+- Cloudflare Pages for the React frontend
+- Stripe test mode for billing
+- Google and GitHub OAuth for public registration
 
-Create these resources before the first Blueprint sync:
+The backend runs with `DEPLOYMENT_PROFILE=public-demo`; the frontend uses
+`VITE_DEPLOYMENT_PROFILE=public-demo`. This profile is not the production
+reference architecture. The production-grade R2, Resend, and ClamAV
+implementations remain in the repository but are unavailable in the public
+demo.
 
-- A private Cloudflare R2 bucket and a bucket-scoped Object Read & Write API
-  token. Record the access key ID, secret access key, bucket name, account ID,
-  and S3 endpoint (`https://<ACCOUNT_ID>.r2.cloudflarestorage.com`). Do not
-  enable public development URLs or a public custom domain.
-- A verified Resend sending domain, API key, and webhook endpoint.
-- A Stripe test-mode Pro product with USD 29 monthly and USD 290 annual
-  recurring prices. Automatic Tax remains enabled by application policy.
-- Google and GitHub OAuth applications.
-- A Render workspace connected to this Git repository.
+## Public-demo security boundary
 
-Configure this R2 bucket CORS policy, replacing the origin with the deployed
-frontend origin:
+The API, not only the frontend, blocks these capabilities in public-demo mode:
 
-```json
-[
-  {
-    "AllowedOrigins": ["https://shipflow-web.onrender.com"],
-    "AllowedMethods": ["GET", "HEAD", "PUT"],
-    "AllowedHeaders": ["Content-Length", "Content-Type", "x-amz-meta-*"],
-    "ExposeHeaders": ["ETag"],
-    "MaxAgeSeconds": 3600
-  }
-]
-```
+- password registration
+- email verification and password recovery
+- every file metadata, upload, download, and local-content endpoint
+- the Resend webhook
 
-R2 supports presigned `PUT`, not HTML-form presigned `POST`. The API therefore
-returns a raw-file `PUT` target for R2 while local development continues to use
-the API's signed multipart `POST` endpoint. Object size, SHA-256, declared MIME
-type, detected MIME type, and file signature are verified by the API before a
-file can enter scanning or become downloadable.
+Existing password accounts can still sign in, which preserves local and test
+coverage, but the public interface offers Google and GitHub as the only account
+creation paths. Organization invitations return a newly generated shareable URL
+only to an authorized creator or resender. The raw token is never persisted and
+is not returned by invitation-list endpoints.
 
-## 2. Configure provider callbacks
+Do not use this profile for a customer deployment. Switch back to `standard`,
+configure Resend and a verified domain, and provision private R2 plus ClamAV.
 
-Assuming Render grants the service names in `render.yaml`, use:
+## 1. Provision accounts and reserve URLs
 
-- Google redirect URI:
-  `https://shipflow-api.onrender.com/api/v1/auth/oauth/google/callback`
-- GitHub callback URL:
-  `https://shipflow-api.onrender.com/api/v1/auth/oauth/github/callback`
-- Stripe webhook:
-  `https://shipflow-api.onrender.com/api/v1/webhooks/stripe`
-- Resend webhook:
-  `https://shipflow-api.onrender.com/api/v1/webhooks/resend`
+1. Create or select the dedicated ShipFlow Hobby workspace in Render and
+   connect the GitHub repository.
+2. Create a Cloudflare Pages project from the repository. Use `frontend` as the
+   root, `npm run build` as the build command, and `dist` as the output
+   directory. Record the assigned `pages.dev` origin.
+3. Create a Neon PostgreSQL 18 project in a region close to Render Singapore.
+   Copy the **direct** connection string, including `sslmode=require`. ShipFlow
+   uses its own bounded application pool, and startup migrations should not use
+   the pooled hostname.
+4. Create a Stripe test-mode Pro product with USD 29 monthly and USD 290 annual
+   recurring prices.
+5. Create Google and GitHub OAuth applications after the Render service URL is
+   known.
 
-Subscribe Stripe to the billing events documented in
-`backend/docs/adr/0006-stripe-billing.md`. Store the resulting signing secret
-as `STRIPE_WEBHOOK_SECRET`. Store Resend's Svix signing secret as
-`RESEND_WEBHOOK_SECRET`.
+No R2 bucket, Resend key, sending domain, VirusTotal key, or hosted ClamAV
+service is required for this deployment.
 
-If Render changes a service name because it is unavailable, use the actual URL
-everywhere below and in the provider callback settings.
+## 2. Configure and deploy the backend
 
-## 3. Sync the Render Blueprint
+Sync the repository-level `render.yaml` Blueprint into the dedicated ShipFlow
+workspace. Set every value marked `sync: false`:
 
-Create a Blueprint from the repository's `render.yaml`. During the first sync,
-Render prompts for every variable marked `sync: false`.
+| Variable | Value |
+| --- | --- |
+| `DATABASE_URL` | Neon direct PostgreSQL connection string |
+| `FRONTEND_URL` | Exact Cloudflare Pages origin, without a trailing slash |
+| `CORS_ORIGINS` | The same exact Pages origin |
+| `EMAIL_SUPPORT_ADDRESS` | Publicly monitored recovery/support address |
+| `STRIPE_SECRET_KEY` | Stripe test-mode secret key |
+| `STRIPE_WEBHOOK_SECRET` | Stripe test webhook signing secret |
+| `STRIPE_PRO_PRODUCT_ID` | Test product ID |
+| `STRIPE_PRO_MONTHLY_PRICE_ID` | Test monthly price ID |
+| `STRIPE_PRO_ANNUAL_PRICE_ID` | Test annual price ID |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth credentials |
+| `GOOGLE_CALLBACK_URL` | Exact Google callback shown below |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth credentials |
+| `GITHUB_CALLBACK_URL` | Exact GitHub callback shown below |
 
-Set backend variables as follows:
+Assuming the API receives the default service name, use:
 
-| Variable                                      | Value                                                     |
-| --------------------------------------------- | --------------------------------------------------------- |
-| `FRONTEND_URL`                                | `https://shipflow-web.onrender.com`                       |
-| `CORS_ORIGINS`                                | The exact frontend origin, with no path or trailing slash |
-| `EMAIL_FROM_ADDRESS`                          | Verified Resend sender address                            |
-| `EMAIL_REPLY_TO` / `EMAIL_SUPPORT_ADDRESS`    | Monitored support address                                 |
-| `RESEND_API_KEY` / `RESEND_WEBHOOK_SECRET`    | Resend credentials                                        |
-| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Stripe test-mode credentials                              |
-| `STRIPE_PRO_PRODUCT_ID`                       | Stripe test product ID                                    |
-| `STRIPE_PRO_MONTHLY_PRICE_ID`                 | Stripe test monthly price ID                              |
-| `STRIPE_PRO_ANNUAL_PRICE_ID`                  | Stripe test annual price ID                               |
-| `S3_BUCKET`                                   | Private R2 bucket name                                    |
-| `S3_ENDPOINT`                                 | R2 account S3 endpoint                                    |
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | Bucket-scoped R2 S3 credentials                           |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`   | Google OAuth credentials                                  |
-| `GOOGLE_CALLBACK_URL`                         | Exact Google callback URL above                           |
-| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`   | GitHub OAuth credentials                                  |
-| `GITHUB_CALLBACK_URL`                         | Exact GitHub callback URL above                           |
+- Google: `https://shipflow-api.onrender.com/api/v1/auth/oauth/google/callback`
+- GitHub: `https://shipflow-api.onrender.com/api/v1/auth/oauth/github/callback`
+- Stripe: `https://shipflow-api.onrender.com/api/v1/webhooks/stripe`
 
-Set frontend build variables:
+Use the actual Render hostname if the default name is unavailable.
 
-| Variable            | Value                                      |
-| ------------------- | ------------------------------------------ |
-| `VITE_API_BASE_URL` | `https://shipflow-api.onrender.com/api/v1` |
-| `VITE_APP_URL`      | `https://shipflow-web.onrender.com`        |
+Render Free does not support pre-deploy commands. The Blueprint therefore
+overrides the Docker command to run `prisma migrate deploy` before starting the
+single API process. Migration failure prevents the application from starting.
 
-The Blueprint generates independent 256-bit base64 values for the JWT signing
-secret and 2FA encryption key. Preserve these values during updates. Rotating
-the JWT secret invalidates sessions; rotating the 2FA key requires a planned
-credential migration and a version increment.
+The Blueprint generates the JWT signing secret and 2FA encryption key. Preserve
+both values across updates. Rotating the JWT secret invalidates sessions;
+rotating the 2FA key requires a planned credential migration and key-version
+increment.
 
-Render runs `prisma migrate deploy` as the API pre-deploy command. Automatic
-deployment is gated on the GitHub CI checks. The database rejects public
-connections (`ipAllowList: []`), and the API reaches PostgreSQL and ClamAV over
-Render's private network.
+## 3. Configure Cloudflare Pages
 
-## 4. Verify a release
+Set these production build variables:
 
-After a successful deploy:
+| Variable | Value |
+| --- | --- |
+| `VITE_API_BASE_URL` | `https://<render-host>/api/v1` |
+| `VITE_APP_URL` | Exact `https://<project>.pages.dev` origin |
+| `VITE_DEPLOYMENT_PROFILE` | `public-demo` |
+| `VITE_GOOGLE_OAUTH_ENABLED` | `true` |
+| `VITE_GITHUB_OAUTH_ENABLED` | `true` |
 
-1. Confirm `GET /api/v1/health/live` and `GET /api/v1/health/ready` return 200.
-2. Register a fresh user and confirm the verification message arrives.
-3. Sign in with password, then repeat with Google and GitHub.
-4. Enable 2FA, sign out, and confirm both TOTP and one single-use backup code.
-5. Create an organization and complete a Stripe test checkout.
-6. Upload a safe allowlisted file. It should move from `SCANNING` to `READY`.
-7. Upload the standard EICAR test file only in a controlled test workspace. It
-   should move to `REJECTED` and must never receive a download URL.
-8. Confirm Stripe and Resend webhook deliveries are accepted and recorded.
-9. Check API logs for bootstrap, database, scanner, or provider errors without
-   exposing secrets or tokens.
+`frontend/public/_redirects` provides SPA fallback routing and
+`frontend/public/_headers` supplies the CSP and browser security headers. Verify
+both files appear in the final `dist` directory after every build.
 
-## Operations and rollback
+## 4. Configure Stripe and OAuth
 
-- Keep Render PostgreSQL point-in-time recovery/backups enabled and run the
-  repository backup command before high-risk migrations.
-- Treat a failed ClamAV connection as fail-closed: files remain unavailable and
-  ultimately enter `FAILED`; do not disable scanning to clear the queue.
-- Roll back application code by deploying the previous known-good commit.
-  Prisma migrations are forward-only; restore a database backup when a schema
-  rollback is required.
-- Rotate any credential immediately if it appears in a log, screenshot, issue,
-  or commit, then invalidate the old value at the provider.
-- Account recovery is manual: support verifies identity out-of-band and an
-  administrator manually disables 2FA. Email access alone never bypasses 2FA.
+1. Add the deployed Stripe webhook URL and subscribe to the billing events in
+   `backend/docs/adr/0006-stripe-billing.md`.
+2. Copy its signing secret into Render and redeploy.
+3. Add the exact Render callback URLs to the Google and GitHub OAuth apps.
+4. Add the exact Cloudflare Pages origin to any OAuth consent-screen and
+   application-homepage settings that require it.
 
-## Local production-path check
+Never put provider secrets in Cloudflare frontend variables, repository files,
+screenshots, issues, or CI logs.
 
-`backend/compose.yaml` includes PostgreSQL 18 and the pinned ClamAV image. To
-exercise scanning locally, start Compose and configure:
+## 5. Keep-warm monitor
 
-```dotenv
-FILE_STORAGE_PROVIDER=s3
-FILE_MALWARE_SCAN_ENABLED=true
-CLAMAV_HOST=127.0.0.1
-CLAMAV_PORT=3310
-AWS_REGION=auto
-S3_BUCKET=<private-r2-bucket>
-S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
-AWS_ACCESS_KEY_ID=<r2-access-key-id>
-AWS_SECRET_ACCESS_KEY=<r2-secret-access-key>
-```
+Configure UptimeRobot or cron-job.org to request
+`https://<render-host>/api/v1/health/ready` less than every 15 minutes. Treat it
+as a demo convenience, not an availability guarantee. Render may still restart
+or suspend a free instance, and Neon may scale its compute to zero.
 
-Never use production credentials in committed environment files.
+## 6. Release verification
+
+1. Confirm `/api/v1/health/live` and `/api/v1/health/ready` return 200.
+2. Confirm `/register`, `/forgot-password`, `/reset-password`, and
+   `/verify-email` redirect to the OAuth-focused login experience.
+3. Confirm direct API calls to password registration/recovery return 403.
+4. Register fresh accounts with Google and GitHub.
+5. Enable 2FA, sign out, then verify both TOTP and a single-use backup code.
+6. Create an organization and generate a shareable invitation link. Confirm the
+   link is displayed after creation but not in the pending-invitation list.
+7. Confirm the Files navigation is absent and direct file API requests return
+   403.
+8. Complete a Stripe test checkout and confirm webhook processing is recorded.
+9. Inspect logs for migrations, database, OAuth, billing, or startup errors
+   without exposing secrets.
+
+## Upgrade path
+
+For a paid/customer deployment:
+
+1. Set both deployment profiles to `standard`.
+2. Provision a verified Resend domain and webhook.
+3. Provision a private R2 bucket with scoped credentials and origin-specific
+   CORS.
+4. Run the pinned ClamAV container as a private service.
+5. Replace startup migrations with the platform's paid pre-deploy command.
+6. Re-enable the password-email and file interfaces and run their production
+   smoke tests.
+
+Account recovery remains manual in either profile: support verifies identity
+out-of-band and an administrator manually disables 2FA. Email access alone does
+not bypass 2FA.

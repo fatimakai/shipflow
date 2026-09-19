@@ -134,6 +134,13 @@ export class InvitationResponseDto {
 
   @ApiProperty({ format: 'date-time' })
   updatedAt!: Date;
+
+  @ApiPropertyOptional({
+    description:
+      'Single-display shareable link returned only when public-demo mode creates or rotates an invitation',
+    format: 'uri',
+  })
+  invitationUrl?: string;
 }
 
 export class InvitationListResponseDto {

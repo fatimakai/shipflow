@@ -10,9 +10,11 @@ import {
 import { ApiExcludeController } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { API_VERSION } from '../common/http/api.constants';
+import { UnavailableInPublicDemo } from '../config/public-demo.decorator';
 import { ResendWebhookService } from './resend-webhook.service';
 
 @ApiExcludeController()
+@UnavailableInPublicDemo()
 @Controller({ path: 'webhooks/resend', version: API_VERSION })
 export class ResendWebhookController {
   constructor(private readonly webhookService: ResendWebhookService) {}

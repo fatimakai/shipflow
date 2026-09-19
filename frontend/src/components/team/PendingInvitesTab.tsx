@@ -38,6 +38,7 @@ interface PendingInvitesTabProps {
   onResend: (invite: PendingInvite) => void
   onRevoke: (invite: PendingInvite) => void
   pendingInvites: PendingInvite[]
+  shareLinks?: boolean
 }
 
 function formatDate(value: string) {
@@ -55,6 +56,7 @@ export function PendingInvitesTab({
   onResend,
   onRevoke,
   pendingInvites,
+  shareLinks = false,
 }: PendingInvitesTabProps) {
   const [inviteToRevoke, setInviteToRevoke] = useState<PendingInvite | null>(
     null
@@ -147,7 +149,7 @@ export function PendingInvitesTab({
                                 size="sm"
                                 onClick={() => onResend(invite)}
                               >
-                                Resend
+                                {shareLinks ? "Rotate link" : "Resend"}
                               </Button>
                             )}
                             {canRevoke && (

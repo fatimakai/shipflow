@@ -48,6 +48,7 @@ backup, and restore workflows.
 | Variable                            | Default                   | Description                                                         |
 | ----------------------------------- | ------------------------- | ------------------------------------------------------------------- |
 | `NODE_ENV`                          | `development`             | Runtime environment: `development`, `test`, or `production`         |
+| `DEPLOYMENT_PROFILE`                | `standard`                | `standard` or the constrained `public-demo` policy                  |
 | `PORT`                              | `3000`                    | HTTP port used by the API                                           |
 | `APP_NAME`                          | `ShipFlow API`            | Service name used in API documentation and health responses         |
 | `LOG_LEVEL`                         | `debug` locally           | Minimum structured log level; production defaults to `info`         |
@@ -79,7 +80,7 @@ backup, and restore workflows.
 | `AUTH_REFRESH_COOKIE_NAME`          | `shipflow_refresh`        | HttpOnly refresh cookie name                                        |
 | `AUTH_COOKIE_SECURE`                | `false` locally           | Requires HTTPS cookies and must be `true` in production             |
 | `FRONTEND_URL`                      | `http://localhost:5173`   | Frontend base URL for account links and OAuth redirects             |
-| `EMAIL_PROVIDER`                    | `log` (`capture` in test) | Email adapter; production requires `resend`                         |
+| `EMAIL_PROVIDER`                    | `log` (`capture` in test) | Standard production uses `resend`; public demo requires `log`       |
 | `EMAIL_FROM_NAME`                   | `ShipFlow`                | Friendly sender name                                                |
 | `EMAIL_FROM_ADDRESS`                | Example no-reply address  | Verified sender address                                             |
 | `EMAIL_REPLY_TO`                    | Example support address   | Reply-to address                                                    |
@@ -97,7 +98,7 @@ backup, and restore workflows.
 | `STRIPE_PRO_MONTHLY_PRICE_ID`       | Local placeholder         | Approved USD 29 monthly price ID                                    |
 | `STRIPE_PRO_ANNUAL_PRICE_ID`        | Local placeholder         | Approved USD 290 annual price ID                                    |
 | `STRIPE_AUTOMATIC_TAX_ENABLED`      | `false` locally           | Must be `true` in production                                        |
-| `FILE_STORAGE_PROVIDER`             | `local`                   | File adapter; production requires `s3`                              |
+| `FILE_STORAGE_PROVIDER`             | `local`                   | Standard production uses `s3`; public demo requires `local`         |
 | `FILE_LOCAL_ROOT`                   | `.data/files`             | Private non-public local object root                                |
 | `FILE_MALWARE_SCAN_ENABLED`         | `false` locally           | Must be `true` for production S3 storage                            |
 | `CLAMAV_HOST`                       | None                      | Required ClamAV hostname when malware scanning is enabled           |
@@ -324,8 +325,15 @@ PostgreSQL because R2 does not implement S3 object tagging.
 See [ADR 0010](docs/adr/0010-file-storage.md) for the exact provider, security,
 retention, malware, and cleanup decisions.
 
-See the repository-level `docs/deployment.md` for the full Render, R2, ClamAV,
-Resend, Stripe, and OAuth deployment runbook.
+The zero-cost portfolio deployment uses the explicit `public-demo` profile.
+That profile blocks every file endpoint at the API boundary while keeping the
+R2 and ClamAV implementation available for local verification and a future paid
+deployment. It also blocks password registration, verification, and recovery;
+public account creation uses Google or GitHub OAuth, and invitations return
+single-display shareable links to authorized organization managers.
+
+See the repository-level `docs/deployment.md` for the Render Free, Neon,
+Cloudflare Pages, Stripe, and OAuth demo runbook and the paid upgrade path.
 
 ## Notifications
 

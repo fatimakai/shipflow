@@ -8,6 +8,7 @@ import {
   PublicOnlyRoute,
 } from "./features/auth/components/RouteGuards"
 import { OrganizationCapabilityRoute } from "./features/organizations/components/OrganizationCapabilityRoute"
+import { env } from "./config/env"
 
 const Dashboard = lazy(() =>
   import("./pages/dashboard/Dashboard").then((module) => ({
@@ -84,17 +85,44 @@ const AcceptInvitationPage = lazy(() =>
 )
 
 export function AppRoutes() {
+  const demoAuthUnavailable = (
+    <Navigate
+      to="/login"
+      replace
+      state={{
+        notice:
+          "Password registration and email recovery are disabled in this public demo. Continue with Google or GitHub.",
+      }}
+    />
+  )
+
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes>
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/register"
+            element={env.isPublicDemo ? demoAuthUnavailable : <RegisterPage />}
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              env.isPublicDemo ? demoAuthUnavailable : <ForgotPasswordPage />
+            }
+          />
         </Route>
 
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route
+          path="/reset-password"
+          element={
+            env.isPublicDemo ? demoAuthUnavailable : <ResetPasswordPage />
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={env.isPublicDemo ? demoAuthUnavailable : <VerifyEmailPage />}
+        />
         <Route path="/auth/callback" element={<OAuthCallbackPage />} />
         <Route path="/auth/two-factor" element={<TwoFactorChallengePage />} />
 
@@ -129,7 +157,16 @@ export function AppRoutes() {
             <Route
               element={<OrganizationCapabilityRoute capability="file:read" />}
             >
-              <Route path="/files" element={<Files />} />
+              <Route
+                path="/files"
+                element={
+                  env.isPublicDemo ? (
+                    <Navigate to="/dashboard" replace />
+                  ) : (
+                    <Files />
+                  )
+                }
+              />
             </Route>
             <Route
               element={

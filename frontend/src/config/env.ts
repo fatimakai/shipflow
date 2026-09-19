@@ -8,6 +8,9 @@ const featureFlag = z
 const environmentSchema = z.object({
   VITE_API_BASE_URL: z.url().default("http://localhost:3000/api/v1"),
   VITE_APP_URL: z.url().default("http://localhost:5173"),
+  VITE_DEPLOYMENT_PROFILE: z
+    .enum(["standard", "public-demo"])
+    .default("standard"),
   VITE_GITHUB_OAUTH_ENABLED: featureFlag,
   VITE_GOOGLE_OAUTH_ENABLED: featureFlag,
 })
@@ -25,5 +28,6 @@ export const env = {
   appUrl: result.data.VITE_APP_URL.replace(/\/$/, ""),
   githubOAuthEnabled: result.data.VITE_GITHUB_OAUTH_ENABLED,
   googleOAuthEnabled: result.data.VITE_GOOGLE_OAUTH_ENABLED,
+  isPublicDemo: result.data.VITE_DEPLOYMENT_PROFILE === "public-demo",
   isDevelopment: import.meta.env.DEV,
 } as const

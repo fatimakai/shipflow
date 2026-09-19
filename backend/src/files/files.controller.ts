@@ -32,6 +32,7 @@ import { Capability } from '../authorization/capability';
 import type { OrganizationContext } from '../authorization/organization-context.service';
 import { API_VERSION } from '../common/http/api.constants';
 import { ApiStandardErrors } from '../common/http/decorators/api-standard-errors.decorator';
+import { UnavailableInPublicDemo } from '../config/public-demo.decorator';
 import {
   FileListQueryDto,
   InitiateFileUploadDto,
@@ -46,6 +47,7 @@ import {
 import { FilesService } from './files.service';
 
 @ApiTags('Files')
+@UnavailableInPublicDemo()
 @ApiBearerAuth('access-token')
 @ApiStandardErrors()
 @UseGuards(AccessTokenGuard)

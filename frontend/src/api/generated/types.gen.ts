@@ -360,6 +360,7 @@ export type InvitationResponseDto = {
     } | null;
     createdAt: string;
     updatedAt: string;
+    invitationUrl?: string;
 };
 
 export type InvitationListResponseDto = {

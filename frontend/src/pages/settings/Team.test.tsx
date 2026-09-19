@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query"
 import { render, screen } from "@testing-library/react"
 import { waitFor } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { http, HttpResponse } from "msw"
 import { afterEach, describe, expect, it } from "vitest"
 
@@ -139,6 +140,66 @@ describe("Team", () => {
     expect(
       screen.queryByRole("button", { name: "Invite member" })
     ).not.toBeInTheDocument()
+  })
+
+  it("shows a shareable link returned when an invitation is created", async () => {
+    const invitationUrl =
+      "https://shipflow.pages.dev/invitations/accept?token=single-use-token"
+    server.use(
+      http.get(
+        `http://localhost:3000/api/v1/organizations/${organizationId}/members`,
+        () =>
+          HttpResponse.json({
+            items: [],
+            pagination: { limit: 100, page: 1, total: 0, totalPages: 0 },
+          })
+      ),
+      http.get(
+        `http://localhost:3000/api/v1/organizations/${organizationId}/invitations`,
+        () =>
+          HttpResponse.json({
+            items: [],
+            pagination: { limit: 100, page: 1, total: 0, totalPages: 0 },
+          })
+      ),
+      http.post(
+        `http://localhost:3000/api/v1/organizations/${organizationId}/invitations`,
+        () =>
+          HttpResponse.json({
+            acceptedAt: null,
+            createdAt: "2026-08-10T00:00:00.000Z",
+            email: "invitee@example.com",
+            expiresAt: "2026-08-17T00:00:00.000Z",
+            id: "55555555-5555-4555-8555-555555555555",
+            invitationUrl,
+            invitedBy: {
+              avatarUrl: null,
+              displayName: "Alex Morgan",
+              email: "alex@example.com",
+              id: "44444444-4444-4444-8444-444444444444",
+            },
+            organizationId,
+            revokedAt: null,
+            role: "MEMBER",
+            status: "PENDING",
+            updatedAt: "2026-08-10T00:00:00.000Z",
+          })
+      )
+    )
+    const user = userEvent.setup()
+
+    renderTeam(["membership:read", "invitation:read", "invitation:create"])
+    await user.click(
+      await screen.findByRole("button", { name: "Invite member" })
+    )
+    await user.type(
+      screen.getByLabelText("Email addresses"),
+      "invitee@example.com"
+    )
+    await user.click(screen.getByRole("button", { name: "Send invitation" }))
+
+    expect(await screen.findByText(invitationUrl)).toBeVisible()
+    expect(screen.getByRole("button", { name: "Copy" })).toBeVisible()
   })
 
   it("clears the active tenant after backend membership loss", async () => {

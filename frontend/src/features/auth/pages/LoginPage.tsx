@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { env } from "@/config/env"
 
 import { authApi, isTwoFactorChallenge } from "../auth-api"
 import { getAuthErrorMessage } from "../auth-errors"
@@ -56,15 +57,19 @@ export function LoginPage() {
       title="Welcome back"
       description="Sign in to continue to your ShipFlow workspace."
       footer={
-        <>
-          New to ShipFlow?{" "}
-          <Link
-            className="font-medium text-primary hover:underline"
-            to="/register"
-          >
-            Create an account
-          </Link>
-        </>
+        env.isPublicDemo ? (
+          <>New to ShipFlow? Continue with Google or GitHub above.</>
+        ) : (
+          <>
+            New to ShipFlow?{" "}
+            <Link
+              className="font-medium text-primary hover:underline"
+              to="/register"
+            >
+              Create an account
+            </Link>
+          </>
+        )
       }
     >
       <div className="space-y-5">
@@ -103,12 +108,18 @@ export function LoginPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-4">
               <Label htmlFor="password">Password</Label>
-              <Link
-                className="text-xs font-medium text-primary hover:underline"
-                to="/forgot-password"
-              >
-                Forgot password?
-              </Link>
+              {env.isPublicDemo ? (
+                <span className="text-xs text-muted-foreground">
+                  Recovery unavailable in demo
+                </span>
+              ) : (
+                <Link
+                  className="text-xs font-medium text-primary hover:underline"
+                  to="/forgot-password"
+                >
+                  Forgot password?
+                </Link>
+              )}
             </div>
             <PasswordInput
               id="password"

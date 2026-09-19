@@ -50,8 +50,10 @@ Run `npm run api:generate` while the backend Swagger endpoint is available.
 Generated contract types are committed so clean frontend checkouts can build
 without a running backend.
 
-The repository-level `docs/deployment.md` contains the Render production
-deployment and provider configuration runbook.
+The repository-level `docs/deployment.md` contains the Render Free, Neon, and
+Cloudflare Pages public-demo runbook. Set `VITE_DEPLOYMENT_PROFILE=public-demo`
+to remove password-registration/recovery and file surfaces from the deployed
+interface; the API independently enforces the same restrictions.
 
 ## Architecture
 
