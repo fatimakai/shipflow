@@ -51,9 +51,12 @@ Generated contract types are committed so clean frontend checkouts can build
 without a running backend.
 
 The repository-level `docs/deployment.md` contains the Render Free, Neon, and
-Cloudflare Pages public-demo runbook. Set `VITE_DEPLOYMENT_PROFILE=public-demo`
-to remove password-registration/recovery and file surfaces from the deployed
-interface; the API independently enforces the same restrictions.
+Cloudflare Pages public-demo runbook. In that deployment, the Pages Function at
+`functions/api/[[path]].ts` proxies `/api/v1/*` to Render; set
+`VITE_API_BASE_URL` to the main Pages origin plus `/api/v1` so browser auth
+cookies stay same-origin. Set `VITE_DEPLOYMENT_PROFILE=public-demo` to remove
+password-registration/recovery and file surfaces from the deployed interface;
+the API independently enforces the same restrictions.
 
 ## Architecture
 

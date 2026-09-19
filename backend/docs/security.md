@@ -140,6 +140,13 @@ live email delivery, object storage, and malware scanning. A global API guard
 returns `403 Forbidden` for password registration and recovery, email
 verification, file operations, local file transfer, and the Resend webhook.
 
+The deployed browser uses a same-origin Cloudflare Pages Function for
+`/api/v1/*`. It forwards to the fixed Render API origin while preserving the
+browser's `Origin` and Fetch Metadata headers, request cookies, response
+cookies, and OAuth redirects. The Function does not bypass API authorization or
+cookie-origin checks. Browser-visible refresh and OAuth-state cookies remain
+host-only on the Pages origin and use their existing `SameSite=Lax` policy.
+
 OAuth remains subject to ShipFlow's own 2FA challenge. Organization invitations
 are created as single-display, email-bound share links instead of being sent by
 email; later list responses never expose their bearer token. The frontend hides
