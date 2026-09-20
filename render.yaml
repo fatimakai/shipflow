@@ -7,8 +7,6 @@ services:
     rootDir: backend
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    dockerCommand: >-
-      /bin/sh -c "./node_modules/.bin/prisma migrate deploy && node dist/main.js"
     healthCheckPath: /api/v1/health/ready
     autoDeployTrigger: checksPass
     envVars:

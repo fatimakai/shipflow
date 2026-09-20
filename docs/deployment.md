@@ -89,9 +89,12 @@ OAuth must start and return through Pages so the signed state cookie is
 available at callback time. Stripe remains a direct server-to-server webhook
 and does not pass through the Pages Function.
 
-Render Free does not support pre-deploy commands. The Blueprint therefore
-overrides the Docker command to run `prisma migrate deploy` before starting the
-single API process. Migration failure prevents the application from starting.
+Render Free does not support pre-deploy commands. The Docker image runs
+`prisma migrate deploy` before starting the API when
+`DEPLOYMENT_PROFILE=public-demo`; a migration failure prevents the application
+from starting. Leave Render's **Docker Command** field blank so the image's
+startup command is used. Standard deployments still run migrations as a
+separate deployment step.
 
 The Blueprint generates the JWT signing secret and 2FA encryption key. Preserve
 both values across updates. Rotating the JWT secret invalidates sessions;

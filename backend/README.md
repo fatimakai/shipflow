@@ -428,8 +428,10 @@ contain timing and target information without SQL parameters.
 The [production Dockerfile](Dockerfile) uses separate dependency, build,
 migration, and runtime stages. The final image contains production dependencies
 and compiled output only, runs as the unprivileged `node` user, and checks the
-database-backed readiness endpoint. The current topology supports exactly one
-backend instance because rate limits remain in memory.
+database-backed readiness endpoint. Its default startup command applies pending
+migrations before starting the API only in the `public-demo` profile; standard
+deployments use a separate migration step. The current topology supports exactly
+one backend instance because rate limits remain in memory.
 
 Deployment sequencing, migration rollback, database backup and confirmed
 restore, incident handling, and acceptance evidence are documented in the
