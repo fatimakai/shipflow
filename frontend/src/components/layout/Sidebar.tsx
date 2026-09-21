@@ -2,7 +2,6 @@ import {
   LayoutDashboard,
   Settings,
   LogOut,
-  Hexagon,
   X,
   Users,
   CreditCard,
@@ -10,6 +9,7 @@ import {
   FolderOpen,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ShipFlowLogo } from "@/components/brand/ShipFlowLogo"
 import { NavLink, useLocation } from "react-router-dom"
 import { env } from "@/config/env"
 import { ApiHealthIndicator } from "./ApiHealthIndicator"
@@ -73,10 +73,10 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
         ? location.pathname.startsWith(item.path)
         : location.pathname === item.path
 
-    return `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 ${
+    return `flex items-center gap-3 border-l-2 px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
       isActive
-        ? "bg-primary/10 text-primary"
-        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+        ? "border-sidebar-primary bg-sidebar-accent text-sidebar-foreground"
+        : "border-transparent text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
     }`
   }
 
@@ -91,25 +91,18 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[232px] flex flex-col border-r border-border bg-sidebar transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[244px] flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="px-4 pt-4 pb-3">
+        <div className="border-b border-sidebar-border px-4 pb-4 pt-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="bg-primary rounded-lg p-1.5">
-                <Hexagon className="h-4 w-4 text-primary-foreground fill-primary-foreground" />
-              </div>
-              <span className="font-heading font-bold text-lg text-foreground tracking-tight">
-                ShipFlow
-              </span>
-            </div>
+            <ShipFlowLogo inverse />
             <button
               onClick={close}
               aria-label="Close menu"
-              className="lg:hidden p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+              className="cursor-pointer rounded-sm p-1 text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground lg:hidden"
             >
               <X className="h-5 w-5" />
             </button>
@@ -119,9 +112,9 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 px-3 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto px-3 pt-6">
           <div className="mb-6">
-            <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+            <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/50">
               Main
             </p>
             <div className="space-y-0.5">
@@ -147,7 +140,7 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
           </div>
 
           <div>
-            <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+            <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/50">
               General
             </p>
             <div className="space-y-0.5">
@@ -169,8 +162,8 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
         {env.isDevelopment && <ApiHealthIndicator />}
 
         {/* User Profile */}
-        <div className="p-3 border-t border-border">
-          <div className="flex items-center justify-between hover:bg-secondary p-2.5 rounded-lg cursor-pointer transition-colors">
+        <div className="border-t border-sidebar-border p-3">
+          <div className="flex items-center justify-between rounded-sm p-2.5 transition-colors hover:bg-sidebar-accent">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8">
                 <AvatarImage
@@ -182,10 +175,10 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-foreground leading-tight">
+                <span className="text-sm font-medium leading-tight text-sidebar-foreground">
                   {displayName}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-sidebar-foreground/60">
                   {user?.email}
                 </span>
               </div>
@@ -195,7 +188,7 @@ export function Sidebar({ isOpen, close }: SidebarProps) {
               aria-label="Log out"
               title="Log out"
               onClick={() => void signOut().catch(() => undefined)}
-              className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+              className="rounded-sm p-1.5 text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
             >
               <LogOut className="h-4 w-4" />
             </button>

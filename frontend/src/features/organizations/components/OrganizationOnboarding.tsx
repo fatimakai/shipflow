@@ -16,7 +16,7 @@ export function OrganizationOnboarding() {
   const canCreateOrganization = user?.emailVerified ?? false
 
   return (
-    <div className="flex min-h-screen flex-col bg-secondary">
+    <div className="flex min-h-screen flex-col bg-background">
       <EmailVerificationBanner />
       <div className="flex flex-1 items-center justify-center p-4">
         <Card className="w-full max-w-lg">

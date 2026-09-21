@@ -71,102 +71,102 @@
    ShipFlow Brand Palette — Light Mode
    ══════════════════════════════════════════ */
 :root {
-  --background: #ffffff;
-  --foreground: #12121a;
-  --card: #ffffff;
-  --card-foreground: #12121a;
-  --popover: #ffffff;
-  --popover-foreground: #12121a;
+  --background: #f3f0e8;
+  --foreground: #252923;
+  --card: #fcfaf5;
+  --card-foreground: #252923;
+  --popover: #fcfaf5;
+  --popover-foreground: #252923;
 
-  --primary: #5b4fe9;
-  --primary-foreground: #ffffff;
+  --primary: #a3422b;
+  --primary-foreground: #fffaf2;
 
-  --secondary: #f6f6fb;
-  --secondary-foreground: #12121a;
+  --secondary: #eae5da;
+  --secondary-foreground: #252923;
 
-  --muted: #f6f6fb;
-  --muted-foreground: #6b6b7a;
+  --muted: #eae5da;
+  --muted-foreground: #62685e;
 
-  --accent: #3da9fc;
+  --accent: #276a61;
   --accent-foreground: #ffffff;
 
-  --destructive: #ef4444;
+  --destructive: #a6372f;
 
-  --border: #e7e7f0;
-  --input: #e7e7f0;
-  --ring: #5b4fe9;
+  --border: #d8d1c4;
+  --input: #cfc6b7;
+  --ring: #a3422b;
 
   /* ShipFlow semantic */
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --panel: #ffffff;
-  --sidebar: #ffffff;
+  --success: #296d54;
+  --warning: #976011;
+  --danger: #a6372f;
+  --panel: #fcfaf5;
+  --sidebar: #252c29;
 
   /* Charts */
-  --chart-1: #5b4fe9;
-  --chart-2: #3da9fc;
-  --chart-3: #22c55e;
-  --chart-4: #f59e0b;
-  --chart-5: #ef4444;
+  --chart-1: #a3422b;
+  --chart-2: #276a61;
+  --chart-3: #a07835;
+  --chart-4: #70805f;
+  --chart-5: #785f55;
 
   /* Sidebar */
-  --sidebar-foreground: #12121a;
-  --sidebar-primary: #5b4fe9;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f6f6fb;
-  --sidebar-accent-foreground: #12121a;
-  --sidebar-border: #e7e7f0;
-  --sidebar-ring: #5b4fe9;
+  --sidebar-foreground: #f5f0e7;
+  --sidebar-primary: #e18b6c;
+  --sidebar-primary-foreground: #221c18;
+  --sidebar-accent: #39423d;
+  --sidebar-accent-foreground: #f5f0e7;
+  --sidebar-border: #48514b;
+  --sidebar-ring: #d98367;
 
-  --radius: 0.625rem;
+  --radius: 0.375rem;
 }
 
 .dark {
-  --background: #0f0f14;
-  --foreground: #f6f6fb;
-  --card: #1a1a24;
-  --card-foreground: #f6f6fb;
-  --popover: #1a1a24;
-  --popover-foreground: #f6f6fb;
+  --background: #202622;
+  --foreground: #f2eee5;
+  --card: #2a312c;
+  --card-foreground: #f2eee5;
+  --popover: #2a312c;
+  --popover-foreground: #f2eee5;
 
-  --primary: #7c73f0;
-  --primary-foreground: #ffffff;
+  --primary: #e18b6c;
+  --primary-foreground: #221c18;
 
-  --secondary: #1a1a24;
-  --secondary-foreground: #f6f6fb;
+  --secondary: #343c35;
+  --secondary-foreground: #f2eee5;
 
-  --muted: #1a1a24;
-  --muted-foreground: #9090a0;
+  --muted: #343c35;
+  --muted-foreground: #bbbdb2;
 
-  --accent: #3da9fc;
+  --accent: #77b7a5;
   --accent-foreground: #ffffff;
 
-  --destructive: #ef4444;
+  --destructive: #ec8c7e;
 
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.15);
-  --ring: #7c73f0;
+  --border: #4b554b;
+  --input: #687366;
+  --ring: #e18b6c;
 
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --panel: #1a1a24;
-  --sidebar: #1a1a24;
+  --success: #82c5a3;
+  --warning: #e2b76e;
+  --danger: #ec8c7e;
+  --panel: #2a312c;
+  --sidebar: #171d1a;
 
-  --chart-1: #7c73f0;
-  --chart-2: #3da9fc;
-  --chart-3: #22c55e;
-  --chart-4: #f59e0b;
-  --chart-5: #ef4444;
+  --chart-1: #e18b6c;
+  --chart-2: #77b7a5;
+  --chart-3: #e2b76e;
+  --chart-4: #9ba988;
+  --chart-5: #c4a49a;
 
-  --sidebar-foreground: #f6f6fb;
-  --sidebar-primary: #7c73f0;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a1a24;
-  --sidebar-accent-foreground: #f6f6fb;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #7c73f0;
+  --sidebar-foreground: #f2eee5;
+  --sidebar-primary: #e18b6c;
+  --sidebar-primary-foreground: #221c18;
+  --sidebar-accent: #303a33;
+  --sidebar-accent-foreground: #f2eee5;
+  --sidebar-border: #3d493f;
+  --sidebar-ring: #e18b6c;
 }
 
 @layer base {
@@ -175,6 +175,7 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
+    -webkit-font-smoothing: antialiased;
   }
   html {
     @apply font-sans;
@@ -187,6 +188,13 @@
   h6 {
     font-family: var(--font-heading);
   }
+}
+
+.auth-technical-grid {
+  background-image:
+    linear-gradient(rgba(245, 240, 231, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 240, 231, 0.045) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 @media (prefers-reduced-motion: reduce) {

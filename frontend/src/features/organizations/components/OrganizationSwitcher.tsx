@@ -44,22 +44,22 @@ export function OrganizationSwitcher() {
       <DropdownMenu>
         <DropdownMenuTrigger
           aria-label="Switch organization"
-          className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-border bg-secondary px-3 py-2.5 text-sm font-medium transition-colors hover:bg-secondary/80"
+          className="flex w-full cursor-pointer items-center justify-between rounded-sm border border-sidebar-border bg-sidebar-accent px-3 py-2.5 text-sm font-medium transition-colors hover:border-sidebar-primary/60"
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground">
               {organizationInitial(activeOrganization.name)}
             </div>
             <div className="min-w-0 text-left">
-              <span className="block truncate text-sm text-foreground">
+              <span className="block truncate text-sm text-sidebar-foreground">
                 {activeOrganization.name}
               </span>
-              <span className="block text-xs capitalize text-muted-foreground">
+              <span className="block text-xs capitalize text-sidebar-foreground/60">
                 {activeOrganization.currentUserRole.toLowerCase()}
               </span>
             </div>
           </div>
-          <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <ChevronsUpDown className="h-4 w-4 shrink-0 text-sidebar-foreground/60" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[208px]" align="start">
           <DropdownMenuGroup>

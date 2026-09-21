@@ -39,7 +39,7 @@ export function Topbar({ openSidebar }: TopbarProps) {
   )
 
   return (
-    <header className="h-14 border-b border-border bg-background flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card px-4 lg:px-8">
       <div className="flex items-center">
         <button
           onClick={openSidebar}

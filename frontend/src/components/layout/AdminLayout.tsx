@@ -13,12 +13,12 @@ export function AdminLayout() {
 
   return (
     <OrganizationBootstrap>
-      <div className="flex h-screen overflow-hidden bg-secondary">
+      <div className="flex h-screen overflow-hidden bg-background">
         <Sidebar isOpen={isSidebarOpen} close={() => setIsSidebarOpen(false)} />
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <Topbar openSidebar={() => setIsSidebarOpen(true)} />
           <EmailVerificationBanner />
-          <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+          <main className="flex-1 overflow-y-auto p-4 lg:p-8">
             <Suspense fallback={<PageLoading />}>
               <Outlet />
             </Suspense>
