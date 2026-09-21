@@ -1,11 +1,25 @@
 import { Button } from "@/components/ui/button"
 import { env } from "@/config/env"
+import { useLocation } from "react-router-dom"
 
 import { authApi } from "../auth-api"
+import { rememberAuthReturnPath } from "../auth-return-path"
+
+interface OAuthLocationState {
+  from?: { hash?: string; pathname?: string; search?: string }
+}
 
 export function OAuthButtons() {
+  const location = useLocation()
+  const state = location.state as OAuthLocationState | null
+
   if (!env.googleOAuthEnabled && !env.githubOAuthEnabled) {
     return null
+  }
+
+  const beginOAuth = (provider: "github" | "google") => {
+    rememberAuthReturnPath(state?.from)
+    window.location.assign(authApi.oauthUrl(provider))
   }
 
   return (
@@ -16,7 +30,7 @@ export function OAuthButtons() {
             type="button"
             variant="outline"
             className="h-9"
-            onClick={() => window.location.assign(authApi.oauthUrl("google"))}
+            onClick={() => beginOAuth("google")}
           >
             Google
           </Button>
@@ -26,7 +40,7 @@ export function OAuthButtons() {
             type="button"
             variant="outline"
             className="h-9"
-            onClick={() => window.location.assign(authApi.oauthUrl("github"))}
+            onClick={() => beginOAuth("github")}
           >
             GitHub
           </Button>

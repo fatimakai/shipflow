@@ -10,13 +10,19 @@ import type { EnvironmentVariables } from '../config/env.validation';
 import { PrismaService } from '../database/prisma.service';
 import { BillingInterval, SubscriptionStatus } from '../generated/prisma/enums';
 import { BillingEntitlementService } from './billing-entitlement.service';
-import { InjectBillingProvider, type BillingProvider } from './billing.types';
+import {
+  InjectBillingProvider,
+  type BillingProvider,
+  type ProviderCheckoutSession,
+} from './billing.types';
 import type {
   BillingPlanListResponseDto,
   BillingStateResponseDto,
   CheckoutSessionResponseDto,
   PortalSessionResponseDto,
 } from './dto/billing-response.dto';
+
+const CHECKOUT_CREATION_LOCK_MS = 5 * 60 * 1000;
 
 @Injectable()
 export class BillingService {
@@ -83,21 +89,33 @@ export class BillingService {
       ? undefined
       : this.configService.getOrThrow<number>('BILLING_TRIAL_DAYS');
     const frontendUrl = this.frontendUrl();
-    const session = await this.provider.createCheckoutSession(
-      {
-        customerId: customer.stripeCustomerId,
-        organizationId: context.organization.id,
-        interval,
-        priceId,
-        trialDays,
-        automaticTaxEnabled: this.configService.getOrThrow<boolean>(
-          'STRIPE_AUTOMATIC_TAX_ENABLED',
-        ),
-        successUrl: `${frontendUrl}/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${frontendUrl}/billing?checkout=canceled`,
-      },
-      reservation.requestKey,
-    );
+    let session: ProviderCheckoutSession;
+    try {
+      session = await this.provider.createCheckoutSession(
+        {
+          customerId: customer.stripeCustomerId,
+          organizationId: context.organization.id,
+          interval,
+          priceId,
+          trialDays,
+          automaticTaxEnabled: this.configService.getOrThrow<boolean>(
+            'STRIPE_AUTOMATIC_TAX_ENABLED',
+          ),
+          successUrl: `${frontendUrl}/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${frontendUrl}/billing?checkout=canceled`,
+        },
+        reservation.requestKey,
+      );
+    } catch (error: unknown) {
+      await this.prisma.billingCheckoutSession.deleteMany({
+        where: {
+          id: reservation.id,
+          requestKey: reservation.requestKey,
+          stripeSessionId: null,
+        },
+      });
+      throw error;
+    }
     const expiresAt =
       session.expiresAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000);
     await this.prisma.billingCheckoutSession.upsert({
@@ -172,14 +190,33 @@ export class BillingService {
         where: { organizationId },
       });
       if (existing && existing.expiresAt.getTime() > now.getTime()) {
-        if (existing.interval !== interval) {
-          throw new ConflictException(
-            'A Checkout session for another billing interval is still open',
-          );
+        const staleCreation =
+          !existing.stripeSessionId &&
+          !existing.checkoutUrl &&
+          existing.createdAt.getTime() <=
+            now.getTime() - CHECKOUT_CREATION_LOCK_MS;
+
+        if (staleCreation) {
+          const deleted = await this.prisma.billingCheckoutSession.deleteMany({
+            where: {
+              id: existing.id,
+              stripeSessionId: null,
+              checkoutUrl: null,
+              createdAt: {
+                lte: new Date(now.getTime() - CHECKOUT_CREATION_LOCK_MS),
+              },
+            },
+          });
+          if (deleted.count === 0) continue;
+        } else {
+          if (existing.interval !== interval) {
+            throw new ConflictException(
+              'A Checkout session for another billing interval is still open',
+            );
+          }
+          return existing;
         }
-        return existing;
-      }
-      if (existing) {
+      } else if (existing) {
         await this.prisma.billingCheckoutSession.deleteMany({
           where: { id: existing.id, expiresAt: { lte: now } },
         });

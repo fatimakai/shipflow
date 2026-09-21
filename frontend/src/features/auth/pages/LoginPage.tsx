@@ -11,6 +11,7 @@ import { env } from "@/config/env"
 
 import { authApi, isTwoFactorChallenge } from "../auth-api"
 import { getAuthErrorMessage } from "../auth-errors"
+import { consumeAuthReturnPath } from "../auth-return-path"
 import { loginSchema, type LoginValues } from "../auth-schemas"
 import { applyAuthentication } from "../auth-session"
 import { AuthFormError } from "../components/AuthFormError"
@@ -45,9 +46,7 @@ export function LoginPage() {
       }
 
       applyAuthentication(authentication)
-      const returnPath = state?.from?.pathname
-        ? `${state.from.pathname}${state.from.search ?? ""}${state.from.hash ?? ""}`
-        : "/dashboard"
+      const returnPath = consumeAuthReturnPath(state?.from)
       navigate(returnPath, { replace: true })
     },
   })

@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 
 import { authApi } from "../auth-api"
 import { getAuthErrorMessage } from "../auth-errors"
+import { consumeAuthReturnPath } from "../auth-return-path"
 import { twoFactorCodeSchema, type TwoFactorCodeValues } from "../auth-schemas"
 import { applyAuthentication } from "../auth-session"
 import { AuthFormError } from "../components/AuthFormError"
@@ -37,9 +38,7 @@ export function TwoFactorChallengePage() {
     mutationFn: authApi.twoFactor.verifyChallenge,
     onSuccess: (authentication) => {
       applyAuthentication(authentication)
-      const returnPath = state?.from?.pathname
-        ? `${state.from.pathname}${state.from.search ?? ""}${state.from.hash ?? ""}`
-        : "/dashboard"
+      const returnPath = consumeAuthReturnPath(state?.from)
       navigate(returnPath, { replace: true })
     },
   })

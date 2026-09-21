@@ -9,6 +9,7 @@ import { createQueryClient } from "@/api/query-client"
 import { useAuthStore } from "@/stores/auth.store"
 import { server } from "@/test/mocks/server"
 
+import { rememberAuthReturnPath } from "../auth-return-path"
 import { TwoFactorChallengePage } from "./TwoFactorChallengePage"
 
 const authentication = {
@@ -55,7 +56,10 @@ function renderChallenge(
   )
 }
 
-afterEach(() => useAuthStore.getState().clearSession())
+afterEach(() => {
+  sessionStorage.clear()
+  useAuthStore.getState().clearSession()
+})
 
 describe("TwoFactorChallengePage", () => {
   it("verifies a challenge and restores the requested return path", async () => {
@@ -95,7 +99,7 @@ describe("TwoFactorChallengePage", () => {
     expect(useAuthStore.getState().accessToken).toBe("two-factor-access-token")
   })
 
-  it("accepts an OAuth fragment challenge and removes it from the URL", async () => {
+  it("accepts an OAuth challenge and returns to the pending invitation", async () => {
     server.use(
       http.post(
         "http://localhost:3000/api/v1/auth/2fa/challenge/verify",
@@ -109,6 +113,10 @@ describe("TwoFactorChallengePage", () => {
       )
     )
     const user = userEvent.setup()
+    rememberAuthReturnPath({
+      pathname: "/invitations/accept",
+      search: "?token=invitation-token",
+    })
     renderChallenge("/auth/two-factor#challenge=oauth-login-challenge-token")
 
     await waitFor(() =>
@@ -122,7 +130,8 @@ describe("TwoFactorChallengePage", () => {
       screen.getByRole("button", { name: "Verify and continue" })
     )
 
-    expect(await screen.findByText("Dashboard")).toBeVisible()
+    expect(await screen.findByText("Invitation accepted")).toBeVisible()
+    expect(sessionStorage).toHaveLength(0)
   })
 
   it("requires a new sign-in when no challenge is present", () => {

@@ -148,7 +148,7 @@ caller-supplied forwarding headers to avoid trusting a spoofed address.
 ## 4. Configure Stripe and OAuth
 
 1. Add the deployed Stripe webhook URL and subscribe to the billing events in
-   `backend/docs/adr/0006-stripe-billing.md`.
+   `backend/docs/adr/0008-stripe-billing.md`.
 2. Copy its signing secret into Render and redeploy.
 3. Add the exact Pages callback URLs to the Google and GitHub OAuth apps.
 4. Add the exact Cloudflare Pages origin to any OAuth consent-screen and
@@ -173,8 +173,10 @@ or suspend a free instance, and Neon may scale its compute to zero.
 3. Confirm direct API calls to password registration/recovery return 403.
 4. Register fresh accounts with Google and GitHub.
 5. Enable 2FA, sign out, then verify both TOTP and a single-use backup code.
-6. Create an organization and generate a shareable invitation link. Confirm the
-   link is displayed after creation but not in the pending-invitation list.
+6. Create an organization and generate a shareable invitation link. Open it in
+   a signed-out browser and confirm OAuth (including 2FA when enabled) returns
+   to and accepts the invitation. Confirm the link is displayed after creation
+   but not in the pending-invitation list.
 7. Confirm the Files navigation is absent and direct file API requests return 403.
 8. Complete a Stripe test checkout and confirm webhook processing is recorded.
 9. Inspect logs for migrations, database, OAuth, billing, or startup errors
