@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query"
 import { render, screen } from "@testing-library/react"
 import { http, HttpResponse } from "msw"
 import { MemoryRouter } from "react-router-dom"
-import { afterEach, describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 
 import type { OrganizationListResponseDto } from "@/api/generated"
 import { createQueryClient } from "@/api/query-client"
@@ -11,6 +11,20 @@ import { useOrganizationStore } from "@/stores/organization.store"
 import { server } from "@/test/mocks/server"
 
 import { Dashboard } from "./Dashboard"
+
+const deploymentProfile = vi.hoisted(() => ({ isPublicDemo: false }))
+
+vi.mock("@/config/env", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/config/env")>()
+  return {
+    env: {
+      ...actual.env,
+      get isPublicDemo() {
+        return deploymentProfile.isPublicDemo
+      },
+    },
+  }
+})
 
 const organizationId = "11111111-1111-4111-8111-111111111111"
 
@@ -81,7 +95,10 @@ function useMemberHandler() {
   )
 }
 
-afterEach(() => useOrganizationStore.getState().clearActiveOrganization())
+afterEach(() => {
+  deploymentProfile.isPublicDemo = false
+  useOrganizationStore.getState().clearActiveOrganization()
+})
 
 describe("Dashboard", () => {
   it("renders real organization summaries without unsupported analytics", async () => {
@@ -164,5 +181,33 @@ describe("Dashboard", () => {
     expect(
       screen.getByRole("button", { name: "Retry storage used" })
     ).toBeVisible()
+  })
+
+  it("does not request or display file usage in the public demo", async () => {
+    deploymentProfile.isPublicDemo = true
+    let fileUsageRequests = 0
+    useMemberHandler()
+    server.use(
+      http.get(
+        `http://localhost:3000/api/v1/organizations/${organizationId}/files/usage`,
+        () => {
+          fileUsageRequests += 1
+          return HttpResponse.json(
+            { message: "Files are disabled" },
+            { status: 403 }
+          )
+        }
+      ),
+      http.get("http://localhost:3000/api/v1/notifications/unread-count", () =>
+        HttpResponse.json({ count: 0 })
+      )
+    )
+
+    renderDashboard(["membership:read", "file:read", "notification:read"])
+
+    expect(await screen.findAllByText("Alex Morgan")).not.toHaveLength(0)
+    expect(screen.queryByText("Storage used")).not.toBeInTheDocument()
+    expect(screen.queryByText("Storage")).not.toBeInTheDocument()
+    expect(fileUsageRequests).toBe(0)
   })
 })

@@ -1,6 +1,7 @@
 import { Check, Minus } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { env } from "@/config/env"
 import {
   Card,
   CardContent,
@@ -77,28 +78,33 @@ export function RolesPermissionsTab({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {permissionRows.map((item) => (
-              <TableRow key={item.capability}>
-                <TableCell className="text-sm font-medium text-foreground">
-                  {item.label}
-                </TableCell>
-                {roles.map((role) => (
-                  <TableCell key={role} className="text-center">
-                    {roleHasOrganizationCapability(role, item.capability) ? (
-                      <Check
-                        className="mx-auto h-4 w-4 text-success"
-                        aria-label="Allowed"
-                      />
-                    ) : (
-                      <Minus
-                        className="mx-auto h-4 w-4 text-muted-foreground/40"
-                        aria-label="Not allowed"
-                      />
-                    )}
+            {permissionRows
+              .filter(
+                (item) =>
+                  !env.isPublicDemo || !item.capability.startsWith("file:")
+              )
+              .map((item) => (
+                <TableRow key={item.capability}>
+                  <TableCell className="text-sm font-medium text-foreground">
+                    {item.label}
                   </TableCell>
-                ))}
-              </TableRow>
-            ))}
+                  {roles.map((role) => (
+                    <TableCell key={role} className="text-center">
+                      {roleHasOrganizationCapability(role, item.capability) ? (
+                        <Check
+                          className="mx-auto h-4 w-4 text-success"
+                          aria-label="Allowed"
+                        />
+                      ) : (
+                        <Minus
+                          className="mx-auto h-4 w-4 text-muted-foreground/40"
+                          aria-label="Not allowed"
+                        />
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </CardContent>

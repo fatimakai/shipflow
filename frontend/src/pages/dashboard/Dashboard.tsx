@@ -17,6 +17,7 @@ import { isApiError } from "@/api/api-error"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { env } from "@/config/env"
 import {
   Card,
   CardAction,
@@ -132,7 +133,8 @@ export function Dashboard() {
   const queryClient = useQueryClient()
   const organization = useActiveOrganization()
   const organizationId = organization?.id ?? null
-  const canReadFiles = hasOrganizationCapability(organization, "file:read")
+  const canReadFiles =
+    !env.isPublicDemo && hasOrganizationCapability(organization, "file:read")
   const canReadBilling = hasOrganizationCapability(organization, "billing:read")
   const canReadNotifications = hasOrganizationCapability(
     organization,
@@ -228,11 +230,15 @@ export function Dashboard() {
       </div>
 
       <div
-        className={
-          canReadBilling
-            ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-5"
-            : "grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
-        }
+        className={`grid gap-4 sm:grid-cols-2 ${
+          canReadFiles && canReadBilling
+            ? "xl:grid-cols-5"
+            : canReadFiles || canReadBilling
+              ? "xl:grid-cols-4"
+              : canReadNotifications
+                ? "xl:grid-cols-3"
+                : "xl:grid-cols-2"
+        }`}
       >
         <MetricCard
           description="People in this workspace"
