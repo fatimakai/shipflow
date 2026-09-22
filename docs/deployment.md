@@ -160,7 +160,7 @@ screenshots, issues, or CI logs.
 ## 5. Keep-warm monitor
 
 Configure UptimeRobot or cron-job.org to request
-`https://<render-host>/api/v1/health/ready` less than every 15 minutes. Treat it
+`https://<render-host>/api/v1/health/live` less than every 15 minutes. Treat it
 as a demo convenience, not an availability guarantee. Render may still restart
 or suspend a free instance, and Neon may scale its compute to zero.
 
