@@ -63,10 +63,10 @@ jobs:
         run: pnpm prisma:migrate:deploy
 
       - name: Run unit tests
-        run: pnpm test -- --runInBand
+        run: pnpm test --runInBand
 
       - name: Run PostgreSQL integration tests
-        run: pnpm test:e2e -- --runInBand
+        run: pnpm test:e2e --runInBand
 
       - name: Build backend
         run: pnpm build
