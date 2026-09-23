@@ -23,6 +23,7 @@ The API enforces tenant membership and capabilities; frontend visibility is not 
 
 - [Technical case study](docs/case-study.md) — design decisions, security boundaries, testing, deployment, and a verified product walkthrough.
 - [Public-demo deployment guide](docs/deployment.md) — environment profile, proxy, OAuth, Stripe, and health checks.
+- [Remaining commercial-release work](docs/remaining-work.md) — repository-audited blockers and the definition of v1 completion.
 - [Backend setup and API](backend/README.md) and [frontend setup](frontend/README.md).
 - [Security architecture](backend/docs/security.md) and [GitHub Actions workflow](.github/workflows/ci.yml).
 

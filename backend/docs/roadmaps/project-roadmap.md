@@ -1,12 +1,16 @@
 # ShipFlow Unified Project Roadmap
 
 - Product: ShipFlow commercial SaaS boilerplate
-- Architecture: Separate `shipflow-backend` and `shipflow-frontend` repositories
+- Architecture: One repository with independently deployable `backend` and
+  `frontend` applications
 - Backend stack: NestJS 11, Node.js 24, pnpm 11, PostgreSQL, and Prisma
 - Frontend stack: React 19, Vite 8, TypeScript, npm, Tailwind CSS, shadcn, Base UI, and React Router
 - API contract: Versioned REST API and Swagger/OpenAPI under `/api/v1`
 - Roadmap baseline: 2026-08-11
+- Last repository reconciliation: 2026-09-23
 - Branch policy: Work directly on `main` unless the team changes this policy
+- Portfolio demo status: Complete and deployed
+- Commercial v1 status: In progress
 
 ## Purpose
 
@@ -34,8 +38,13 @@ foundation phases can be Complete before later frontend integration phases.
 
 1. Phases 1 through 5, 7 through 10, 12, and 13 are complete.
 2. Phase 14 has a complete provider-independent production baseline.
-3. Provider-dependent Phase 14 decisions and Phase 15 CI/CD remain.
-4. The backend exposes authentication, organizations, permissions, email,
+3. The public demo is deployed on Render with Neon PostgreSQL, Stripe test-mode
+   webhooks, same-origin Cloudflare Pages proxying, and UptimeRobot monitoring.
+4. Provider-dependent paid-production decisions, off-site backup validation,
+   and distributed-scaling policy remain in Phase 14.
+5. Phase 15 CI is operational; release governance and versioned OpenAPI
+   publishing remain.
+6. The backend exposes authentication, organizations, permissions, email,
    billing, notifications, and file-storage contracts.
 
 ### Frontend
@@ -55,12 +64,16 @@ foundation phases can be Complete before later frontend integration phases.
    notifications are integrated, responsive, tested, and route-split.
 7. Phase 13 file management is integrated with secure upload, download,
    recovery, deletion, quota, permission, and responsive browser workflows.
+8. The public-demo profile intentionally hides password recovery and file
+   surfaces while the standard profile retains them.
+9. GitHub Actions runs formatting, lint, type, unit, browser, build, dependency,
+   database, and container checks for the applicable application.
 
 ## Phase Summary
 
 | Phase    | Product scope                                 | Backend status | Frontend status | Overall status |
 | -------- | --------------------------------------------- | -------------- | --------------- | -------------- |
-| Phase 0  | Architecture and product decisions            | In progress    | Complete        | In progress    |
+| Phase 0  | Architecture and product decisions            | In progress    | In progress     | In progress    |
 | Phase 1  | Repository foundations                        | Complete       | Complete        | Complete       |
 | Phase 2  | Local backend infrastructure                  | Complete       | Not applicable  | Complete       |
 | Phase 3  | Backend application foundation                | Complete       | Not applicable  | Complete       |
@@ -69,25 +82,26 @@ foundation phases can be Complete before later frontend integration phases.
 | Phase 6  | Frontend authentication                       | Complete       | Complete        | Complete       |
 | Phase 7  | Organizations and memberships                 | Complete       | Complete        | Complete       |
 | Phase 8  | Permission-aware behavior                     | Complete       | Complete        | Complete       |
-| Phase 9  | Transactional email and browser link journeys | Complete       | Pending         | In progress    |
+| Phase 9  | Transactional email and browser link journeys | Complete       | In progress     | In progress    |
 | Phase 10 | Billing and entitlements                      | Complete       | Complete        | Complete       |
 | Phase 11 | Dashboard and settings experience             | Complete       | Complete        | Complete       |
 | Phase 12 | Notifications                                 | Complete       | Complete        | Complete       |
 | Phase 13 | File management                               | Complete       | Complete        | Complete       |
-| Phase 14 | Production hardening                          | In progress    | Pending         | In progress    |
-| Phase 15 | CI/CD, regression testing, and documentation  | Pending        | Pending         | Pending        |
+| Phase 14 | Production hardening                          | In progress    | In progress     | In progress    |
+| Phase 15 | CI/CD, regression testing, and documentation  | In progress    | In progress     | In progress    |
 | Release  | Beta, packaging, and commercial launch        | Pending        | Pending         | Pending        |
 
 ## Phase 0: Architecture And Product Decisions
 
-**Status:** Complete
+**Status:** In progress (public-demo decisions complete)
 
 **Objective:** Establish shared technical, security, product, ownership, and
 release rules before dependent implementation needs to invent them.
 
 ### Completed Decisions
 
-1. Use separate frontend and backend repositories with independent deployment.
+1. Use one repository with independently deployable backend and frontend
+   applications.
 2. Use NestJS, PostgreSQL, Prisma, and a versioned REST API for the backend.
 3. Use React, Vite, TypeScript, React Router, Tailwind CSS, shadcn, Base UI, and
    Lucide for the frontend.
@@ -97,10 +111,10 @@ release rules before dependent implementation needs to invent them.
 7. Keep backend authorization, membership, entitlements, and tenant isolation
    authoritative.
 8. Use Owner, Admin, Member, and Viewer organization roles.
-9. Use local file storage in development and private AWS S3 storage in
+9. Use local file storage in development and an S3-compatible private store in
    production.
 10. Keep Redis out of the runtime until it has an approved responsibility.
-11. Use npm for the current frontend repository and pnpm for the backend.
+11. Use npm for the frontend workspace and pnpm for the backend workspace.
 12. Use TanStack Query for server state and Zustand only for memory-only access
     token and active organization state.
 13. Use native `fetch` behind a centralized API client and React Hook Form with
@@ -115,8 +129,11 @@ release rules before dependent implementation needs to invent them.
 
 ### Remaining Decisions
 
-1. Select the production deployment platform and managed PostgreSQL topology.
-2. Select centralized logging, error monitoring, alerting, and uptime services.
+1. Select and validate the paid-production deployment and managed PostgreSQL
+   topology; the Render, Neon, and Cloudflare public-demo topology is approved
+   only for the portfolio demo.
+2. Select centralized log retention and frontend/backend error monitoring;
+   UptimeRobot is already selected for public-demo uptime and alerting.
 3. Decide whether the first release needs Redis, horizontal scaling, or
    distributed rate limiting.
 4. Define branch protection, release ownership, semantic versioning, support,
@@ -142,8 +159,8 @@ release rules before dependent implementation needs to invent them.
 
 **Status:** Complete
 
-**Objective:** Make both repositories independently installable, verifiable,
-documented, and ready for feature work.
+**Objective:** Make both applications independently installable, verifiable,
+documented, and ready for feature work inside the shared repository.
 
 ### Backend - Complete
 
@@ -155,7 +172,7 @@ documented, and ready for feature work.
 
 ### Frontend - Completed
 
-1. Created and cloned the frontend repository with a Git remote and `main`.
+1. Scaffolded the frontend application in the shared repository on `main`.
 2. Scaffolded React 19, Vite 8, and TypeScript with npm.
 3. Added the `@/` import alias.
 4. Added Tailwind CSS, shadcn, Base UI, design tokens, fonts, and Lucide.
@@ -181,7 +198,7 @@ documented, and ready for feature work.
 
 ### Completion Criteria
 
-1. Clean checkouts of both repositories install and pass their quality scripts.
+1. A clean checkout installs both workspaces and passes their quality scripts.
 2. No local credentials or environment files are committed.
 3. The frontend displays a controlled result from the backend health API.
 
@@ -401,11 +418,20 @@ handling for every emailed action.
 
 ### Frontend - Remaining
 
-1. Add verification, password reset, invitation acceptance, and recovery routes.
-2. Consume URL tokens only on their owning route and remove them from history.
-3. Add success, expired, reused, revoked, and malformed states.
-4. Preserve invitation destinations safely through authentication.
-5. Test local, preview, staging, production, responsive, and accessible journeys.
+1. Remove invitation tokens from browser history before the acceptance request,
+   matching the completed verification and password-reset route behavior.
+2. Add explicit browser coverage for expired, reused, revoked, and malformed
+   link states in the standard frontend profile.
+3. Complete cross-browser, responsive, keyboard, and accessibility validation
+   for the email-link journeys.
+
+### Frontend - Verified Complete
+
+1. Added verification, password-reset, and invitation-acceptance routes with
+   owning-route token consumption and safe success/error presentation.
+2. Removed verification and password-reset tokens from browser history.
+3. Preserved invitation destinations through password and OAuth authentication.
+4. Verified a signed-out invitation through OAuth in the deployed public demo.
 
 ### Completion Criteria
 
@@ -499,7 +525,7 @@ accessible SaaS interface.
 
 ## Phase 12: Notifications
 
-**Status:** In progress
+**Status:** Complete (2026-08-13)
 
 **Objective:** Provide persistent user notifications and preferences.
 
@@ -592,19 +618,39 @@ performance, deployment, and operational standards.
 
 ### Backend - Remaining
 
-1. Select deployment, managed PostgreSQL, logging, monitoring, alerting, uptime,
-   and off-site backup providers.
-2. Decide whether horizontal scaling and distributed throttling are required.
-3. Validate the final production topology and record acceptance evidence.
+1. Select centralized log retention, error monitoring, and an off-site backup
+   provider for the paid-production topology.
+2. Decide whether horizontal scaling and distributed throttling are required;
+   the public demo intentionally runs a single instance with in-memory limits.
+3. Provision and validate standard-profile providers, including Resend, private
+   R2 storage, and ClamAV, before calling the commercial topology production
+   ready.
+4. Perform and record a paid-production backup restore, rollback, and incident
+   drill. Public-demo deployment, health, webhook, and uptime evidence is
+   already recorded.
+
+### Frontend - Verified Complete
+
+1. Added route-level lazy loading and production chunking.
+2. Added a deployed CSP and related browser security headers on Cloudflare
+   Pages.
+3. Verified the deployed same-origin API proxy, cookie-based session refresh,
+   OAuth, 2FA, invitations, Stripe test-mode billing, health checks, and the
+   public-demo feature restrictions.
+4. Added responsive application layouts and focused desktop/mobile Playwright
+   journeys for core product areas.
 
 ### Frontend - Remaining
 
 1. Add route error boundaries, monitoring boundaries, and release tagging.
 2. Review token, credential, redirect, URL-token, and sensitive-log behavior.
-3. Define CSP compatibility and source-map policy.
-4. Add route splitting and measure loading, bundle, and interaction performance.
-5. Run accessibility, keyboard, responsive, and supported-browser audits.
-6. Validate production API, CORS, cookie, cache, rollback, and incident behavior.
+3. Record an explicit source-map publication and retention policy and revalidate
+   CSP whenever third-party production services are enabled.
+4. Define and enforce loading, bundle, and interaction performance budgets.
+5. Complete automated accessibility and keyboard audits plus Firefox, WebKit,
+   Edge, and 360-pixel viewport coverage; CI currently exercises Chromium.
+6. Validate paid-production cache, rollback, and incident behavior after its
+   provider topology is selected.
 
 ### Completion Criteria
 
@@ -614,41 +660,55 @@ performance, deployment, and operational standards.
 
 ## Phase 15: CI/CD, Regression Testing, And Documentation
 
-**Status:** Pending
+**Status:** In progress
 
 **Objective:** Make product delivery repeatable, verifiable, maintainable, and
 buyer-ready.
 
+### Backend - Verified Complete
+
+1. GitHub Actions performs frozen installation, formatting, linting, unit/e2e
+   tests, Prisma validation, migrations, production dependency audit, build,
+   and production-container build.
+2. CI provides an isolated PostgreSQL service and broad backend regression
+   coverage.
+3. Environment, migration, provider, deployment, rollback, backup, restore,
+   incident, and troubleshooting documentation is present.
+
 ### Backend - Remaining
 
-1. Add CI for frozen install, formatting, lint, unit/e2e tests, Prisma validation,
-   migration checks, audit, and build.
-2. Add an isolated PostgreSQL CI service and broad regression coverage.
-3. Publish versioned OpenAPI artifacts and decide generated-client ownership.
-4. Document environments, migrations, providers, deployment, upgrades, and
-   troubleshooting.
+1. Publish versioned OpenAPI artifacts and formalize generated-client ownership
+   and compatibility policy.
+
+### Frontend - Verified Complete
+
+1. GitHub Actions performs frozen npm installation, formatting, linting, type
+   checks, unit tests, Chromium Playwright tests, production build, and
+   production dependency audit.
+2. Regression coverage exists for authentication, invitations, tenancy,
+   capabilities, billing, notifications, and file workflows.
+3. Generated OpenAPI TypeScript types are committed and checked by the build.
+4. Frontend setup, architecture, API usage, testing, deployment, demo behavior,
+   and extension guidance is present across the application README and shared
+   documentation.
 
 ### Frontend - Remaining
 
-1. Add CI for frozen npm install, formatting, lint, type checks, unit tests,
-   build, and Playwright.
-2. Add authentication, invitation, tenant, capability, billing, notification,
-   and file regression coverage.
-3. Add approved visual regression and preview deployment checks.
-4. Generate or version API types from the OpenAPI contract.
-5. Document architecture, state ownership, API use, testing, accessibility,
-   deployment, extension, and troubleshooting.
+1. Add approved visual regression and preview-deployment checks.
+2. Extend browser CI beyond Chromium and add automated accessibility checks.
 
 ### Shared Release Work
 
 1. Define semantic versions, tags, changelogs, compatibility, and support.
 2. Add dependency-update automation with required verification.
 3. Declare compatible frontend and backend release versions.
+4. Add release/deployment approval gates and verify repository branch
+   protection outside the source tree.
 
 ### Completion Criteria
 
 1. Every pull request and release runs required checks automatically.
-2. New contributors can configure, test, deploy, and extend both repositories.
+2. New contributors can configure, test, deploy, and extend both applications.
 
 ## Release: Beta, Packaging, And Commercial Launch
 
@@ -694,10 +754,8 @@ buyer-ready.
 
 ## Immediate Next Work
 
-1. Complete the remaining Phase 9 frontend email-link journey states and
-   browser coverage.
-2. Replace mock billing, dashboard, notification, and
-   file surfaces in dependency order.
-3. Complete provider-dependent Phase 14 backend decisions before production.
-4. Implement shared Phase 15 CI/CD and release documentation after feature
-   integration stabilizes.
+The repository-backed checklist is maintained in
+[`docs/remaining-work.md`](../../../docs/remaining-work.md). The next release
+blockers are invitation-token history removal, paid-production provider
+validation, frontend hardening audits, and release/version governance. The
+portfolio demo and case-study deliverables are complete.
